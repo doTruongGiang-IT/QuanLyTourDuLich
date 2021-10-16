@@ -1,0 +1,19 @@
+version: "3.0"
+services:
+
+  pl-backend:
+    image: pl_backend:latest
+    container_name: pl_backend
+    restart: always
+    volumes:
+      - ./:/app
+    networks:
+      - pl_net
+    env_file:
+      - dev.env
+    command: pipenv run python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "0.0.0.0:8000:8000"
+
+networks:
+  pl_net: null
