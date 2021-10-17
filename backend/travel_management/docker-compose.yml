@@ -1,5 +1,15 @@
 version: "3.0"
 services:
+  pl-database:
+    image: postgres:latest
+    networks:
+      - pl_net
+    environment:
+      POSTGRES_DB: travel_management
+      POSTGRES_USER: pl_user
+      POSTGRES_PASSWORD: asd123!@#
+    ports:
+      - 5432:5432
 
   pl-backend:
     image: pl_backend:latest
