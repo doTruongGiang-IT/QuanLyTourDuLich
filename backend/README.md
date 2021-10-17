@@ -59,3 +59,12 @@ make init
 |         | docker-compose -p travel_management up                          |                                    |                                  |
 | init    | docker exec -it pl_backend pipenv run python3 manage.py migrate | migrate new Django's migration(s)  |                                  |
 | install | docker exec -it pl_backend pipenv install $(package)            | install new package(s) with pipenv | rebuild image after installation |
+
+---
+
+## Account
+
+| type                | username | password  | note                                               |
+|---------------------|----------|-----------|----------------------------------------------------|
+| admin site (Django) | admin    | 12345678  |                                                    |
+| postgreSQL          | pl_user  | asd123!@# | host: localhost:5432 \| DB name: travel_management |
