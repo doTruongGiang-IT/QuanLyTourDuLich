@@ -4,8 +4,6 @@ services:
     image: pl_frontend:latest
     container_name: pl_frontend
     restart: always
-    stdin_open: true
-    tty: true
     volumes:
       - ./src:/app/src
     networks:
