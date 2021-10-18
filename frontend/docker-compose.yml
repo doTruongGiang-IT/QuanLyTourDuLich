@@ -8,6 +8,8 @@ services:
       - ./src:/app/src
     networks:
       - pl_net
+    env_file:
+      - dev.env
     command: npm start
     ports:
       - "0.0.0.0:3000:3000"
