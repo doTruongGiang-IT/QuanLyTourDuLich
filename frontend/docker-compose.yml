@@ -1,0 +1,18 @@
+version: "3.0"
+services:
+  pl-frontend:
+    image: pl_frontend:latest
+    container_name: pl_frontend
+    restart: always
+    volumes:
+      - ./src:/app/src
+    networks:
+      - pl_net
+    env_file:
+      - dev.env
+    command: npm start
+    ports:
+      - "0.0.0.0:3000:3000"
+
+networks:
+  pl_net: null
