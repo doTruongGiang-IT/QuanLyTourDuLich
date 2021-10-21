@@ -1,0 +1,13 @@
+.tourDetailsForm {
+    height: fit-content;
+    padding: 50px 50px;
+
+}
+
+.tourDetailsForm h2 {
+    text-align: center;
+    color: white;
+    background-color: blue;
+    font-size: 28px;
+    padding: 5px 0;
+}
