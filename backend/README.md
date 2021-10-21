@@ -67,4 +67,4 @@ make init
 | type                | username | password  | note                                               |
 |---------------------|----------|-----------|----------------------------------------------------|
 | admin site (Django) | admin    | 12345678  |                                                    |
-| postgreSQL          | pl_user  | asd123!@# | host: localhost:5432 \| DB name: travel_management |
+| postgreSQL          | pl_user  | asd123!@# | host: localhost:5433 \| DB name: travel_management |

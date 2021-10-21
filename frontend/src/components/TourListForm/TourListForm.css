@@ -1,0 +1,19 @@
+.tourListForm {
+    height: fit-content;
+    padding: 30px 50px;
+}
+
+#addTour {
+    color: white;
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 80px;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+}
+
+#addTour:hover {
+    background-color: lightskyblue;
+}
