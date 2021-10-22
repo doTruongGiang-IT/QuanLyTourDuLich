@@ -6,6 +6,7 @@ import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import EditableCell from '../EditableCell/EditableCell';
 import "./TourListForm.css";
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
 
 const TourListForm = ({remove, update}) => {
     let data = [
@@ -103,6 +104,7 @@ const TourListForm = ({remove, update}) => {
     const [editingKey, setEditingKey] = useState('');
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
+    const history = useHistory();
 
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -153,7 +155,7 @@ const TourListForm = ({remove, update}) => {
         confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
-      };
+    };
     
     const handleReset = clearFilters => {
         clearFilters();
@@ -321,6 +323,10 @@ const TourListForm = ({remove, update}) => {
                     body: {
                         cell: EditableCell,
                     },
+                }} onRow={(record, rowIndex) => {
+                    return {
+                        onClick: event => history.push(`/details/${record.id}`),
+                    };
                 }} bordered columns={mergedColumns} dataSource={dataInfo} />
             </Form>
         </div>

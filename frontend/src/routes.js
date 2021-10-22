@@ -15,7 +15,7 @@ const routes = [
     }, 
     {
         exact: true,
-        path: '/details',
+        path: '/details/:id',
         main: () => <TourDetailsPage />
     }, 
 ];

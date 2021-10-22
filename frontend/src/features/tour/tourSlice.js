@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const initialState = {
     tourList: [],
-    tourDetails: {},
+    tourDetails: [],
     loading: false,
     error: false
 };
@@ -19,8 +19,9 @@ export const getTourList = createAsyncThunk(
 export const getTourDetails = createAsyncThunk(
     'tour/getTourDetails',
     async (id) => {
-        const res = axios.get('');
-        return res.data;
+        // const res = axios.get('');
+        // return res.data;
+        console.log(Number.parseInt(id));
     }
 );
 
