@@ -1,13 +1,28 @@
 from django.db import models
-
-
+   
+   
 class LocationType(object):
-    ABOARD  = "Aboard"
-    DOMESTIC = "Domestic"
+    HOTEL  = "Hotel"
+    TOURIST_AREA = "Tourist Area"
     UNKNOWN = "Unknown"
     CHOICES = [
-        (ABOARD, ABOARD),
-        (DOMESTIC, DOMESTIC),
+        (HOTEL, HOTEL),
+        (TOURIST_AREA, TOURIST_AREA),
+        (UNKNOWN, UNKNOWN),
+    ]
+    
+    
+class LocationLevel(object):
+    DISTRICT = "District"
+    CITY = "City"
+    PROVINCE = "Province"
+    COUNTRY = "Country"
+    UNKNOWN = "Unknown"
+    CHOICES = [
+        (DISTRICT, DISTRICT),
+        (CITY, CITY),
+        (PROVINCE, PROVINCE),
+        (COUNTRY, COUNTRY),
         (UNKNOWN, UNKNOWN),
     ]
     
@@ -39,9 +54,14 @@ class TourPrice(models.Model):
 class Location(models.Model):
     name                = models.TextField()
     type                = models.CharField(
-                            max_length=10,
+                            max_length=20,
                             choices=LocationType.CHOICES,
                             default=LocationType.UNKNOWN,
+                        )
+    level               = models.CharField(
+                            max_length=20,
+                            choices=LocationLevel.CHOICES,
+                            default=LocationLevel.UNKNOWN,
                         )
     
     def __str__(self):
