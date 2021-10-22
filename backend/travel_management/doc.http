@@ -67,3 +67,46 @@ content-type: application/json
 GET {{api_url}}/group/2 HTTP/1.1
 content-type: application/json
 
+
+
+##################################
+#     3. Tour Characteristic     #
+##################################
+
+
+### Tour Characteristic List ###
+GET {{api_url}}/tour/tour_characteristic HTTP/1.1
+content-type: application/json
+
+
+
+############################
+#       4. Tour Type       #
+############################
+
+
+### Tour Type List ###
+GET {{api_url}}/tour/tour_type HTTP/1.1
+content-type: application/json
+
+
+
+#############################
+#       5. Tour Price       #
+#############################
+
+
+### Tour Price List ###
+GET {{api_url}}/tour/tour_price HTTP/1.1
+content-type: application/json
+
+
+
+############################
+#       6. Location        #
+############################
+
+
+### Location ###
+GET {{api_url}}/tour/location HTTP/1.1
+content-type: application/json
