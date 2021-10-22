@@ -1,0 +1,53 @@
+####################################################
+#                                                  #
+#  This file is used for testing                   #
+#  Used by REST Client extensions in VSCode        #
+#                                                  # 
+####################################################
+
+
+@base_url = http://127.0.0.1:8000
+@api_url = {{base_url}}/api
+
+
+########################
+#       1. Tour        #
+########################
+
+
+### Tour List ###
+GET {{api_url}}/tour/ HTTP/1.1
+content-type: application/json
+
+
+### Tour Detail ###
+GET {{api_url}}/tour/2 HTTP/1.1
+content-type: application/json
+
+
+### Tour Create ###
+POST {{api_url}}/tour/ HTTP/1.1
+content-type: application/json
+
+{   
+    "name": "Tour Cần Thơ mùa hè 2021",
+    "characteristic": 1,
+    "type": 1,
+    "price": 1,
+    "location": 1
+}
+
+
+### Tour Update ###
+PATCH {{api_url}}/tour/2 HTTP/1.1
+content-type: application/json
+
+{   
+    "price": 2
+}
+
+
+### Tour Delete ###
+DELETE  {{api_url}}/tour/2 HTTP/1.1
+content-type: application/json
+
