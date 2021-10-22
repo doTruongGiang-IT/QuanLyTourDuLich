@@ -14,7 +14,7 @@ const TourDetailsPage = () => {
     }, [dispatch, id]);
 
     return (
-        <TourDetailsForm />
+        <TourDetailsForm tourDetails={tourDetails} />
     )
 }
 

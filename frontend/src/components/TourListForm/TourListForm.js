@@ -2,13 +2,13 @@
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
 import { Table, Input, Button, Space, Popconfirm, Form, notification} from 'antd';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import EditableCell from '../EditableCell/EditableCell';
 import "./TourListForm.css";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
-const TourListForm = ({remove, update}) => {
+const TourListForm = ({remove, update, tours}) => {
     let data = [
         {
             key: '1',
@@ -272,7 +272,7 @@ const TourListForm = ({remove, update}) => {
                                 type="primary"
                                 icon={<DeleteOutlined />}
                                 size="small"
-                                style={{ width: 60 }}
+                                style={{ width: 40 }}
                                 danger
                             />
                         </Popconfirm>
@@ -282,7 +282,15 @@ const TourListForm = ({remove, update}) => {
                             type="primary"
                             icon={<EditOutlined />}
                             size="small"
-                            style={{ width: 60 }}
+                            style={{ width: 40 }}
+                        />
+                        <Button
+                            disabled={editingKey !== ''} 
+                            onClick={() => history.push(`/details/${record.id}`)}
+                            type="primary"
+                            icon={<EyeOutlined />}
+                            size="small"
+                            style={{ width: 40 }}
                         />
                     </Space>   
                 )
@@ -323,11 +331,13 @@ const TourListForm = ({remove, update}) => {
                     body: {
                         cell: EditableCell,
                     },
-                }} onRow={(record, rowIndex) => {
-                    return {
-                        onClick: event => history.push(`/details/${record.id}`),
-                    };
-                }} bordered columns={mergedColumns} dataSource={dataInfo} />
+                }} 
+                // onRow={(record, rowIndex) => {
+                //     return {
+                //         onClick: event => history.push(`/details/${record.id}`),
+                //     };
+                // }} 
+                bordered columns={mergedColumns} dataSource={tours} />
             </Form>
         </div>
     )

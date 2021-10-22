@@ -5,7 +5,37 @@ import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
 
-const TourDetailsForm = () => {
+const TourDetailsForm = ({tourDetails}) => {
+    let details = [];
+    let hotel = "";
+    let location = "";
+    let journey = "";
+    tourDetails.forEach(detail => {
+      detail.journey.forEach((item) => {
+        journey += `${new Date(item.start_date).getHours()}h - ${new Date(item.end_date).getHours()}h: ${item.content}. `;
+        if(item.location.type === "Hotel") {
+          hotel = item.location.name;
+        };
+        if(item.location.type === "Tourist Area") {
+          location = item.location.name;
+        };
+      });
+      let formatDetail  = {
+        id: detail.id,
+        name: detail.name,
+        startDate: detail.start_date,
+        endDate: detail.end_date,
+        journey,
+        hotel,
+        location
+      };
+      details.push(formatDetail);
+    });
+    console.log(details);
+    // let details = tourDetails.forEach((detail) => {
+    //   detail.journey = "";
+    // });
+    // console.log(details);
     let data = [
         {
             key: '1',
@@ -171,7 +201,7 @@ const TourDetailsForm = () => {
     return (
         <div className="tourDetailsForm">
             <h2>Details for this tour</h2>
-            <Table bordered columns={columns} dataSource={dataInfo} />
+            <Table bordered columns={columns} dataSource={details} />
         </div>
     )
 }

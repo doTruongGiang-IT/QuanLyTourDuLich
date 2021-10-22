@@ -7,6 +7,10 @@ const TourListPage = () => {
     const dispatch = useDispatch();
     const tours = useSelector(selectTourList);
 
+    useEffect(() => {
+        dispatch(getTourList())
+    }, [dispatch]);
+
     const handleDelete = (key) => {
         dispatch(deleteTour(key));
     };
@@ -16,7 +20,7 @@ const TourListPage = () => {
     };
 
     return (
-        <TourListForm remove={handleDelete} update={saveEdit} />
+        <TourListForm tours={tours} remove={handleDelete} update={saveEdit} />
     )
 }
 

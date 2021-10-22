@@ -11,7 +11,7 @@ const initialState = {
 export const getTourList = createAsyncThunk(
     'tour/getTourList',
     async () => {
-        const res = axios.get('');
+        const res = await axios.get(`http://e265-171-239-160-76.ngrok.io/api/tour/`);
         return res.data;
     }
 );
@@ -19,9 +19,11 @@ export const getTourList = createAsyncThunk(
 export const getTourDetails = createAsyncThunk(
     'tour/getTourDetails',
     async (id) => {
-        // const res = axios.get('');
-        // return res.data;
-        console.log(Number.parseInt(id));
+        const URL = `http://e265-171-239-160-76.ngrok.io/api/group?tour_id=${id}`;
+        const res = await axios.get(URL);
+        console.log(res.data);
+        console.log(URL);
+        return res.data;
     }
 );
 
@@ -62,7 +64,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getTourDetails.fulfilled, (state, action) => {
-                return {...state, loading: false, tourDetails: action.payload};
+                return {...state, loading: false, tourDetails: action.payload.results};
             })
             .addCase(getTourDetails.rejected, (state) => {
                 return {...state, error: true, loading: false};
@@ -71,7 +73,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getTourList.fulfilled, (state, action) => {
-                return {...state, loading: false, tourList: action.payload};
+                return {...state, loading: false, tourList: action.payload.results};
             })
             .addCase(getTourList.rejected, (state) => {
                 return {...state, error: true, loading: false};
