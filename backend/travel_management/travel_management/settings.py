@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'base.apps.BaseConfig',
     'tour.apps.TourConfig',
+    'group.apps.GroupConfig',
 ]
 
 MIDDLEWARE = [
