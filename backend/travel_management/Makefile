@@ -13,6 +13,10 @@ restart:
 
 init:
 	docker exec -it pl_backend pipenv run python3 manage.py migrate
+	docker exec -it pl_backend pipenv run python3 manage.py init_super_user
+	
+migrate:
+	docker exec -it pl_backend pipenv run python3 manage.py migrate
 
 package=
 install:
