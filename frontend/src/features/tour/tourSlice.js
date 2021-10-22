@@ -11,7 +11,7 @@ const initialState = {
 export const getTourList = createAsyncThunk(
     'tour/getTourList',
     async () => {
-        const res = await axios.get(`http://e265-171-239-160-76.ngrok.io/api/tour/`);
+        const res = await axios.get(`http://localhost:8000/api/tour/`);
         return res.data;
     }
 );
@@ -19,7 +19,7 @@ export const getTourList = createAsyncThunk(
 export const getTourDetails = createAsyncThunk(
     'tour/getTourDetails',
     async (id) => {
-        const URL = `http://e265-171-239-160-76.ngrok.io/api/group?tour_id=${id}`;
+        const URL = `http://localhost:8000/api/group?tour_id=${id}`;
         const res = await axios.get(URL);
         console.log(res.data);
         console.log(URL);
