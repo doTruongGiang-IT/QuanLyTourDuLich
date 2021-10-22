@@ -1,8 +1,19 @@
 from django.urls import path
 
-from .views import tour_list, tour_detail
+from .views import (
+    tour_list,
+    tour_detail,
+    tour_characteristic_list,
+    tour_type_list,
+    tour_price_list,
+    location_list
+)
 
 urlpatterns = [
-    path('',                   tour_list,          name='tour-list'),
-    path('<int:pk>',           tour_detail,        name='tour-detail'),
+    path('',                            tour_list,                  name='tour-list'),
+    path('<int:pk>',                    tour_detail,                name='tour-detail'),
+    path('tour_characteristic',        tour_characteristic_list,   name='tour-characteristic-list'),
+    path('tour_type',                  tour_type_list,             name='tour-type-list'),
+    path('tour_price',                 tour_price_list,            name='tour-price-list'),
+    path('location',                   location_list,              name='location-list'),
 ]

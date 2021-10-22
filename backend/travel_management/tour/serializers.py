@@ -18,3 +18,27 @@ class TourSerializer(serializers.ModelSerializer):
         representation['location']          = instance.location.name
         
         return representation
+    
+    
+class TourCharacteristicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TourCharacteristic
+        fields = '__all__'
+    
+    
+class TourTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TourType
+        fields = '__all__'
+    
+    
+class TourPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TourPrice
+        fields = '__all__'
+        
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = '__all__'
