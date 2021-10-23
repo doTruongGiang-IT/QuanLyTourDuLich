@@ -1,6 +1,10 @@
 import os
 import pandas as pd
+
+from django.core.management.color import no_style
 from django.core.management.base import BaseCommand
+from django.db import connection
+
 from tour.models import (
     Tour, 
     TourCharacteristic, 
@@ -8,6 +12,7 @@ from tour.models import (
     TourPrice,
     Location,
 )
+
 
 filenames = ['Tour', 'TourCharacteristic', 'TourType', 'TourPrice', 'Location']
 filenames = dict(zip(
@@ -129,6 +134,20 @@ class Command(BaseCommand):
 
         print("---- INIT LOCATION SUCCESSFULLY ----\n")
         print(inserted)
+        
+    def reset_primary_key(self):
+        sequence_sql = connection.ops.sequence_reset_sql(no_style(), [
+            Tour, 
+            TourCharacteristic, 
+            TourType, 
+            TourPrice,
+            Location,
+        ])
+        with connection.cursor() as cursor:
+            for sql in sequence_sql:
+                cursor.execute(sql)
+                        
+        print("---- RESET PRIMARY KEY SUCCESSFULLY ----\n")
      
     def handle(self, **options):
         self.init_tour_characteristic_data()
@@ -136,5 +155,6 @@ class Command(BaseCommand):
         self.init_tour_price_data()
         self.init_location_data()
         self.init_tour_data()
+        self.reset_primary_key()
 
         print("---- INIT TOUR DATA SUCCESSFULLY ----\n")

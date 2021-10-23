@@ -1,6 +1,10 @@
 import os
 import pandas as pd
+
+from django.core.management.color import no_style
 from django.core.management.base import BaseCommand
+from django.db import connection
+
 from group.models import (
     Group, 
     GroupJourney, 
@@ -9,6 +13,7 @@ from tour.models import (
     Tour,
     Location
 )
+
 
 filenames = ['Group', 'GroupJourney']
 filenames = dict(zip(
@@ -68,9 +73,21 @@ class Command(BaseCommand):
 
         print("---- INIT TOUR CHARACTERISTIC SUCCESSFULLY ----\n")
         print(inserted)
+             
+    def reset_primary_key(self):
+        sequence_sql = connection.ops.sequence_reset_sql(no_style(), [
+            Group, 
+            GroupJourney, 
+        ])
+        with connection.cursor() as cursor:
+            for sql in sequence_sql:
+                cursor.execute(sql)
+                        
+        print("---- RESET PRIMARY KEY SUCCESSFULLY ----\n")
      
     def handle(self, **options):
         self.init_group_data()
         self.init_group_journey_data()
+        self.reset_primary_key()
 
         print("---- INIT GROUP DATA SUCCESSFULLY ----\n")
