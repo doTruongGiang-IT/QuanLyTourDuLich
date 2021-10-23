@@ -13,6 +13,7 @@ django-allauth = "==0.45.0"
 celery = "==4.4.0"
 redis = "==3.4.1"
 psycopg2-binary = "==2.*"
+pandas = "==1.1.2"
 
 [dev-packages]
 
