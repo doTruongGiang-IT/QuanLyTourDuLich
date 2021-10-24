@@ -1,0 +1,24 @@
+tasks:
+  - name: Start front-end
+    init: cd frontend && make build
+    command:  make up
+    openMode: split-left
+
+  - name: Start back-end
+    init: cd backend/travel_management && make build
+    command: make up
+    openMode: split-right
+
+  - name: Init data
+    init: |
+      gp await-port 8000
+      cd backend/travel_management && make init
+
+ports:
+  - port: 3000
+    onOpen: open-browser
+    visibility: public
+    
+  - port: 8000
+    onOpen: ignore
+    visibility: public
