@@ -1,0 +1,27 @@
+tasks:
+  - name: Start front-end
+    before: cd frontend
+    init: make build
+    command:  make up
+    openMode: split-left
+
+  - name: Start back-end\
+    before: cd backend/travel_management && touch is_gitpod
+    init: make build
+    command: make up
+    openMode: split-right
+
+  - name: Init data
+    init: |
+      gp await-port 8000
+      sleep 40
+      cd backend/travel_management && make init
+
+ports:
+  - port: 3000
+    onOpen: open-browser
+    visibility: public
+    
+  - port: 8000
+    onOpen: ignore
+    visibility: public
