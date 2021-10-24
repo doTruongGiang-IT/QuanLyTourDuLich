@@ -1,11 +1,13 @@
 tasks:
   - name: Start front-end
-    init: cd frontend && make build
+    before: cd frontend
+    init: make build
     command:  make up
     openMode: split-left
 
-  - name: Start back-end
-    init: cd backend/travel_management && make build
+  - name: Start back-end\
+    before: cd backend/travel_management && touch is_gitpod
+    init: make build
     command: make up
     openMode: split-right
 
