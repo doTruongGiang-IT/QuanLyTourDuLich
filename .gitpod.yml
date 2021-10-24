@@ -14,6 +14,7 @@ tasks:
   - name: Init data
     init: |
       gp await-port 8000
+      sleep 20
       cd backend/travel_management && make init
 
 ports:
