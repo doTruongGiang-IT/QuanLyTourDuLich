@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { get_api_url } from '../../base';
 
 const initialState = {
     tourList: [],
@@ -11,7 +12,9 @@ const initialState = {
 export const getTourList = createAsyncThunk(
     'tour/getTourList',
     async () => {
-        const res = await axios.get(`http://localhost:8000/api/tour/`);
+        const api_url = get_api_url();
+        console.log(api_url);
+        const res = await axios.get(`${api_url}/api/tour/`);
         return res.data;
     }
 );
@@ -19,10 +22,8 @@ export const getTourList = createAsyncThunk(
 export const getTourDetails = createAsyncThunk(
     'tour/getTourDetails',
     async (id) => {
-        const URL = `http://localhost:8000/api/group?tour_id=${id}`;
-        const res = await axios.get(URL);
-        console.log(res.data);
-        console.log(URL);
+        const api_url = get_api_url();
+        const res = await axios.get(`${api_url}/api/group?tour_id=${id}`);
         return res.data;
     }
 );
