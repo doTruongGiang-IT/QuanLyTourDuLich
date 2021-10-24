@@ -13,7 +13,7 @@ export const getTourList = createAsyncThunk(
     'tour/getTourList',
     async () => {
         const api_url = get_api_url();
-        const res = await axios.get(`${api_url}/api/tour/`);
+        const res = await axios.get(`${api_url}api/tour/`);
         return res.data;
     }
 );
@@ -22,7 +22,7 @@ export const getTourDetails = createAsyncThunk(
     'tour/getTourDetails',
     async (id) => {
         const api_url = get_api_url();
-        const res = await axios.get(`${api_url}/api/group?tour_id=${id}`);
+        const res = await axios.get(`${api_url}api/group?tour_id=${id}`);
         return res.data;
     }
 );
