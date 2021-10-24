@@ -13,6 +13,7 @@ export const getTourList = createAsyncThunk(
     'tour/getTourList',
     async () => {
         const api_url = get_api_url();
+        console.log(api_url);
         const res = await axios.get(`${api_url}api/tour/`);
         return res.data;
     }
