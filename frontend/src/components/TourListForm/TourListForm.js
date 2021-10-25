@@ -236,8 +236,6 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
           key: 'id',
           width: '10%',
           ...getColumnSearchProps('id'),
-          sorter: (a, b) => a.id - b.id,
-          sortDirections: ['ascend'],
         },
         {
           title: 'Name',
