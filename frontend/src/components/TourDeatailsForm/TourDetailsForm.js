@@ -159,7 +159,10 @@ const TourDetailsForm = ({tourDetails, location}) => {
           width: '20%',
           editable: true,
           ...getColumnSearchProps('startDate'),
-          sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+          sorter: {
+            compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+            multiple: tourDetails.length
+          },
           ellipsis: true,
           sortDirections: ['descend', 'ascend'],
         },
@@ -170,6 +173,12 @@ const TourDetailsForm = ({tourDetails, location}) => {
             width: '20%',
             editable: true,
             ...getColumnSearchProps('endDate'),
+            sorter: {
+              compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+              multiple: tourDetails.length
+            },
+            ellipsis: true,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Journey',

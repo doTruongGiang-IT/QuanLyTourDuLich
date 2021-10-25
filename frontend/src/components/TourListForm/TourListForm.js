@@ -209,6 +209,26 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
         }
     };
 
+    const quickSort = (values) => {
+        if (values.length <= 1) {
+            return values
+        };
+
+        var lessThanPivot = [];
+        var greaterThanPivot = [];
+        var pivot = values[0];
+        for (var i = 1; i < values.length; i++) {
+            if (values[i].id <= pivot.id) {
+                lessThanPivot.push(values[i]);
+            } else {
+                greaterThanPivot.push(values[i]);
+            }
+        }
+        return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
+    };
+
+    tourList = quickSort(tourList);
+
     const columns = [
         {
           title: 'ID',
@@ -216,6 +236,8 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
           key: 'id',
           width: '10%',
           ...getColumnSearchProps('id'),
+          sorter: (a, b) => a.id - b.id,
+          sortDirections: ['ascend'],
         },
         {
           title: 'Name',
