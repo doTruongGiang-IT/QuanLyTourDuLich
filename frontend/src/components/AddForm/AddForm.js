@@ -20,7 +20,7 @@ const tailLayout = {
   },
 };
 
-const AddForm = ({submit}) => {
+const AddForm = ({submit, locations, types, prices, characteristics}) => {
     const [form] = Form.useForm();
 
     const onFinish = (values) => {
@@ -56,7 +56,13 @@ const AddForm = ({submit}) => {
                         },
                     ]}
                 >
-                    <Input />
+                    <Select placeholder="Select tour characteristic" allowClear>
+                        {
+                            characteristics.map(characteristic => {
+                                return <Option key={characteristic.id} value={characteristic.id}>{characteristic.name}</Option>
+                            })
+                        }
+                    </Select>
                 </Form.Item>
                 <Form.Item
                     name="type"
@@ -67,14 +73,47 @@ const AddForm = ({submit}) => {
                         },
                     ]}
                 >
-                    <Select
-                    placeholder="Select tour type"
-                    // onChange={onGenderChange}
-                    allowClear
-                    >
-                        <Option value="Abc">Abc</Option>
-                        <Option value="Def">Def</Option>
-                        <Option value="Xyz">Xyz</Option>
+                    <Select placeholder="Select tour type" allowClear>
+                        {
+                            types.map(type => {
+                                return <Option key={type.id} value={type.id}>{type.name}</Option>
+                            })
+                        }
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    name="price"
+                    label="Price"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Select placeholder="Select tour price" allowClear>
+                        {
+                            prices.map(price => {
+                                return <Option key={price.id} value={price.id}>{price.price}</Option>
+                            })
+                        }
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    name="location"
+                    label="Location"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Select placeholder="Select tour location" allowClear>
+                        {
+                            locations.map(location => {
+                                if(location.type === "Tourist Area" || location.type === "Tourist")
+                                    return <Option key={location.id} value={location.id}>{location.name}</Option>
+                            })
+                        }
                     </Select>
                 </Form.Item>
                 {/* <Form.Item

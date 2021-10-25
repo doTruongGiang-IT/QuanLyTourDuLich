@@ -5,33 +5,32 @@ import { Table, Input, Button, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
 
-const TourDetailsForm = ({tourDetails}) => {
+const TourDetailsForm = ({tourDetails, location}) => {
     let details = [];
     let hotel = "";
-    let location = "";
-    let journey = "";
+    let journey = [];
+
     tourDetails.forEach(detail => {
       detail.journey.forEach((item) => {
-        journey += `${new Date(item.start_date).getHours()}h - ${new Date(item.end_date).getHours()}h: ${item.content}. `;
+        journey.push(`${new Date(item.start_date).getHours()}h - ${new Date(item.end_date).getHours()}h: ${item.content}.`);
         if(item.location.type === "Hotel") {
           hotel = item.location.name;
         };
-        if(item.location.type === "Tourist Area") {
-          location = item.location.name;
-        };
+        // if(item.location.type === "Tourist Area") {
+        //   location = item.location.name;
+        // };
       });
       let formatDetail  = {
         id: detail.id,
         name: detail.name,
         startDate: detail.start_date,
         endDate: detail.end_date,
-        journey,
+        journey: journey.join(' || '),
         hotel,
-        location
+        location: location.location
       };
       details.push(formatDetail);
     });
-    console.log(details);
     // let details = tourDetails.forEach((detail) => {
     //   detail.journey = "";
     // });
@@ -160,7 +159,10 @@ const TourDetailsForm = ({tourDetails}) => {
           width: '20%',
           editable: true,
           ...getColumnSearchProps('startDate'),
-          sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+          sorter: {
+            compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+            multiple: tourDetails.length
+          },
           ellipsis: true,
           sortDirections: ['descend', 'ascend'],
         },
@@ -171,6 +173,12 @@ const TourDetailsForm = ({tourDetails}) => {
             width: '20%',
             editable: true,
             ...getColumnSearchProps('endDate'),
+            sorter: {
+              compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+              multiple: tourDetails.length
+            },
+            ellipsis: true,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Journey',

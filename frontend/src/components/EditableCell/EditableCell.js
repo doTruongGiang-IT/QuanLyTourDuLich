@@ -1,5 +1,8 @@
-import React from 'react';
-import { Input, InputNumber, Form } from 'antd';
+import React, {useEffect} from 'react';
+import { Input, Form, Select } from 'antd';
+import { Option } from 'rc-select';
+import { selectTourCharacteristic, selectTourType, getTourCharacteristic, getTourType } from '../../features/tour/tourSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const EditableCell = ({
     editing,
@@ -11,7 +14,15 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    // const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    const dispatch = useDispatch();
+    const characteristics = useSelector(selectTourCharacteristic);
+    const types = useSelector(selectTourType);
+
+    useEffect(() => {
+        dispatch(getTourCharacteristic());
+        dispatch(getTourType());
+    }, [dispatch]);
 
     return (
         <td {...restProps}>
@@ -28,7 +39,21 @@ const EditableCell = ({
                     },
                 ]}
                 >
-                {inputNode}
+                {
+                    title === "Name" ?
+                    <Input /> :
+                    <Select placeholder="Please select one" allowClear>
+                        {
+                            title === "Characteristic" ?
+                            characteristics.map(characteristic => {
+                                return <Option key={characteristic.id} value={characteristic.id}>{characteristic.name}</Option>
+                            }):
+                            types.map(type => {
+                                return <Option key={type.id} value={type.id}>{type.name}</Option>
+                            })
+                        }
+                    </Select>
+                }
                 </Form.Item>
             ) : (
                 children
