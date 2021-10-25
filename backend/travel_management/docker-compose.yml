@@ -21,7 +21,7 @@ services:
       - pl_net
     env_file:
       - dev.env
-    command: bash -c "bash create_gitpod_container.sh && pipenv run python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "bash create_gitpod_container_2.sh && pipenv run python manage.py runserver 0.0.0.0:8000"
     ports:
       - "0.0.0.0:8000:8000"
     depends_on:

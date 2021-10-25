@@ -8,7 +8,11 @@ import "./TourListForm.css";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
-const TourListForm = ({remove, update, tours}) => {
+const TourListForm = ({remove, update, tours, tourEdit}) => {
+    let tourList = tours ? tours.map((tour) => {
+        return {key: tour.id + 1, ...tour};
+    }) : [];
+
     let data = [
         {
             key: '1',
@@ -162,9 +166,9 @@ const TourListForm = ({remove, update, tours}) => {
         setSearchText({ searchText: '' });
     };
 
-    const handleDelete = (key) => {
+    const handleDelete = (id) => {
         // setDataInfo(data.filter((item) => item.key !== key));
-        remove(key);
+        remove(id);
         openNotification("Deleted");
     };
 
@@ -181,18 +185,18 @@ const TourListForm = ({remove, update, tours}) => {
         setEditingKey('');
     };
 
-    const saveEdit = async (key) => {
+    const saveEdit = async (id) => {
         try {
           const row = await form.validateFields();
-          const newData = [...dataInfo];
-          const index = newData.findIndex((item) => key === item.key);
+          const newData = [...tourList];
+          const index = newData.findIndex((item) => id === item.id);
     
           if (index > -1) {
             const item = newData[index];
             newData.splice(index, 1, { ...item, ...row });
-            // setEditData(newData);
+            setEditData(newData);
             update(newData[index]);
-            setDataInfo(newData);
+            // setDataInfo(newData);
             setEditingKey('');
             openNotification("Update");
           } else {
@@ -211,7 +215,6 @@ const TourListForm = ({remove, update, tours}) => {
           dataIndex: 'id',
           key: 'id',
           width: '10%',
-          editable: true,
           ...getColumnSearchProps('id'),
         },
         {
@@ -235,7 +238,7 @@ const TourListForm = ({remove, update, tours}) => {
             title: 'ID Type',
             dataIndex: 'type',
             key: 'type',
-            width: '10%',
+            width: '20%',
             editable: true,
             ...getColumnSearchProps('type'),
         },
@@ -247,7 +250,7 @@ const TourListForm = ({remove, update, tours}) => {
                 return editable ? (
                     <Space>
                         <Button
-                            onClick={() => saveEdit(record.key)}
+                            onClick={() => saveEdit(record.id)}
                             type="primary"
                             size="small"
                             style={{ width: 60 }}
@@ -267,7 +270,7 @@ const TourListForm = ({remove, update, tours}) => {
                     </Space> 
                 ) : (
                     <Space>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
+                        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
                             <Button
                                 type="primary"
                                 icon={<DeleteOutlined />}
@@ -307,7 +310,7 @@ const TourListForm = ({remove, update, tours}) => {
           ...col,
           onCell: (record) => ({
             record,
-            inputType: col.dataIndex === 'type' ? 'number' : 'text',
+            inputType: 'text',
             dataIndex: col.dataIndex,
             title: col.title,
             editing: isEditing(record),
@@ -337,7 +340,7 @@ const TourListForm = ({remove, update, tours}) => {
                 //         onClick: event => history.push(`/details/${record.id}`),
                 //     };
                 // }} 
-                bordered columns={mergedColumns} dataSource={tours} />
+                bordered columns={mergedColumns} dataSource={tourList} />
             </Form>
         </div>
     )
