@@ -15,9 +15,9 @@ const TourListPage = () => {
         dispatch(getTourList());
     }, [dispatch, tourList]);
 
-    const handleDelete = (id) => {
-        dispatch(deleteTour(id));
-        setTourList(tours.results.forEach(tour => tour.id !== id));
+    const handleDelete = async (id) => {
+        await dispatch(deleteTour(id));
+        setTourList(tours.results.filter(tour => tour.id !== id));
     };
 
     const formatEditTour = (updateTour) => {
@@ -39,9 +39,9 @@ const TourListPage = () => {
         });
     };
 
-    const saveEdit = (updateTour) => {
-        formatEditTour(updateTour);
-        dispatch(editTour(updateTour));
+    const saveEdit = async (updateTour) => {
+        await formatEditTour(updateTour);
+        await dispatch(editTour(updateTour));
         tours.results.forEach(tour => {
             if(tour.id === updateTour.id) {
                 tour = {...tour, ...updateTour};
