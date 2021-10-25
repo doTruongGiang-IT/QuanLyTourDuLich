@@ -34,15 +34,7 @@
 
 Back-end using **Django** for building REST API
 
-<div align="center">
-
-# Backend
-  
-</div>
-
----
-
-## How to run back-end
+### How to run back-end
 **1. Di chuyển đến thư mục** `\QuanLyTourDuLich\backend\travel_management` 
 
 **2. Build docker image**
@@ -84,7 +76,7 @@ make init
 
 ---
 
-## Makefile info
+### Makefile info
 
 | rule    | command                                                                 | description                        | note                             |
 |---------|-------------------------------------------------------------------------|------------------------------------|----------------------------------|
@@ -102,7 +94,7 @@ make init
 
 ---
 
-## Account
+### Account
 
 | type                | username | password  | note                                               |
 |---------------------|----------|-----------|----------------------------------------------------|
