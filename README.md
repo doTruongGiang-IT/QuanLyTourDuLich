@@ -2,7 +2,7 @@
 
 # Travel Management
 
-<img src="/readme/banner.png" width="50%">
+<img src="/readme/banner.png" width="56%">
 
 ![VERSION: V0.2.0 (shields.io)](https://img.shields.io/badge/version-v0.2.0-1ED760?&style=for-the-badge&logo=qgis&logoColor=white)
 ![DJANGO (shields.io)](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)
