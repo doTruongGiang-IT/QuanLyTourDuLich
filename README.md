@@ -27,9 +27,9 @@
 ---
 
 ## Introduction
-Travel Management là hệ thống quản lý tour du lịch đơn giản và dễ dàng. Hệ thống được triển khai trên web app và desktop app.
+Travel Management là hệ thống quản lý tour du lịch đơn giản và dễ dàng. Hệ thống được triển khai trên nền tảng web app và desktop app.
 
-**Các tính năng của hệ thống:**
+### Các tính năng của hệ thống
 
 Hệ thống quản lý tất cả thông tin liên quan:
 + Quản lý tour
@@ -45,8 +45,13 @@ và thực hiện các yêu cầu quản lý, ví dụ:
 + Thống kê tình hình hoạt động theo mỗi tour (doanh số, số đoàn tham quan,…)
 + Thống kê số lần đi tour của từng nhân viên trong khoảng thời gian.
 
-**System architecture:**
+### System architecture
 
+<div align="center">
+<img src="/readme/system-architecture.png" width="77%">
+</div>
+
+<br>
 
 ## Front-end
 Front-end using **React**.
@@ -88,7 +93,7 @@ make up
 | restart | docker-compose -p travel_management_fe down                             | restart compose                    |                                  |
 |         | docker-compose -p travel_management_fe up                               |                                    |                                  |
 
----
+<br>
 
 ## Back-end
 
@@ -160,19 +165,25 @@ make init
 
 > Các environment variable được định nghĩa ở dev.env
 
+<br>
+
 ## Desktop app
 Desktop app using **Dear PyGui**.
 
+<br>
+
 ## Document
-Document [here!](https://github.com/doTruongGiang-IT/QuanLyTourDuLich/tree/develop/document) 
-and API document [here!](https://github.com/doTruongGiang-IT/QuanLyTourDuLich/wiki/API-Document-v1)
+Document [here](https://github.com/doTruongGiang-IT/QuanLyTourDuLich/tree/develop/document) 
+and API document [here](https://github.com/doTruongGiang-IT/QuanLyTourDuLich/wiki/API-Document-v1)
+
+<br>
 
 ## Try it now
 Easy and quick to deploy with
 
-*Main branch*
+*Main branch*\
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/doTruongGiang-IT/QuanLyTourDuLich)
 
-*Develop branch*
+*Develop branch*\
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/doTruongGiang-IT/QuanLyTourDuLich/tree/develop)
 
