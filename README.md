@@ -27,12 +27,72 @@
 ---
 
 ## Introduction
+Travel Management là hệ thống quản lý tour du lịch đơn giản và dễ dàng. Hệ thống được triển khai trên web app và desktop app.
+
+**Các tính năng của hệ thống:**
+
+Hệ thống quản lý tất cả thông tin liên quan:
++ Quản lý tour
++ Quản lý đoàn khách
+
+và thực hiện các yêu cầu quản lý, ví dụ:
++ Lập danh sách các khách hàng của một đoàn du lịch nào đó
++ Lập danh sách các địa điểm của một tour nào đó.
++ Thống kê chi phí (một tour, chi phí khách sạn, ăn uống trong một khoảng thời gian…).
++ Doanh thu của một đoàn, của một tour trong một khoảng thời gian.
++ Tìm kiếm thông tin về một khách hàng, về một đoàn, về một tour.
++ Xem bảng giá tour hiện tại
++ Thống kê tình hình hoạt động theo mỗi tour (doanh số, số đoàn tham quan,…)
++ Thống kê số lần đi tour của từng nhân viên trong khoảng thời gian.
+
+**System architecture:**
+
 
 ## Front-end
+Front-end using **React**.
+
+### How to run front-end
+**1. Di chuyển đến thư mục** `\QuanLyTourDuLich\frontend`
+
+**2. Build docker image**
+
+```shell
+docker build -t pl_frontend .
+```
+
+*hoặc*
+
+```shell
+make build
+```
+
+**3. Run server bằng docker-compose**
+
+```shell
+docker-compose -p travel_management_fe up
+```
+
+*hoặc*
+
+```shell
+make up
+```
+
+### Makefile info
+
+| rule    | command                                                                 | description                        | note                             |
+|---------|-------------------------------------------------------------------------|------------------------------------|----------------------------------|
+| build   | docker build -t pl_frontend .                                           | build image for front-end          |                                  |
+| up      | docker-compose -p travel_management_fe up                               | start app                          |                                  |
+| down    | docker-compose -p travel_management_fe down                             | down compose                       |                                  |
+| restart | docker-compose -p travel_management_fe down                             | restart compose                    |                                  |
+|         | docker-compose -p travel_management_fe up                               |                                    |                                  |
+
+---
 
 ## Back-end
 
-Back-end using **Django** for building REST API
+Back-end using **Django** for building REST API.
 
 ### How to run back-end
 **1. Di chuyển đến thư mục** `\QuanLyTourDuLich\backend\travel_management` 
@@ -74,8 +134,6 @@ docker exec -it pl_backend pipenv run python3 manage.py migrate
 make init
 ```
 
----
-
 ### Makefile info
 
 | rule    | command                                                                 | description                        | note                             |
@@ -92,7 +150,6 @@ make init
 | migrate | docker exec -it pl_backend pipenv run python3 manage.py migrate         | migrate new Django's migration(s)  |                                  |
 | install | docker exec -it pl_backend pipenv install $(package)                    | install new package(s) with pipenv | rebuild image after installation |
 
----
 
 ### Account
 
@@ -104,7 +161,18 @@ make init
 > Các environment variable được định nghĩa ở dev.env
 
 ## Desktop app
+Desktop app using **Dear PyGui**.
 
 ## Document
+Document [here!](https://github.com/doTruongGiang-IT/QuanLyTourDuLich/tree/develop/document) 
+and API document [here!](https://github.com/doTruongGiang-IT/QuanLyTourDuLich/wiki/API-Document-v1)
 
 ## Try it now
+Easy and quick to deploy with
+
+*Main branch*
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/doTruongGiang-IT/QuanLyTourDuLich)
+
+*Develop branch*
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/doTruongGiang-IT/QuanLyTourDuLich/tree/develop)
+
