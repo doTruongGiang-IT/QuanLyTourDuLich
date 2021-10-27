@@ -28,8 +28,8 @@ const AddTourPage = () => {
         dispatch(getTourPrice());
     }, [dispatch]);
 
-    const handleSubmit = (values) => {
-        dispatch(addTour(values));
+    const handleSubmit = async (values) => {
+        await dispatch(addTour(values));
         history.push("/");
     };
 
