@@ -1,0 +1,16 @@
+.addForm {
+    max-height: fit-content;
+    overflow: hidden;
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    width: 50%;
+    border: 1px solid blue;
+}
+
+.addForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: blue;
+    color: white;
+}

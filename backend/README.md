@@ -50,15 +50,19 @@ make init
 
 ## Makefile info
 
-| rule    | command                                                         | description                        | note                             |
-|---------|-----------------------------------------------------------------|------------------------------------|----------------------------------|
-| build   | docker build -t pl_backend .                                    | build image for Django app         |                                  |
-| up      | docker-compose -p travel_management up                          | start apps                         |                                  |
-| down    | docker-compose -p travel_management down                        | down apps                          |                                  |
-| restart | docker-compose -p travel_management down                        | restart apps                       |                                  |
-|         | docker-compose -p travel_management up                          |                                    |                                  |
-| init    | docker exec -it pl_backend pipenv run python3 manage.py migrate | migrate new Django's migration(s)  |                                  |
-| install | docker exec -it pl_backend pipenv install $(package)            | install new package(s) with pipenv | rebuild image after installation |
+| rule    | command                                                                 | description                        | note                             |
+|---------|-------------------------------------------------------------------------|------------------------------------|----------------------------------|
+| build   | docker build -t pl_backend .                                            | build image for Django app         |                                  |
+| up      | docker-compose -p travel_management up                                  | start apps                         |                                  |
+| down    | docker-compose -p travel_management down                                | down apps                          |                                  |
+| restart | docker-compose -p travel_management down                                | restart apps                       |                                  |
+|         | docker-compose -p travel_management up                                  |                                    |                                  |
+| init    | docker exec -it pl_backend pipenv run python3 manage.py migrate         | migrate new Django's migration(s)  |                                  |
+|         | docker exec -it pl_backend pipenv run python3 manage.py init_super_user | init super user account            |                                  |
+|         | docker exec -it pl_backend pipenv run python3 manage.py init_tour_data  | init tour data                     |                                  |
+|         | docker exec -it pl_backend pipenv run python3 manage.py init_group_data | init group data                    |                                  |
+| migrate | docker exec -it pl_backend pipenv run python3 manage.py migrate         | migrate new Django's migration(s)  |                                  |
+| install | docker exec -it pl_backend pipenv install $(package)                    | install new package(s) with pipenv | rebuild image after installation |
 
 ---
 
@@ -67,4 +71,4 @@ make init
 | type                | username | password  | note                                               |
 |---------------------|----------|-----------|----------------------------------------------------|
 | admin site (Django) | admin    | 12345678  |                                                    |
-| postgreSQL          | pl_user  | asd123!@# | host: localhost:5432 \| DB name: travel_management |
+| postgreSQL          | pl_user  | asd123!@# | host: localhost:5433 \| DB name: travel_management |

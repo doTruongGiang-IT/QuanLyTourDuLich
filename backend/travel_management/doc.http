@@ -1,0 +1,112 @@
+####################################################
+#                                                  #
+#  This file is used for testing                   #
+#  Used by REST Client extensions in VSCode        #
+#                                                  # 
+####################################################
+
+
+@base_url = http://127.0.0.1:8000
+@api_url = {{base_url}}/api
+
+
+########################
+#       1. Tour        #
+########################
+
+
+### Tour List ###
+GET {{api_url}}/tour/ HTTP/1.1
+content-type: application/json
+
+
+### Tour Detail ###
+GET {{api_url}}/tour/2 HTTP/1.1
+content-type: application/json
+
+
+### Tour Create ###
+POST {{api_url}}/tour/ HTTP/1.1
+content-type: application/json
+
+{   
+    "name": "Let the games begin",
+    "characteristic": 2,
+    "type": 3,
+    "price": 2,
+    "location": 1
+}
+
+
+### Tour Update ###
+PATCH {{api_url}}/tour/12 HTTP/1.1
+content-type: application/json
+
+{   
+    "name": "Hi there"
+}
+
+
+### Tour Delete ###
+DELETE  {{api_url}}/tour/2 HTTP/1.1
+content-type: application/json
+
+
+
+########################
+#      2. Group       #
+########################
+
+
+### Group List ###
+GET {{api_url}}/group?tour_id=1 HTTP/1.1
+content-type: application/json
+
+
+### Group Detail ###
+GET {{api_url}}/group/2 HTTP/1.1
+content-type: application/json
+
+
+
+##################################
+#     3. Tour Characteristic     #
+##################################
+
+
+### Tour Characteristic List ###
+GET {{api_url}}/tour/tour_characteristic HTTP/1.1
+content-type: application/json
+
+
+
+############################
+#       4. Tour Type       #
+############################
+
+
+### Tour Type List ###
+GET {{api_url}}/tour/tour_type HTTP/1.1
+content-type: application/json
+
+
+
+#############################
+#       5. Tour Price       #
+#############################
+
+
+### Tour Price List ###
+GET {{api_url}}/tour/tour_price HTTP/1.1
+content-type: application/json
+
+
+
+############################
+#       6. Location        #
+############################
+
+
+### Location ###
+GET {{api_url}}/tour/location HTTP/1.1
+content-type: application/json

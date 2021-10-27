@@ -1,0 +1,2 @@
+Shared link database description: https://docs.google.com/spreadsheets/d/1KYBAO9tStgU6OXdIgO4s1q96lRtvUuOnPUJfs1Logk8/edit?usp=sharing
+Shared link database: https://drawsql.app/merevoli/diagrams/exam-1
