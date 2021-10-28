@@ -41,7 +41,14 @@ tour_detail = TourViewSet.as_view({
 })
 
 tour_characteristic_list = TourCharacteristicViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+tour_characteristic_detail = TourCharacteristicViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
 
 tour_type_list = TourTypeViewSet.as_view({
