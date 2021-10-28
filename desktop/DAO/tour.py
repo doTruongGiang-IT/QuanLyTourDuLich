@@ -1,64 +1,46 @@
 import requests
-from desktop.DAO.base import API_URL
-from desktop.DTO.tour import Tour
+from Base.base_dao import BaseDAO
+from DAO.base import API_URL
+from DTO.tour import Tour, TourCharacteristic
 
-
-class TourDAO():
-    TOUR_API_URL = f'{API_URL}/tour'
     
-    def read(self) -> tuple[str, list[Tour]]:
-        request = requests.get(self.TOUR_API_URL)
+class TourCharacteristicDAO(BaseDAO):
+    DTO_CLASS = TourCharacteristic
+    API_URL = {
+        'read':         f'{API_URL}/tour/tour_characteristic',
+        'create':       f'{API_URL}/tour/tour_characteristic',
+        'read_detail':  f'{API_URL}/tour/tour_characteristic',
+        'update':       f'{API_URL}/tour/tour_characteristic/{{}}',
+        'delete':       f'{API_URL}/tour/tour_characteristic/{{}}'
+    }
     
-        if request.status_code == 200:
-            response = request.json()
-            result = []
-            
-            for data in response['results']:
-                result = Tour(**data)
-                
-            return ('', result)
-        else:
-            return ('Get the tour list that have an error', None)
-    
-    def create(self, data: Tour) -> str:
+    def to_create_request_data(self, data: DTO_CLASS) -> dict:
         request_data = {
-            'id': data.id,
+            'name': data.name
+        }
+        return request_data
+    
+    
+class TourDAO(BaseDAO):
+    DTO_CLASS = Tour
+    API_URL = {
+        'read':         f'{API_URL}/tour',
+        'create':       f'{API_URL}/tour',
+        'read_detail':  f'{API_URL}/tour/{{}}',
+        'update':       f'{API_URL}/tour/{{}}',
+        'delete':       f'{API_URL}/tour/{{}}'
+    }
+    
+    def get_object(self, data: dict):
+        data['characteristic'] = TourCharacteristicDAO().read_detail(data['characteristic'])
+        return self.DTO_CLASS(**data)
+    
+    def to_create_request_data(self, data: DTO_CLASS) -> dict:
+        request_data = {
             'name': data.name,
             'characteristic': data.characteristic.id,
             'type': data.type.id,
             'price': data.price.id,
             'location': data.location.id
         }
-        
-        request = requests.post(self.TOUR_API_URL, data=request_data)
-        
-        if request.status_code == 201:
-            return ''
-        else:
-            return 'create new tour that have an error'
-        
-    def update(self, data: Tour) -> str:
-        tour_id = Tour.id
-        request_data = {
-            'id': data.id,
-            'name': data.name,
-            'characteristic': data.characteristic.id,
-            'type': data.type.id,
-            'price': data.price.id,
-            'location': data.location.id
-        }
-        
-        request = requests.patch(f'{self.TOUR_API_URL}/{tour_id}', data=request_data)
-        
-        if request.status_code == 200:
-            return ''
-        else:
-            return 'update a tour that have an error'
-        
-    def delete(self, tour_id: int) -> str:
-        request = requests.delete(f'{self.TOUR_API_URL}/{tour_id}')
-        
-        if request.status_code == 204:
-            return ''
-        else:
-            return 'delete a tour that have an error'
+        return request_data

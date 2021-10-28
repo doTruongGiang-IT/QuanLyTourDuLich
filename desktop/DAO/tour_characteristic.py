@@ -1,6 +1,6 @@
 import requests
-from desktop.DAO.base import API_URL
-from desktop.DTO.tour import TourCharacteristic
+from DAO.base import API_URL
+from DTO.tour import TourCharacteristic
 
 
 class TourCharacteristicDAO():
@@ -14,7 +14,7 @@ class TourCharacteristicDAO():
             result = []
             
             for data in response['results']:
-                result = TourCharacteristic(**data)
+                result.append(TourCharacteristic(**data))
                 
             return ('', result)
         else:
@@ -22,7 +22,6 @@ class TourCharacteristicDAO():
     
     def create(self, data: TourCharacteristic) -> str:
         request_data = {
-            'id': data.id,
             'name': data.name
         }
         
@@ -34,14 +33,10 @@ class TourCharacteristicDAO():
             return 'create new tour characteristic that have an error'
         
     def update(self, data: TourCharacteristic) -> str:
-        tour_id = TourCharacteristic.id
+        tour_id = data.id
         request_data = {
             'id': data.id,
-            'name': data.name,
-            'characteristic': data.characteristic.id,
-            'type': data.type.id,
-            'price': data.price.id,
-            'location': data.location.id
+            'name': data.name
         }
         
         request = requests.patch(f'{self.TOUR_API_URL}/{tour_id}', data=request_data)

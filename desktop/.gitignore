@@ -1,1 +1,2 @@
-dearpygui
+dearpygui/
+__pycache__/

@@ -10,6 +10,12 @@ class TourCharacteristic:
         self.id             = id
         self.name           = name
         
+    def __str__(self):
+        return str({
+            'id': self.id,
+            'name': self.name
+        })
+        
         
 class TourType:
     def __init__(
