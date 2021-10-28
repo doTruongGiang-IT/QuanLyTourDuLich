@@ -16,7 +16,12 @@
 
 
 ### Tour List ###
-GET {{api_url}}/tour/ HTTP/1.1
+GET {{api_url}}/tour HTTP/1.1
+content-type: application/json
+
+
+### Tour List (Format) ###
+GET {{api_url}}/tour?is_format=true HTTP/1.1
 content-type: application/json
 
 

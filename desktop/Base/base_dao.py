@@ -1,7 +1,11 @@
 import requests
 
 
-class BaseDAO():
+API_HOST = 'http://localhost:8000'
+BASE_API_URL = f'{API_HOST}/api'
+
+
+class BaseDAO:
     DTO_CLASS = None
     API_URL = {
         'read': '',

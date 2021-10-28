@@ -14,8 +14,8 @@ class BaseBUS:
         if error:
             print(error)
             return None
-        else:
-            return objects
+        
+        return objects
             
     def create(self, obj: DTO_CLASS) -> None:
         error = self.query.create(obj)
