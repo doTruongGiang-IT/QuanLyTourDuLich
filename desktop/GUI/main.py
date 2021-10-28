@@ -43,7 +43,7 @@ dpg.bind_item_theme(t2, item_theme)
 
 dpg.show_style_editor()
 dpg.show_implot_demo()
-
+dpg.show_documentation()
 
 dpg.create_viewport(title='Custom Title', width=800, height=600)
 dpg.setup_dearpygui()
