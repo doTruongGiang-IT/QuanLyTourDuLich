@@ -96,7 +96,7 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                         {
                             prices ?
                             prices.map(price => {
-                                return <Option key={price.id} value={price.id}>{price.price}</Option>
+                                return <Option key={price.id} value={price.id}>{price.price} vnd-id: {price.id}</Option>
                             }) : null
                         }
                     </Select>
