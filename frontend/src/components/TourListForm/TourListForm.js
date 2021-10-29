@@ -69,6 +69,7 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
                 if(selectedRowKeys.length > 0) {
                     selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
                 };
+                setSelectedKeys([]);
             },
           },
         ],
