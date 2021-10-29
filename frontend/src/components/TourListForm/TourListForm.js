@@ -18,9 +18,61 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
     const [form] = Form.useForm();
     const [editData, setEditData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
+    const [selectedRowKeys, setSelectedKeys] = useState([]);
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
     const history = useHistory();
+
+    const onSelectChange = (selectedRowKeys) => {
+        setSelectedKeys(selectedRowKeys);
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+        selections: [
+          Table.SELECTION_ALL,
+          Table.SELECTION_INVERT,
+          Table.SELECTION_NONE,
+          {
+            key: 'odd',
+            text: 'Select Odd Row',
+            onSelect: changableRowKeys => {
+                let newSelectedRowKeys = [];
+                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
+                    if (index % 2 !== 0) {
+                        return false;
+                    };
+                    return true;
+                });
+                setSelectedKeys(newSelectedRowKeys);
+            },
+          },
+          {
+            key: 'even',
+            text: 'Select Even Row',
+            onSelect: changableRowKeys => {
+                let newSelectedRowKeys = [];
+                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
+                    if (index % 2 !== 0) {
+                        return true;
+                    };
+                    return false;
+                });
+                setSelectedKeys(newSelectedRowKeys);
+            },
+          },
+          {
+            key: 'delete',
+            text: 'Delete Selected Rows',
+            onSelect: () => {
+                if(selectedRowKeys.length > 0) {
+                    selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
+                };
+            },
+          },
+        ],
+    };
 
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -272,6 +324,7 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
                 //         onClick: event => history.push(`/details/${record.id}`),
                 //     };
                 // }} 
+                rowSelection={rowSelection}
                 bordered columns={mergedColumns} dataSource={tourList} pagination={{defaultPageSize: 20}} scroll={{ y: 500, x: "max-content" }} />
             </Form>
         </div>
