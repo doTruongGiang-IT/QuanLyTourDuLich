@@ -272,7 +272,7 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
                 //         onClick: event => history.push(`/details/${record.id}`),
                 //     };
                 // }} 
-                bordered columns={mergedColumns} dataSource={tourList} pagination={{defaultPageSize: 20}} scroll={{ y: 500 }} />
+                bordered columns={mergedColumns} dataSource={tourList} pagination={{defaultPageSize: 20}} scroll={{ y: 500, x: "max-content" }} />
             </Form>
         </div>
     )
