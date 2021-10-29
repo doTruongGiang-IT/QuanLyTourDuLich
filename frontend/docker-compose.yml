@@ -3,7 +3,6 @@ services:
   pl-frontend:
     image: pl_frontend:latest
     container_name: pl_frontend
-    restart: always
     volumes:
       - ./src:/app/src
     networks:
