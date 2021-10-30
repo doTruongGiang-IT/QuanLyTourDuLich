@@ -8,11 +8,9 @@ import "./TourListForm.css";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
-const TourListForm = ({remove, update, tours}) => {
-    let tourList = tours ? tours.map((tour) => {
-        return {key: tour.id + 1, ...tour};
-    }) : [];
-    
+const TourLocationForm = () => {
+    let tourList = [];
+
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
@@ -134,7 +132,7 @@ const TourListForm = ({remove, update, tours}) => {
 
     const handleDelete = (id) => {
         // setDataInfo(data.filter((item) => item.key !== key));
-        remove(id);
+        // remove(id);
         openNotification("Deleted");
     };
 
@@ -161,7 +159,7 @@ const TourListForm = ({remove, update, tours}) => {
             const item = newData[index];
             newData.splice(index, 1, { ...item, ...row });
             setEditData(newData);
-            update(newData[index]);
+            // update(newData[index]);
             // setDataInfo(newData);
             setEditingKey('');
             openNotification("Update");
@@ -193,15 +191,13 @@ const TourListForm = ({remove, update, tours}) => {
         return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
     };
 
-    tourList = quickSort(tourList);
-
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
+            title: 'STT',
+            dataIndex: 'stt',
+            key: 'stt',
             width: '10%',
-            ...getColumnSearchProps('id'),
+            ...getColumnSearchProps('stt'),
         },
         {
             title: 'Name',
@@ -214,23 +210,16 @@ const TourListForm = ({remove, update, tours}) => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'Characteristic',
-            dataIndex: 'characteristic',
-            key: 'characteristic',
-            editable: true,
-            ...getColumnSearchProps('characteristic'),
-        },
-        {
-            title: 'ID Type',
+            title: 'Type',
             dataIndex: 'type',
             key: 'type',
-            width: '17%',
+            width: '20%',
             editable: true,
             ...getColumnSearchProps('type'),
         },
         {
             title: 'Actions',
-            width: '13%',
+            width: '10%',
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -273,22 +262,6 @@ const TourListForm = ({remove, update, tours}) => {
                             size="small"
                             style={{ width: 40 }}
                         />
-                        <Button
-                            disabled={editingKey !== ''} 
-                            onClick={() => history.push(`/details/${record.id}`)}
-                            type="primary"
-                            icon={<EyeOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
-                        />
-                        <Button
-                            disabled={editingKey !== ''} 
-                            onClick={() => history.push(`/locations/${record.id}`)}
-                            type="primary"
-                            icon={<BookOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
-                        />
                     </Space>   
                 )
             },
@@ -319,66 +292,11 @@ const TourListForm = ({remove, update, tours}) => {
         });
     };
 
-    // const renderLocations = async (record) => {
-    //     let locations = [];
-    //     let details = [];
-    //     let result = "There's no locations yet";
-    //     const res = await dispatch(getTourDetails(record.id));
-    //     details = res.payload.results;
-    //     details.forEach(detail => {
-    //         detail.journey.forEach(location => {
-    //             locations.push(location.location.name);
-    //         })
-    //     });
-    //     result = locations.join(" - ");
-    //     setTourLocations(result);
-    // };
-
-    // const expandedRowsChange = (expandedRows) => {
-    //     // Compare expandedRows to this.state.expanded rows
-    //     console.log(expandedRows);
-    //     // then set this.state.expandedRows to an array with just the new row in it.
-    // };
-
     return (
-        <div className="tourListForm">
-            {contextHolder}
-            <Link id="addTour" to="/add">Add Tour</Link>
-            <Form form={form} component={false}>
-                <Table components={{
-                    body: {
-                        cell: EditableCell,
-                    },
-                }} 
-                // onRow={(record, rowIndex) => {
-                //     return {
-                //         onClick: event => history.push(`/?tour_id=${record.id}`),
-                //     };
-                // }}
-                rowSelection={rowSelection}
-                // expandedRowKeys={expandedRows} 
-                // onExpandedRowsChange={expandedRowsChange}
-                // expandable={{
-                //     expandedRowRender: record => {
-                //         renderLocations(record);
-                //         return <Space><p>{tourLocations}</p></Space>
-                //     },
-                //         // <Space>
-                //         //     {renderLocations(record)}
-                //         //     {
-                //         //         {/* tourLocations ?
-                //         //         tourLocations.map((location, index) => {
-                //         //             console.log(location);
-                //         //             return <span key={index} style={{marginLeft: 10}}>{location}</span>
-                //         //         }) : "There's no locations yet" */}
-                //         //     }
-                //         // </Space>,
-                //     rowExpandable: record => record.name !== 'Not Expandable',
-                // }}
-                bordered columns={mergedColumns} dataSource={tourList} pagination={{defaultPageSize: 20}} scroll={{ y: 500, x: "max-content" }} />
-            </Form>
+        <div>
+            
         </div>
     )
 }
 
-export default TourListForm;
+export default TourLocationForm;
