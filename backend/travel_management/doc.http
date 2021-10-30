@@ -92,6 +92,7 @@ content-type: application/json
     "name": "Tour characteristic 1"
 }
 
+
 ### Tour Characteristic Update ###
 PATCH {{api_url}}/tour/tour_characteristic/8 HTTP/1.1
 content-type: application/json
@@ -99,6 +100,7 @@ content-type: application/json
 {
     "name": "Tour characteristic 1 sss"
 }
+
 
 ### Tour Characteristic Delete ###
 DELETE {{api_url}}/tour/tour_characteristic/8 HTTP/1.1
@@ -116,7 +118,6 @@ GET {{api_url}}/tour/tour_type HTTP/1.1
 content-type: application/json
 
 
-
 #############################
 #       5. Tour Price       #
 #############################
@@ -125,6 +126,41 @@ content-type: application/json
 ### Tour Price List ###
 GET {{api_url}}/tour/tour_price HTTP/1.1
 content-type: application/json
+
+
+### Tour Price Detail ###
+GET {{api_url}}/tour/tour_price/1 HTTP/1.1
+content-type: application/json
+
+
+### Tour Price Create ###
+POST {{api_url}}/tour/tour_price HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Du lịch Đà Nẵng mùa xuân asdsa d",
+  "price": 5000000,
+  "start_date": "2022-03-20",
+  "end_date": "2022-06-21"
+}
+
+
+### Tour Price Update ###
+PATCH {{api_url}}/tour/tour_price/21 HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Du lịch Đà Nẵng mùa xuân asdsa d",
+  "price": 500000000,
+  "start_date": "2022-03-20",
+  "end_date": "2022-06-21"
+}
+
+
+### Tour Price Delete ###
+DELETE {{api_url}}/tour/tour_price/21 HTTP/1.1
+content-type: application/json
+
 
 
 
