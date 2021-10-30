@@ -118,6 +118,32 @@ GET {{api_url}}/tour/tour_type HTTP/1.1
 content-type: application/json
 
 
+### Tour Type Detail ###
+GET {{api_url}}/tour/tour_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Tour Type Create ###
+POST {{api_url}}/tour/tour_type HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Type 1"
+}
+
+### Tour Type Update ###
+PATCH {{api_url}}/tour/tour_type/5 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Type 1 d"
+}
+
+
+### Tour Type Delete ###
+DELETE {{api_url}}/tour/tour_type/5 HTTP/1.1
+content-type: application/json
+
 #############################
 #       5. Tour Price       #
 #############################
