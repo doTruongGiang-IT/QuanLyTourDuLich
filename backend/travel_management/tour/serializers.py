@@ -11,11 +11,13 @@ class TourSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         
-        representation['characteristic']    = instance.characteristic.name
-        representation['type']              = instance.type.name
-        representation['price_name']        = instance.price.name
-        representation['price']             = instance.price.price
-        representation['location']          = instance.location.name
+        is_format = self.context.get("is_format") 
+        if is_format:
+            representation['characteristic']    = instance.characteristic.name
+            representation['type']              = instance.type.name
+            representation['price_name']        = instance.price.name
+            representation['price']             = instance.price.price
+            representation['location']          = instance.location.name
         
         return representation
     

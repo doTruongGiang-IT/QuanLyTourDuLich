@@ -1,3 +1,7 @@
+from typing import Tuple
+from Base.error import Error
+
+
 class BaseBUS:
     DTO_CLASS = None
     DAO_CLASS = None
@@ -6,28 +10,50 @@ class BaseBUS:
         self.query = self.DAO_CLASS()
         
     @property
-    def objects(self):
+    def objects(self) -> list[DTO_CLASS]:
         return self.read()
         
     def read(self) -> list[DTO_CLASS]:
+        """
+        Read method in BUS, equivalent to GET method (get list action)
+        :return: list[DTO_CLASS]:
+        """
         error, objects = self.query.read()
-        if error:
-            print(error)
+        if error.status is True:
+            print(error.message)
             return None
-        else:
-            return objects
+        
+        return objects
             
-    def create(self, obj: DTO_CLASS) -> None:
+    def create(self, obj: DTO_CLASS) -> Error:
+        """
+        Create method in BUS, equivalent to POST method (create action)
+        :obj: DTO_CLASS 
+        :return: Error:
+        """
         error = self.query.create(obj)
-        if error:
-            print(error)
+        if error.status is True:
+            print(error.message)
+        return error
             
-    def update(self, obj: DTO_CLASS) -> None:
+    def update(self, obj: DTO_CLASS) -> Error:
+        """
+        Update method in BUS, equivalent to PATCH method (partial_update action)
+        :obj: DTO_CLASS 
+        :return: Error:
+        """
         error = self.query.update(obj)
-        if error:
-            print(error)
+        if error.status is True:
+            print(error.message)
+        return error
             
-    def delete(self, obj_id: int) -> None:
+    def delete(self, obj_id: int) -> Error:
+        """
+        Create method in BUS, equivalent to POST method (create action)
+        :obj: DTO_CLASS 
+        :return: Error:
+        """
         error = self.query.delete(obj_id)
-        if error:
-            print(error)
+        if error.status is True:
+            print(error.message)
+        return error

@@ -8,6 +8,17 @@ class TourViewSet(viewsets.ModelViewSet):
     serializer_class = TourSerializer
     queryset = Tour.objects.all()
     
+    def get_serializer_context(self):
+        contexts = super().get_serializer_context()
+        
+        is_format = self.request.query_params.get("is_format", None)
+        if is_format is not None and is_format == 'true':
+            contexts['is_format'] = True 
+        else:
+            contexts['is_format'] = False
+            
+        return contexts
+    
     
 class TourCharacteristicViewSet(viewsets.ModelViewSet):
     serializer_class = TourCharacteristicSerializer
