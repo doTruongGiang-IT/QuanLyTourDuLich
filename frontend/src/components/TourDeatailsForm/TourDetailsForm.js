@@ -1,20 +1,34 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
-import { Table, Input, Button, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Space, Modal } from 'antd';
+import { SearchOutlined, BookOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
 
-const TourDetailsForm = ({tourDetails, location}) => {
+const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     let details = [];
     let hotel = "";
-    let journey = [];
+    let journeys = [];
+    let nameLocation = "";
+    let contents = [];
 
     tourDetails.forEach(detail => {
-      detail.journey.forEach((item) => {
-        journey.push(`${new Date(item.start_date).getHours()}h - ${new Date(item.end_date).getHours()}h: ${item.content}.`);
-        if(item.location.type === "Hotel") {
-          hotel = item.location.name;
+      if(detail.journey.length > 0) {
+        detail.journey.forEach((item) => {
+          contents.push(`${new Date(item.start_date).getHours()}h - ${new Date(item.end_date).getHours()}h: ${item.content}.`);
+          if(item.location.type === "Hotel") {
+            hotel = item.location.name;
+          };
+        });
+        journeys.push({id: detail.id, contents});
+      }else {
+        journeys.push({id: detail.id, contents: []});
+      };
+
+      listLocation.forEach(locationItem => {
+        if(locationItem.id === location.location) {
+          nameLocation = locationItem.name;
         };
       });
 
@@ -23,15 +37,29 @@ const TourDetailsForm = ({tourDetails, location}) => {
         name: detail.name,
         startDate: detail.start_date,
         endDate: detail.end_date,
-        journey: journey.join(' || '),
+        // journey: detail.journey.length > 0 ? journey.join(' || ') : "",
         hotel,
-        location: location.location
+        location: nameLocation
       };
       details.push(formatDetail);
+      details = details.map((detail) => {
+        return {key: detail.id + 1, ...detail};
+      });
     });
     
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isRowActive, setIsRowActive] = useState(0);
+
+    const showModal = (id) => {
+      setIsRowActive(id);
+      setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+      setIsModalVisible(false);
+    };
 
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -91,26 +119,26 @@ const TourDetailsForm = ({tourDetails, location}) => {
 
     const columns = [
         {
-          title: 'ID Tourist Group',
-          dataIndex: 'id',
-          key: 'id',
-          width: '10%',
-          editable: true,
-          ...getColumnSearchProps('id'),
+            title: 'ID Tourist Group',
+            dataIndex: 'id',
+            key: 'id',
+            width: '10%',
+            editable: true,
+            ...getColumnSearchProps('id'),
         },
         {
-          title: 'StartDate',
-          dataIndex: 'startDate',
-          key: 'startDate',
-          width: '20%',
-          editable: true,
-          ...getColumnSearchProps('startDate'),
-          sorter: {
-            compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
-            multiple: tourDetails.length
-          },
-          ellipsis: true,
-          sortDirections: ['descend', 'ascend'],
+            title: 'StartDate',
+            dataIndex: 'startDate',
+            key: 'startDate',
+            width: '20%',
+            editable: true,
+            ...getColumnSearchProps('startDate'),
+            sorter: {
+              compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+              multiple: tourDetails.length
+            },
+            ellipsis: true,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'EndDate',
@@ -130,9 +158,19 @@ const TourDetailsForm = ({tourDetails, location}) => {
             title: 'Journey',
             dataIndex: 'journey',
             key: 'journey',
-            width: '20%',
+            width: '10%',
             editable: true,
-            ...getColumnSearchProps('journey'),
+            render: (_, record) => {
+              return(
+                <Button
+                    onClick={() => showModal(record.id)}
+                    type="primary"
+                    icon={<BookOutlined />}
+                    size="medium"
+                    style={{ width: 100 }}
+                />
+              )
+            }
         },
         {
             title: 'Hotel',
@@ -156,6 +194,19 @@ const TourDetailsForm = ({tourDetails, location}) => {
         <div className="tourDetailsForm">
             <h2>Details for this tour</h2>
             <Table bordered columns={columns} dataSource={details} />
+            <Modal title="Journey for this group" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
+              {
+                journeys.map(journey => {
+                  return <p key={journey.id}>
+                    {
+                      journey.id === isRowActive ? journey.contents.map((content, index) => {
+                        return <p key={index}>{content}</p>
+                      }) : ""
+                    }
+                  </p>
+                })
+              }
+            </Modal>
         </div>
     )
 }
