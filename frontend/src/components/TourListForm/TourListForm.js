@@ -12,103 +12,68 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
     let tourList = tours ? tours.map((tour) => {
         return {key: tour.id + 1, ...tour};
     }) : [];
-
-    let data = [
-        {
-            key: '1',
-            id: 0,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '2',
-            id: 1,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '3',
-            id: 2,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '4',
-            id: 3,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '5',
-            id: 4,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '6',
-            id: 5,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '7',
-            id: 6,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '8',
-            id: 7,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '9',
-            id: 8,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '10',
-            id: 9,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '11',
-            id: 10,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-        {
-            key: '12',
-            id: 11,
-            name: 'John Brown',
-            characteristic: 'Expensive',
-            type: 1
-        },
-    ];
     
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
-    const [dataInfo, setDataInfo] = useState(data);
     const [form] = Form.useForm();
     const [editData, setEditData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
+    const [selectedRowKeys, setSelectedKeys] = useState([]);
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
     const history = useHistory();
+
+    const onSelectChange = (selectedRowKeys) => {
+        setSelectedKeys(selectedRowKeys);
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+        selections: [
+          Table.SELECTION_ALL,
+          Table.SELECTION_INVERT,
+          Table.SELECTION_NONE,
+          {
+            key: 'odd',
+            text: 'Select Odd Row',
+            onSelect: changableRowKeys => {
+                let newSelectedRowKeys = [];
+                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
+                    if (index % 2 !== 0) {
+                        return false;
+                    };
+                    return true;
+                });
+                setSelectedKeys(newSelectedRowKeys);
+            },
+          },
+          {
+            key: 'even',
+            text: 'Select Even Row',
+            onSelect: changableRowKeys => {
+                let newSelectedRowKeys = [];
+                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
+                    if (index % 2 !== 0) {
+                        return true;
+                    };
+                    return false;
+                });
+                setSelectedKeys(newSelectedRowKeys);
+            },
+          },
+          {
+            key: 'delete',
+            text: 'Delete Selected Rows',
+            onSelect: () => {
+                if(selectedRowKeys.length > 0) {
+                    selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
+                };
+                setSelectedKeys([]);
+            },
+          },
+        ],
+    };
 
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -231,21 +196,21 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
 
     const columns = [
         {
-          title: 'ID',
-          dataIndex: 'id',
-          key: 'id',
-          width: '10%',
-          ...getColumnSearchProps('id'),
+            title: 'ID',
+            dataIndex: 'id',
+            key: 'id',
+            width: '10%',
+            ...getColumnSearchProps('id'),
         },
         {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
-          width: '30%',
-          editable: true,
-          ...getColumnSearchProps('name'),
-          sorter: (a, b) => a.name.length - b.name.length,
-          sortDirections: ['descend', 'ascend'],
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            width: '30%',
+            editable: true,
+            ...getColumnSearchProps('name'),
+            sorter: (a, b) => a.name.length - b.name.length,
+            sortDirections: ['descend', 'ascend'],
         },
         {
             title: 'Characteristic',
@@ -360,7 +325,8 @@ const TourListForm = ({remove, update, tours, tourEdit}) => {
                 //         onClick: event => history.push(`/details/${record.id}`),
                 //     };
                 // }} 
-                bordered columns={mergedColumns} dataSource={tourList} />
+                rowSelection={rowSelection}
+                bordered columns={mergedColumns} dataSource={tourList} pagination={{defaultPageSize: 20}} scroll={{ y: 500, x: "max-content" }} />
             </Form>
         </div>
     )

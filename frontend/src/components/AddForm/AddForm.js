@@ -58,9 +58,10 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                 >
                     <Select placeholder="Select tour characteristic" allowClear>
                         {
+                            characteristics ?
                             characteristics.map(characteristic => {
                                 return <Option key={characteristic.id} value={characteristic.id}>{characteristic.name}</Option>
-                            })
+                            }) : null
                         }
                     </Select>
                 </Form.Item>
@@ -75,9 +76,10 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                 >
                     <Select placeholder="Select tour type" allowClear>
                         {
+                            types ?
                             types.map(type => {
                                 return <Option key={type.id} value={type.id}>{type.name}</Option>
-                            })
+                            }) : null
                         }
                     </Select>
                 </Form.Item>
@@ -92,9 +94,10 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                 >
                     <Select placeholder="Select tour price" allowClear>
                         {
+                            prices ?
                             prices.map(price => {
-                                return <Option key={price.id} value={price.id}>{price.price}</Option>
-                            })
+                                return <Option key={price.id} value={price.id}>{price.price} vnd-id: {price.id}</Option>
+                            }) : null
                         }
                     </Select>
                 </Form.Item>
@@ -109,33 +112,14 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                 >
                     <Select placeholder="Select tour location" allowClear>
                         {
+                            locations ?
                             locations.map(location => {
                                 if(location.type === "Tourist Area" || location.type === "Tourist")
                                     return <Option key={location.id} value={location.id}>{location.name}</Option>
-                            })
+                            }) : null
                         }
                     </Select>
                 </Form.Item>
-                {/* <Form.Item
-                    noStyle
-                    shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-                >
-                    {({ getFieldValue }) =>
-                    getFieldValue('gender') === 'other' ? (
-                        <Form.Item
-                        name="customizeGender"
-                        label="Customize Gender"
-                        rules={[
-                            {
-                            required: true,
-                            },
-                        ]}
-                        >
-                        <Input />
-                        </Form.Item>
-                    ) : null
-                    }
-                </Form.Item> */}
                 <Form.Item {...tailLayout}>
                     <Space>
                         <Button type="primary" htmlType="submit">

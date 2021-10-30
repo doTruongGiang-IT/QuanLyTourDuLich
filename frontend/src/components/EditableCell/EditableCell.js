@@ -14,7 +14,7 @@ const EditableCell = ({
     children,
     ...restProps
 }) => {
-    // const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    
     const dispatch = useDispatch();
     const characteristics = useSelector(selectTourCharacteristic);
     const types = useSelector(selectTourType);

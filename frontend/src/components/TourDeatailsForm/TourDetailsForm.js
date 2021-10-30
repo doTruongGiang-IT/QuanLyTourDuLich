@@ -16,10 +16,8 @@ const TourDetailsForm = ({tourDetails, location}) => {
         if(item.location.type === "Hotel") {
           hotel = item.location.name;
         };
-        // if(item.location.type === "Tourist Area") {
-        //   location = item.location.name;
-        // };
       });
+
       let formatDetail  = {
         id: detail.id,
         name: detail.name,
@@ -31,61 +29,9 @@ const TourDetailsForm = ({tourDetails, location}) => {
       };
       details.push(formatDetail);
     });
-    // let details = tourDetails.forEach((detail) => {
-    //   detail.journey = "";
-    // });
-    // console.log(details);
-    let data = [
-        {
-            key: '1',
-            id: 0,
-            startDate: '12/10/1998',
-            endDate: '25/10/1998',
-            journey: 'journey',
-            hotel: 'hotel',
-            location: 'location'
-        },
-        {
-            key: '2',
-            id: 1,
-            startDate: '11/05/2000',
-            endDate: '18/05/2000',
-            journey: 'journey',
-            hotel: 'hotel',
-            location: 'location'
-        },
-        {
-            key: '3',
-            id: 2,
-            startDate: '06/09/2013',
-            endDate: '16/09/2013',
-            journey: 'journey',
-            hotel: 'hotel',
-            location: 'location'
-        },
-        {
-            key: '4',
-            id: 3,
-            startDate: '23/11/2018',
-            endDate: '28/11/2018',
-            journey: 'journey',
-            hotel: 'hotel',
-            location: 'location'
-        },
-        {
-            key: '5',
-            id: 4,
-            startDate: '13/03/1999',
-            endDate: '18/03/1999',
-            journey: 'journey',
-            hotel: 'hotel',
-            location: 'location'
-        }
-    ];
-
+    
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
-    const [dataInfo, setDataInfo] = useState(data);
 
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (

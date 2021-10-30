@@ -63,13 +63,34 @@ tour_characteristic_detail = TourCharacteristicViewSet.as_view({
 })
 
 tour_type_list = TourTypeViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+tour_type_detail = TourTypeViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
 
 tour_price_list = TourPriceViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+tour_price_detail = TourPriceViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
 
 location_list = LocationViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+location_detail = LocationViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
