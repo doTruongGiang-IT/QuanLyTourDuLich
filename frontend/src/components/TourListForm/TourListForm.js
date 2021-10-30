@@ -1,18 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
-import { Table, Input, Button, Space, Popconfirm, Form, notification} from 'antd';
+import { Table, Input, Button, Space, Popconfirm, Form, notification, Modal} from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined, EyeOutlined, BookOutlined } from '@ant-design/icons';
 import EditableCell from '../EditableCell/EditableCell';
 import "./TourListForm.css";
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
 
-const TourListForm = ({remove, update, tours}) => {
+const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
+    let formatLocations = [];
     let tourList = tours ? tours.map((tour) => {
         return {key: tour.id + 1, ...tour};
     }) : [];
-    
+
+    let locations = tourDetails.length > 0 ? tourDetails[0].journey.map(location => {
+        if(location.location.type !== "Hotel") {
+            return location.location.name;
+        };
+    }) : [];
+
+    locations.forEach(location => {
+        if(location !== undefined && !formatLocations.includes(location)) {
+            formatLocations.push(location);
+        }
+    });
+
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
@@ -23,6 +36,18 @@ const TourListForm = ({remove, update, tours}) => {
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
     const history = useHistory();
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isRowActive, setIsRowActive] = useState(0);
+
+    const showModal = async (id) => {
+        await setDetails(id);
+        setIsRowActive(id);
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
 
     const onSelectChange = (selectedRowKeys) => {
         setSelectedKeys(selectedRowKeys);
@@ -282,8 +307,7 @@ const TourListForm = ({remove, update, tours}) => {
                             style={{ width: 40 }}
                         />
                         <Button
-                            disabled={editingKey !== ''} 
-                            onClick={() => history.push(`/locations/${record.id}`)}
+                            onClick={() => showModal(record.id)}
                             type="primary"
                             icon={<BookOutlined />}
                             size="small"
@@ -319,27 +343,6 @@ const TourListForm = ({remove, update, tours}) => {
         });
     };
 
-    // const renderLocations = async (record) => {
-    //     let locations = [];
-    //     let details = [];
-    //     let result = "There's no locations yet";
-    //     const res = await dispatch(getTourDetails(record.id));
-    //     details = res.payload.results;
-    //     details.forEach(detail => {
-    //         detail.journey.forEach(location => {
-    //             locations.push(location.location.name);
-    //         })
-    //     });
-    //     result = locations.join(" - ");
-    //     setTourLocations(result);
-    // };
-
-    // const expandedRowsChange = (expandedRows) => {
-    //     // Compare expandedRows to this.state.expanded rows
-    //     console.log(expandedRows);
-    //     // then set this.state.expandedRows to an array with just the new row in it.
-    // };
-
     return (
         <div className="tourListForm">
             {contextHolder}
@@ -356,27 +359,15 @@ const TourListForm = ({remove, update, tours}) => {
                 //     };
                 // }}
                 rowSelection={rowSelection}
-                // expandedRowKeys={expandedRows} 
-                // onExpandedRowsChange={expandedRowsChange}
-                // expandable={{
-                //     expandedRowRender: record => {
-                //         renderLocations(record);
-                //         return <Space><p>{tourLocations}</p></Space>
-                //     },
-                //         // <Space>
-                //         //     {renderLocations(record)}
-                //         //     {
-                //         //         {/* tourLocations ?
-                //         //         tourLocations.map((location, index) => {
-                //         //             console.log(location);
-                //         //             return <span key={index} style={{marginLeft: 10}}>{location}</span>
-                //         //         }) : "There's no locations yet" */}
-                //         //     }
-                //         // </Space>,
-                //     rowExpandable: record => record.name !== 'Not Expandable',
-                // }}
                 bordered columns={mergedColumns} dataSource={tourList} pagination={{defaultPageSize: 20}} scroll={{ y: 500, x: "max-content" }} />
             </Form>
+            <Modal title="Locations for this tour" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
+              {
+                formatLocations.map((location, index) => {
+                    return <p key={index}>{index + 1}: {location}</p>;
+                })
+              }
+            </Modal>
         </div>
     )
 }

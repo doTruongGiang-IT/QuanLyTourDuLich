@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import TourListForm from '../../components/TourListForm/TourListForm';
 import {useSelector, useDispatch} from 'react-redux';
 import { selectTourList,
+    selectTourDetails,
+    getTourDetails,
     getTourList, 
     editTour, 
     deleteTour, 
@@ -16,6 +18,7 @@ const TourListPage = () => {
     const tours = useSelector(selectTourList);
     const characteristics = useSelector(selectTourCharacteristic);
     const types = useSelector(selectTourType);
+    const details = useSelector(selectTourDetails);
     const [tourList, setTourList] = useState(tours.results);
 
     useEffect(() => {
@@ -57,8 +60,12 @@ const TourListPage = () => {
         setTourList(tours.results);
     };
 
+    const handleDetails = (id) => {
+        dispatch(getTourDetails(id));
+    };
+
     return (
-        <TourListForm tours={tours.results} remove={handleDelete} update={saveEdit} />
+        <TourListForm tours={tours.results} remove={handleDelete} update={saveEdit} setDetails={handleDetails} tourDetails={details} />
     )
 }
 
