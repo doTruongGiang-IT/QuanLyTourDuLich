@@ -79,6 +79,32 @@ GET {{api_url}}/tour/tour_characteristic HTTP/1.1
 content-type: application/json
 
 
+### Tour Characteristic Detail ###
+GET {{api_url}}/tour/tour_characteristic/1 HTTP/1.1
+content-type: application/json
+
+
+### Tour Characteristic Create ###
+POST {{api_url}}/tour/tour_characteristic HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour characteristic 1"
+}
+
+### Tour Characteristic Update ###
+PATCH {{api_url}}/tour/tour_characteristic/8 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour characteristic 1 sss"
+}
+
+### Tour Characteristic Delete ###
+DELETE {{api_url}}/tour/tour_characteristic/8 HTTP/1.1
+content-type: application/json
+
+
 
 ############################
 #       4. Tour Type       #
