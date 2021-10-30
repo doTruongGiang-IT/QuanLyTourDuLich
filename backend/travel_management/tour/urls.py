@@ -9,7 +9,8 @@ from .views import (
     tour_type_detail,
     tour_price_list,
     tour_price_detail,
-    location_list
+    location_list,
+    location_detail
 )
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     path('tour_price/<int:pk>',         tour_price_detail,          name='tour-price-detail'),
     
     path('location',                    location_list,              name='location-list'),
+    path('location/<int:pk>',           location_detail,            name='location-detail'),
 ]

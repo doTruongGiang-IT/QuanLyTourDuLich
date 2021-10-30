@@ -195,6 +195,38 @@ content-type: application/json
 ############################
 
 
-### Location ###
+### Location List ###
 GET {{api_url}}/tour/location HTTP/1.1
+content-type: application/json
+
+
+### Location Detail ###
+GET {{api_url}}/tour/location/1 HTTP/1.1
+content-type: application/json
+
+
+### Location Create ###
+POST {{api_url}}/tour/location HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Đà Nẵng 212",
+    "type": "Tourist Area",
+    "level": "City"
+}
+
+
+### Location Update ###
+PATCH {{api_url}}/tour/location/17 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Đà Nẵng 123",
+    "type": "Tourist Area",
+    "level": "City"
+}
+
+
+### Location Delete###
+DELETE {{api_url}}/tour/location/17 HTTP/1.1
 content-type: application/json

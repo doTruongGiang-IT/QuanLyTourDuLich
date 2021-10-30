@@ -74,5 +74,12 @@ tour_price_detail = TourPriceViewSet.as_view({
 })
 
 location_list = LocationViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+location_detail = LocationViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
