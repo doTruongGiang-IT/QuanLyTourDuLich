@@ -10,13 +10,13 @@ class BaseBUS:
         self.query = self.DAO_CLASS()
         
     @property
-    def objects(self) -> list[DTO_CLASS] | None:
+    def objects(self) -> list[DTO_CLASS]:
         return self.read()
         
-    def read(self) -> list[DTO_CLASS] | None:
+    def read(self) -> list[DTO_CLASS]:
         """
         Read method in BUS, equivalent to GET method (get list action)
-        :return: list[DTO_CLASS] | None:
+        :return: list[DTO_CLASS]:
         """
         error, objects = self.query.read()
         if error.status is True:

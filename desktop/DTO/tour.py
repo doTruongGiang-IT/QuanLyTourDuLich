@@ -42,11 +42,13 @@ class Location:
         self,
         id: int,
         name: str,
-        type: str
+        type: str,
+        level: str,
     ):
         self.id             = id
         self.name           = name
         self.type           = type
+        self.level           = level
         
         
 class Tour:

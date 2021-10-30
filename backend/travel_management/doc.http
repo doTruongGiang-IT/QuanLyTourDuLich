@@ -26,7 +26,7 @@ content-type: application/json
 
 
 ### Tour Detail ###
-GET {{api_url}}/tour/2 HTTP/1.1
+GET {{api_url}}/tour/1 HTTP/1.1
 content-type: application/json
 
 

@@ -43,10 +43,10 @@ class BaseDAO:
         """
         return self.DTO_CLASS(**data)
     
-    def read(self) -> tuple[Error, list[DTO_CLASS] | None]:
+    def read(self) -> tuple[Error, list[DTO_CLASS]]:
         """
         Read method in DAO, equivalent to GET method (get list action)
-        :return: tuple[Error, list[DTO_CLASS] | None]
+        :return: tuple[Error, list[DTO_CLASS]]
         """
         request = requests.get(self.API_URL['read'])
     
@@ -61,11 +61,11 @@ class BaseDAO:
         else:
             return (Error(True, 'Get the tour list that have an error'), None)
     
-    def read_detail(self, tour_id: int) -> tuple[Error, DTO_CLASS | None]:
+    def read_detail(self, tour_id: int) -> tuple[Error, DTO_CLASS]:
         """
         Read detail method in DAO, equivalent to GET method (get detail action)
         :tour_id: int -> Tour id
-        :return: tuple[Error, DTO_CLASS | None]
+        :return: tuple[Error, DTO_CLASS]
         """
         request = requests.get(self.API_URL['read_detail'].format(tour_id))
     

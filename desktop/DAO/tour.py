@@ -8,7 +8,7 @@ class TourCharacteristicDAO(BaseDAO):
     API_URL = {
         'read':         f'{BASE_API_URL}/tour/tour_characteristic',
         'create':       f'{BASE_API_URL}/tour/tour_characteristic',
-        'read_detail':  f'{BASE_API_URL}/tour/tour_characteristic',
+        'read_detail':  f'{BASE_API_URL}/tour/tour_characteristic/{{}}',
         'update':       f'{BASE_API_URL}/tour/tour_characteristic/{{}}',
         'delete':       f'{BASE_API_URL}/tour/tour_characteristic/{{}}'
     }
@@ -25,7 +25,7 @@ class TourTypeDAO(BaseDAO):
     API_URL = {
         'read':         f'{BASE_API_URL}/tour/tour_type',
         'create':       f'{BASE_API_URL}/tour/tour_type',
-        'read_detail':  f'{BASE_API_URL}/tour/tour_type',
+        'read_detail':  f'{BASE_API_URL}/tour/tour_type/{{}}',
         'update':       f'{BASE_API_URL}/tour/tour_type/{{}}',
         'delete':       f'{BASE_API_URL}/tour/tour_type/{{}}'
     }
@@ -42,10 +42,15 @@ class TourPriceDAO(BaseDAO):
     API_URL = {
         'read':         f'{BASE_API_URL}/tour/tour_price',
         'create':       f'{BASE_API_URL}/tour/tour_price',
-        'read_detail':  f'{BASE_API_URL}/tour/tour_price',
+        'read_detail':  f'{BASE_API_URL}/tour/tour_price/{{}}',
         'update':       f'{BASE_API_URL}/tour/tour_price/{{}}',
         'delete':       f'{BASE_API_URL}/tour/tour_price/{{}}'
     }
+    
+    def get_object(self, data):
+        data['start_date'] = datetime.strptime(data['start_date'], '%Y-%m-%d')
+        data['end_date'] = datetime.strptime(data['end_date'], '%Y-%m-%d')
+        return self.DTO_CLASS(**data)
     
     def to_create_request_data(self, data):
         request_data = {
@@ -62,20 +67,16 @@ class LocationDAO(BaseDAO):
     API_URL = {
         'read':         f'{BASE_API_URL}/tour/location',
         'create':       f'{BASE_API_URL}/tour/location',
-        'read_detail':  f'{BASE_API_URL}/tour/location',
+        'read_detail':  f'{BASE_API_URL}/tour/location/{{}}',
         'update':       f'{BASE_API_URL}/tour/location/{{}}',
         'delete':       f'{BASE_API_URL}/tour/location/{{}}'
     }
     
-    def get_object(self, data):
-        data['start_date'] = datetime.strptime(data['start_date'], '%Y-%m-%d')
-        data['end_date'] = datetime.strptime(data['end_date'], '%Y-%m-%d')
-        return self.DTO_CLASS(**data)
-    
     def to_create_request_data(self, data: Location) -> dict:
         request_data = {
             'name': data.name,
-            'type': data.type
+            'type': data.type,
+            'level': data.level
         }
         return request_data
     
@@ -84,7 +85,7 @@ class TourDAO(BaseDAO):
     DTO_CLASS = Tour
     API_URL = {
         'read':         f'{BASE_API_URL}/tour',
-        'create':       f'{BASE_API_URL}/tour',
+        'create':       f'{BASE_API_URL}/tour/',
         'read_detail':  f'{BASE_API_URL}/tour/{{}}',
         'update':       f'{BASE_API_URL}/tour/{{}}',
         'delete':       f'{BASE_API_URL}/tour/{{}}'
@@ -95,10 +96,10 @@ class TourDAO(BaseDAO):
     location_dao = LocationDAO()
     
     def get_object(self, data):
-        data['characteristic'] = self.tour_characteristic_dao.read_detail(data['characteristic'])
-        data['type'] = self.tour_type_dao.read_detail(data['type'])
-        data['price'] = self.tour_price_dao.read_detail(data['price'])
-        data['location'] = self.location_dao.read_detail(data['location'])
+        _, data['characteristic'] = self.tour_characteristic_dao.read_detail(data['characteristic'])
+        _, data['type'] = self.tour_type_dao.read_detail(data['type'])
+        _, data['price'] = self.tour_price_dao.read_detail(data['price'])
+        _, data['location'] = self.location_dao.read_detail(data['location'])
         return self.DTO_CLASS(**data)
     
     def to_create_request_data(self, data):
