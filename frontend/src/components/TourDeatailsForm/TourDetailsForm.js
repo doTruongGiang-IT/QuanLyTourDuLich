@@ -13,6 +13,11 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     let nameLocation = "";
     let contents = [];
 
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isRowActive, setIsRowActive] = useState(0);
+
     tourDetails.forEach(detail => {
       if(detail.journey.length > 0) {
         detail.journey.forEach((item) => {
@@ -46,11 +51,6 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
         return {key: detail.id + 1, ...detail};
       });
     });
-    
-    const [searchText, setSearchText] = useState("");
-    const [searchedColumn, setSearchedColumn] = useState("");
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isRowActive, setIsRowActive] = useState(0);
 
     const showModal = (id) => {
       setIsRowActive(id);
