@@ -1,0 +1,36 @@
+.guestsForm {
+    height: fit-content;
+    padding: 50px 50px;
+
+}
+
+.guestsForm h2 {
+    text-align: center;
+    color: white;
+    background-color: blue;
+    font-size: 28px;
+    padding: 5px 0;
+}
+
+.guestContent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.guestList {
+    width: 78%;
+}
+
+.guestAddForm {
+    width: 20%;
+    max-height: fit-content;
+    overflow: hidden;
+    border: 1px solid blue;
+}
+
+.guestAddForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: blue;
+    color: white;
+}
