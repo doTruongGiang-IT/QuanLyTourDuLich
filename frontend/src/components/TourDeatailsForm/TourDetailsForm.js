@@ -3,8 +3,9 @@
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
 import { Table, Input, Button, Space, Modal } from 'antd';
-import { SearchOutlined, BookOutlined } from '@ant-design/icons';
+import { SearchOutlined, BookOutlined, TeamOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
+import { useHistory } from 'react-router';
 
 const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     let details = [];
@@ -17,6 +18,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     const [searchedColumn, setSearchedColumn] = useState("");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isRowActive, setIsRowActive] = useState(0);
+    const history = useHistory();
 
     tourDetails.forEach(detail => {
       if(detail.journey.length > 0) {
@@ -184,9 +186,26 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             title: 'Location',
             dataIndex: 'location',
             key: 'location',
-            width: '20%',
+            width: '10%',
             editable: true,
             ...getColumnSearchProps('location'),
+        },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            key: 'actions',
+            width: '10%',
+            render: (_, record) => {
+              return(
+                <Button
+                    onClick={() => history.push(`/guests/${record.id}`)}
+                    type="primary"
+                    icon={<TeamOutlined />}
+                    size="medium"
+                    style={{ width: 100 }}
+                />
+              )
+            },
         },
     ];
 
