@@ -2,6 +2,7 @@ import dearpygui.dearpygui as dpg
 
 from ..base_table import init_table
 from BUS.tour import TourBUS, TourCharacteristicBUS, TourTypeBUS, TourPriceBUS, LocationBUS
+from DTO.tour import Tour, TourCharacteristic, TourType, TourPrice, Location
 
 
 class TourGUI:
@@ -114,8 +115,8 @@ class TourGUI:
         
     @classmethod
     def tour_create_window(cls):
-        window = dpg.add_window(label="Add new tour", width=400, autosize=True)
-        dpg.add_input_text(label="Name ", parent=window)
+        window = dpg.add_window(label="Add new tour", width=400, autosize=True, pos=[500, 200])
+        tour_name = dpg.add_input_text(label="Name ", parent=window)
         
         tour_characteristics    = TourCharacteristicBUS().objects
         tour_types              = TourTypeBUS().objects
@@ -127,9 +128,89 @@ class TourGUI:
         tour_prices             = [f'{d.id} | {d.name}' for d in tour_prices]
         locations               = [f'{d.id} | {d.name}' for d in locations]
         
-        dpg.add_combo(label="Characteristic", items=tour_characteristics, parent=window)
-        dpg.add_combo(label="Type", items=tour_types, parent=window)
-        dpg.add_combo(label="Price", items=tour_prices, parent=window)
-        dpg.add_combo(label="Location", items=locations, parent=window)
+        tour_characteristics = dpg.add_combo(label="Characteristic", items=tour_characteristics, parent=window)
+        tour_types = dpg.add_combo(label="Type", items=tour_types, parent=window)
+        tour_prices = dpg.add_combo(label="Price", items=tour_prices, parent=window)
+        locations = dpg.add_combo(label="Location", items=locations, parent=window)
         
-        dpg.add_button(label="Add new tour", parent=window)
+        group = dpg.add_group(horizontal=True, parent=window)
+        button = dpg.add_button(label="Add new tour", callback=cls.tour_create_window_callback, parent=group)
+        status = dpg.add_text(default_value="Status", parent=group)
+        dpg.set_item_user_data(
+            button, 
+            {
+                'window': window,
+                'status': status, 
+                'items': [
+                    {
+                        'field': 'name',
+                        'name': 'Tour name',
+                        'item': tour_name,
+                    },
+                    {
+                        'field': 'characteristic',
+                        'name': 'Tour characteristic',
+                        'item': tour_characteristics,
+                    },
+                    {
+                        'field': 'type',
+                        'name': 'Tour type',
+                        'item': tour_types,
+                    },
+                    {
+                        'field': 'price',
+                        'name': 'Tour price',
+                        'item': tour_prices,
+                    },
+                    {
+                        'field': 'location',
+                        'name': 'Location',
+                        'item': locations,
+                    }
+                ]
+            }
+        )
+        
+    @classmethod
+    def tour_create_window_callback(cls, sender, app_data, user_data):
+        is_valid = True
+        request_data = {}
+        
+        for item in user_data['items']:
+            data = dpg.get_value(item['item'])
+            if data != "": 
+                print(data)
+                request_data[item['field']] = data
+            else:
+                is_valid = False
+                dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is invalid', color=[255, 92, 88])               
+                break
+            
+        if is_valid:
+            dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
+            print(request_data)
+            
+            request_data['characteristic']  = int(request_data['characteristic'].split('|')[0])        
+            request_data['type']            = int(request_data['type'].split('|')[0])        
+            request_data['price']           = int(request_data['price'].split('|')[0])        
+            request_data['location']        = int(request_data['location'].split('|')[0])    
+            
+            print(request_data)
+            
+            tour_obj = Tour(
+                id=0,
+                name=request_data['name'],
+                characteristic=TourCharacteristic(request_data['characteristic'], None),
+                type=TourType(request_data['type'], None),
+                price=TourPrice(request_data['price'], None, None, None, None),
+                location=Location(request_data['location'], None, None, None)
+            ) 
+            tour_bus = TourBUS()
+            error = tour_bus.create(tour_obj)
+            
+            if error.status is True:
+                dpg.configure_item(user_data['status'], default_value=f'Status: {error["message"]}', color=[255, 92, 88])
+            else:
+                dpg.delete_item(user_data['window'])
+                
+            

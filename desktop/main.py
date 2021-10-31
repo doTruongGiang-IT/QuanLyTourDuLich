@@ -9,13 +9,25 @@ init_window()
             
 dpg.show_style_editor()
 dpg.show_imgui_demo()
-# dpg.show_debug()
-dpg.show_implot_demo()
+dpg.show_debug()
+dpg.show_item_registry()
 
 dpg.configure_app(docking=True, docking_space=True)
 dpg.create_viewport(title='Custom Title', width=1215, height=840)
 # with dpg.viewport_menu_bar():
+#     with dpg.menu(label="Window"):
+#         dpg.add_menu_item(label="Show About")
+#         dpg.add_menu_item(label="Show Metrics")
+#         dpg.add_menu_item(label="Show Documentation")
+#         dpg.add_menu_item(label="Show Debug")
+#         dpg.add_menu_item(label="Show Style Editor")
 #     with dpg.menu(label="Tools"):
+#         dpg.add_menu_item(label="Show About")
+#         dpg.add_menu_item(label="Show Metrics")
+#         dpg.add_menu_item(label="Show Documentation")
+#         dpg.add_menu_item(label="Show Debug")
+#         dpg.add_menu_item(label="Show Style Editor")
+#     with dpg.menu(label="Theme"):
 #         dpg.add_menu_item(label="Show About")
 #         dpg.add_menu_item(label="Show Metrics")
 #         dpg.add_menu_item(label="Show Documentation")

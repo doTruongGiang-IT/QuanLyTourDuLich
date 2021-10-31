@@ -13,6 +13,10 @@ def init_window():
     
 def init_font():
     with dpg.font_registry() as main_font_registry:
-        regular_font = dpg.add_font('GUI/font/static/RobotoMono-Medium.ttf', 16)
-        dpg.add_font_range_hint(dpg.mvFontRangeHint_Vietnamese, parent=regular_font)
-        dpg.bind_font(regular_font)
+        roboto_mono_regular_font = dpg.add_font('GUI/font/roboto_mono/RobotoMono-Medium.ttf', 16)
+        lora_regular_font = dpg.add_font('GUI/font/lora/Lora-Medium.ttf', 16)
+        firacode_regular_font = dpg.add_font('GUI/font/firacode/FiraCode-SemiBold.ttf', 15)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Vietnamese, parent=roboto_mono_regular_font)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Vietnamese, parent=lora_regular_font)
+        dpg.add_font_range_hint(dpg.mvFontRangeHint_Vietnamese, parent=firacode_regular_font)
+        dpg.bind_font(roboto_mono_regular_font)
