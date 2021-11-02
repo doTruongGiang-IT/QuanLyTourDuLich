@@ -13,7 +13,7 @@ dpg.show_debug()
 dpg.show_item_registry()
 
 dpg.configure_app(docking=True, docking_space=True)
-dpg.create_viewport(title='Custom Title', width=1215, height=840)
+dpg.create_viewport(title='Custom Title', width=1280, height=840)
 # with dpg.viewport_menu_bar():
 #     with dpg.menu(label="Window"):
 #         dpg.add_menu_item(label="Show About")
@@ -32,7 +32,15 @@ dpg.create_viewport(title='Custom Title', width=1215, height=840)
 #         dpg.add_menu_item(label="Show Metrics")
 #         dpg.add_menu_item(label="Show Documentation")
 #         dpg.add_menu_item(label="Show Debug")
-#         dpg.add_menu_item(label="Show Style Editor")
+#         dpg.add_menu_item(label="Show Style Editor")  
+
+with dpg.theme() as global_theme:
+
+    with dpg.theme_component(dpg.mvAll):
+        dpg.add_theme_style(dpg.mvStyleVar_CellPadding, 8, 2)
+
+dpg.bind_theme(global_theme)
+
 dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.start_dearpygui()

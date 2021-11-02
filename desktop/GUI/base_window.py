@@ -8,7 +8,7 @@ def init_window():
                 for item_data in header_data['data']:
                     dpg.add_button(tag=item_data[0], label=item_data[1], width=380, indent=20, callback=item_data[2])
         
-    with dpg.window(tag="content_window", label="Content", pos=[400, 0], width=800, height=800):
+    with dpg.window(tag="content_window", label="Content", pos=[400, 0], width=865, height=800):
         pass
     
 def init_font():

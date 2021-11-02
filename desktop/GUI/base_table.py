@@ -22,7 +22,16 @@ def sort_callback(sender, sort_specs):
 
     dpg.reorder_items(sender, 1, new_order)
 
-def init_table(header, data, parent):
+def init_table(
+    header, 
+    data, 
+    parent, 
+    width_columns = None, 
+    is_action = False, 
+    modified_callback=None, 
+    delete_callback=None, 
+    view_callback=None
+):
     table = dpg.add_table(
         header_row=True, 
         borders_innerH=True, 
@@ -35,12 +44,23 @@ def init_table(header, data, parent):
         callback=sort_callback,
         parent=parent)
 
-    for column in header:
-        dpg.add_table_column(label=column, parent=table)
+    for idx, column in enumerate(header):
+        width = width_columns[idx] if width_columns else 0
+        dpg.add_table_column(label=column, width=width, parent=table)
 
+    if is_action is True:
+        dpg.add_table_column(label="Action", parent=table)
+        
     for row in data:
         table_row = dpg.add_table_row(parent=table)
         for d in row:
             dpg.add_text(d, parent=table_row)
+        
+        if is_action is True:
+            action_group = dpg.add_group(horizontal=True, parent=table_row)
+            dpg.add_button(label='M', parent=action_group, callback=modified_callback, user_data=row[0])
+            dpg.add_button(label='D', parent=action_group, callback=delete_callback, user_data=row[0])
+            dpg.add_button(label='V', parent=action_group, callback=view_callback, user_data=row[0])
+            dpg.add_image_button
             
     return table
