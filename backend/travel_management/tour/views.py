@@ -1,12 +1,14 @@
 from rest_framework import viewsets
 
+from base.views import TrackingMixin
 from .models import Tour, TourCharacteristic, TourType, TourPrice, Location
 from .serializers import TourSerializer, TourCharacteristicSerializer, TourTypeSerializer, TourPriceSerializer, LocationSerializer
 
 
-class TourViewSet(viewsets.ModelViewSet):
+class TourViewSet(TrackingMixin, viewsets.ModelViewSet):
     serializer_class = TourSerializer
     queryset = Tour.objects.all()
+    object_name = 'tour'
     
     def get_serializer_context(self):
         contexts = super().get_serializer_context()
@@ -16,28 +18,32 @@ class TourViewSet(viewsets.ModelViewSet):
             contexts['is_format'] = True 
         else:
             contexts['is_format'] = False
-            
+        
         return contexts
     
     
-class TourCharacteristicViewSet(viewsets.ModelViewSet):
+class TourCharacteristicViewSet(TrackingMixin, viewsets.ModelViewSet):
     serializer_class = TourCharacteristicSerializer
     queryset = TourCharacteristic.objects.all()
+    object_name = 'tour_characteristic'
     
     
-class TourTypeViewSet(viewsets.ModelViewSet):
+class TourTypeViewSet(TrackingMixin, viewsets.ModelViewSet):
     serializer_class = TourTypeSerializer
     queryset = TourType.objects.all()
+    object_name = 'tour_type'
     
     
-class TourPriceViewSet(viewsets.ModelViewSet):
+class TourPriceViewSet(TrackingMixin, viewsets.ModelViewSet):
     serializer_class = TourPriceSerializer
     queryset = TourPrice.objects.all()
+    object_name = 'tour_price'
     
     
-class LocationViewSet(viewsets.ModelViewSet):
+class LocationViewSet(TrackingMixin, viewsets.ModelViewSet):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
+    object_name = 'location'
     
     
 tour_list = TourViewSet.as_view({
