@@ -1,11 +1,17 @@
+import threading
+
 import dearpygui.dearpygui as dpg
-from GUI.base_window import init_window, init_font
+
+from Base.lazy_loading import async_lazy_loading
+from GUI.base_window import init_font, init_window
 
 dpg.create_context()
         
 init_font()
 init_window()
-            
+
+lazy_loading_thread = threading.Thread(target=async_lazy_loading, args=(), daemon=True)
+lazy_loading_thread.start()
             
 dpg.show_style_editor()
 dpg.show_imgui_demo()

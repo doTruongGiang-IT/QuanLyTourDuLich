@@ -25,4 +25,9 @@ async def lazy_loading():
                 CLASS_TO_OBJECT_NAMES[msg['tracking_object']].TRACKING_STATUS = False
                 print(msg['tracking_object'])
 
-asyncio.get_event_loop().run_until_complete(lazy_loading())
+def async_lazy_loading():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    loop.run_until_complete(lazy_loading())
+    loop.close()
