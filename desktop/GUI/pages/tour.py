@@ -1,6 +1,7 @@
 import dearpygui.dearpygui as dpg
 
 from .tour_tour import TourTourGUI
+from .tour_type import TourTypeGUI
 
 class TourGUI:
     content_window = "content_window"
@@ -8,7 +9,7 @@ class TourGUI:
     CONTENT_TAB_BAR = [
         ["tour_tab_bar_menu_window", "Tour", TourTourGUI.content_render],
         ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", TourTourGUI.content_render],
-        ["tour_type_tab_bar_menu_window", "Tour Type", TourTourGUI.content_render],
+        ["tour_type_tab_bar_menu_window", "Tour Type", TourTypeGUI.content_render],
         ["tour_price_tab_bar_menu_window", "Tour Price", TourTourGUI.content_render],
         ["location_tab_bar_menu_window", "Location", TourTourGUI.content_render]
     ]
@@ -52,7 +53,8 @@ class TourGUI:
     @classmethod
     def tour_type_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        cls.tour_type_render(str(sender))
+        TourTypeGUI.group_content_window = cls.group_content_window
+        TourTypeGUI.content_render(str(sender))
 
     @classmethod
     def tour_price_render_callback(cls, sender, app_data):
