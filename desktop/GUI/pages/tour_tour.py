@@ -5,72 +5,18 @@ from BUS.tour import TourBUS, TourCharacteristicBUS, TourTypeBUS, TourPriceBUS, 
 from DTO.tour import Tour, TourCharacteristic, TourType, TourPrice, Location
 
 
-class TourGUI:
-    content_window = "content_window"
+class TourTourGUI:
     group_content_window = None
-    CONTENT_TAB_BAR = [
-        ["tour_tab_bar_menu_window", "Tour", "tour_render"],
-        ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", "tour_characteristic_render"],
-        ["tour_type_tab_bar_menu_window", "Tour Type", "tour_type_render"],
-        ["tour_price_tab_bar_menu_window", "Tour Price", "tour_price_render"],
-        ["location_tab_bar_menu_window", "Location", "location_render"]
-    ]
-    
-    @classmethod
-    def tab_bar_call_back(cls, sender, data):
-        for tab in cls.CONTENT_TAB_BAR:
-            if dpg.get_item_label(data) == tab[1]:
-                getattr(cls, tab[2])(tab[1])
-                break
-    
-    @classmethod    
-    def init_content_window(cls):
-        cls.delete_window()
-        tab_bar = dpg.add_tab_bar(parent=cls.content_window, callback=cls.tab_bar_call_back)
-        for tab in cls.CONTENT_TAB_BAR:
-            dpg.add_tab(label=tab[1], parent=tab_bar)
-            
-        cls.group_content_window = dpg.add_group(parent=cls.content_window)
-                
-    @classmethod
-    def delete_window(cls):
-        dpg.delete_item(cls.content_window, children_only=True)
-    
-    @classmethod
-    def delete_group(cls, children_only=False):
-        if cls.group_content_window:
-            dpg.delete_item(cls.group_content_window, children_only=children_only)
-                
-    @classmethod
-    def tour_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        cls.tour_render(str(sender))
 
     @classmethod
-    def tour_characteristic_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        cls.tour_characteristic_render(str(sender))
-
-    @classmethod
-    def tour_type_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        cls.tour_type_render(str(sender))
-
-    @classmethod
-    def tour_price_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        cls.tour_price_render(str(sender))
-
-    @classmethod
-    def location_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        cls.location_render(str(sender))
-
-    @classmethod
-    def tour_render(cls, data):
-        cls.delete_group(children_only=True)
+    def content_render(cls, data):
+        dpg.delete_item(cls.group_content_window, children_only=True)
         dpg.add_text(default_value=data, parent=cls.group_content_window)
-        dpg.add_button(label="Add new tour", callback=cls.tour_create_window, parent=cls.group_content_window)
+        
+        top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
+        dpg.add_button(label="Add new tour", callback=cls.create_window, parent=top_group)
+        dpg.add_input_text(label="Search", parent=top_group)
+        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
         header = ['id', 'name', 'characteristic', "type", "price", "location"]
         data = []
@@ -94,33 +40,13 @@ class TourGUI:
             parent=cls.group_content_window,
             width_columns=width_columns,
             is_action=True,
-            modified_callback=cls.tour_modified_callback,
-            delete_callback=cls.tour_delete_callback,
-            view_callback=cls.tour_view_callback
+            modified_callback=cls.modified_window,
+            delete_callback=cls.delete_window,
+            view_callback=cls.view_window
         )
         
     @classmethod
-    def tour_characteristic_render(cls, data):
-        cls.delete_group(children_only=True)
-        dpg.add_text(default_value=data, parent=cls.group_content_window)
-        
-    @classmethod
-    def tour_type_render(cls, data):
-        cls.delete_group(children_only=True)
-        dpg.add_text(default_value=data, parent=cls.group_content_window)
-        
-    @classmethod
-    def tour_price_render(cls, data):
-        cls.delete_group(children_only=True)
-        dpg.add_text(default_value=data, parent=cls.group_content_window)
-        
-    @classmethod
-    def location_render(cls, data):
-        cls.delete_group(children_only=True)
-        dpg.add_text(default_value=data, parent=cls.group_content_window)
-        
-    @classmethod
-    def tour_create_window(cls):
+    def create_window(cls):
         window = dpg.add_window(label="Add new tour", width=400, autosize=True, pos=[500, 200])
         tour_name = dpg.add_input_text(label="Name ", parent=window)
         
@@ -140,7 +66,7 @@ class TourGUI:
         locations               = dpg.add_combo(label="Location", items=locations, parent=window)
         
         group = dpg.add_group(horizontal=True, parent=window)
-        button = dpg.add_button(label="Add new tour", callback=cls.tour_create_window_callback, parent=group)
+        button = dpg.add_button(label="Add new tour", callback=cls.create_window_callback, parent=group)
         status = dpg.add_text(default_value="Status", parent=group)
         dpg.set_item_user_data(
             button, 
@@ -178,7 +104,7 @@ class TourGUI:
         )
         
     @classmethod
-    def tour_create_window_callback(cls, sender, app_data, user_data):
+    def create_window_callback(cls, sender, app_data, user_data):
         is_valid = True
         request_data = {}
         
@@ -215,18 +141,19 @@ class TourGUI:
             error = tour_bus.create(tour_obj)
             
             if error.status is True:
-                dpg.configure_item(user_data['status'], default_value=f'Status: {error["message"]}', color=[255, 92, 88])
+                dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
             else:
                 dpg.delete_item(user_data['window'])
+                cls.content_render("tour")
                 
     @classmethod
-    def tour_modified_callback(cls, sender, app_data, user_data):
-        
+    def modified_window(cls, sender, app_data, user_data):
         tours = TourBUS().objects
         
         tour = [t for t in tours if t.id == user_data][0]
         
         window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
+        tour_id = dpg.add_text(default_value=f"id: {tour.id}", parent=window)
         tour_name = dpg.add_input_text(label="Name ", parent=window, default_value=tour.name)
         
         tour_characteristics    = TourCharacteristicBUS().objects
@@ -245,13 +172,14 @@ class TourGUI:
         locations               = dpg.add_combo(label="Location", items=locations, default_value=f'{tour.location.id} | {tour.location.name}', parent=window)
         
         group = dpg.add_group(horizontal=True, parent=window)
-        button = dpg.add_button(label="Save the tour", callback=cls.tour_create_window_callback, parent=group)
+        button = dpg.add_button(label="Save the tour", callback=cls.modified_window_callback, parent=group)
         status = dpg.add_text(default_value="Status", parent=group)
         dpg.set_item_user_data(
             button, 
             {
                 'window': window,
                 'status': status, 
+                'id': tour.id,
                 'items': [
                     {
                         'field': 'name',
@@ -283,9 +211,86 @@ class TourGUI:
         )
         
     @classmethod
-    def tour_delete_callback(cls, sender, app_data, user_data):
-        print("delete: ", user_data)
+    def modified_window_callback(cls, sender, app_data, user_data):
+        is_valid = True
+        request_data = {}
+        
+        for item in user_data['items']:
+            data = dpg.get_value(item['item'])
+            if data != "": 
+                print(data)
+                request_data[item['field']] = data
+            else:
+                is_valid = False
+                dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is invalid', color=[255, 92, 88])               
+                break
+            
+        if is_valid:
+            dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
+            print(request_data)
+            
+            request_data['characteristic']  = int(request_data['characteristic'].split('|')[0])        
+            request_data['type']            = int(request_data['type'].split('|')[0])        
+            request_data['price']           = int(request_data['price'].split('|')[0])        
+            request_data['location']        = int(request_data['location'].split('|')[0])    
+            
+            print(request_data)
+            
+            tour_obj = Tour(
+                id=user_data['id'],
+                name=request_data['name'],
+                characteristic=TourCharacteristic(request_data['characteristic'], None),
+                type=TourType(request_data['type'], None),
+                price=TourPrice(request_data['price'], None, None, None, None),
+                location=Location(request_data['location'], None, None, None)
+            ) 
+            tour_bus = TourBUS()
+            error = tour_bus.update(tour_obj)
+            
+            if error.status is True:
+                dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+            else:
+                dpg.delete_item(user_data['window'])
+                cls.content_render('tour')
         
     @classmethod
-    def tour_view_callback(cls, sender, app_data, user_data):
-        print("view: ", user_data)
+    def delete_window(cls, sender, app_data, user_data):
+        tour_id = user_data
+        window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
+
+        question = dpg.add_text(default_value=f"Do you want to delete the tour (id: {tour_id})?", parent=window)
+        status = dpg.add_text(default_value="Status", parent=window)
+        
+        group = dpg.add_group(horizontal=True, parent=window)
+        
+        user_data = {
+            'tour_id': tour_id,
+            'status': status,
+            'window': window
+        }
+        button_yes = dpg.add_button(label="Yes", callback=cls.delete_window_callback, user_data=user_data, parent=group)
+        button_no = dpg.add_button(label="Cancel", callback=lambda :dpg.delete_item(window), parent=group)
+        
+    @classmethod
+    def delete_window_callback(cls, sender, app_data, user_data):
+        error = TourBUS().delete(user_data['tour_id'])
+        if error.status is True:
+            dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+        else:
+            dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
+            dpg.delete_item(user_data['window'])
+            cls.content_render('tour')
+            
+    @classmethod
+    def view_window(cls, sender, app_data, user_data):
+        tours = TourBUS().objects
+        tour = [t for t in tours if t.id == user_data][0]
+        
+        window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
+        dpg.add_text(default_value=f"id: {tour.id}", parent=window)
+        dpg.add_text(default_value=f"Name: {tour.name}", parent=window)
+        dpg.add_text(default_value=f"Characteristic: {tour.characteristic.id} | {tour.characteristic.name}", parent=window)
+        dpg.add_text(default_value=f"Type: {tour.type.id} | {tour.type.name}", parent=window)
+        dpg.add_text(default_value=f"Price: {tour.price.id} | {tour.price.name}", parent=window)
+        dpg.add_text(default_value=f"Location: {tour.location.id} | {tour.location.name}", parent=window)
+        dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)

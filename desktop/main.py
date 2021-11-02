@@ -9,8 +9,8 @@ init_window()
             
 dpg.show_style_editor()
 dpg.show_imgui_demo()
-dpg.show_debug()
-dpg.show_item_registry()
+# dpg.show_debug()
+# dpg.show_item_registry()
 
 dpg.configure_app(docking=True, docking_space=True)
 dpg.create_viewport(title='Custom Title', width=1280, height=840)
