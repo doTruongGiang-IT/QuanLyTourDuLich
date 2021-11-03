@@ -1,9 +1,10 @@
 import dearpygui.dearpygui as dpg
 
-from .tour_characteristic import TourCharacteristicGUI
 from .tour_tour import TourTourGUI
-from .tour_price import TourPriceGUI
+from .tour_characteristic import TourCharacteristicGUI
 from .tour_type import TourTypeGUI
+from .tour_price import TourPriceGUI
+from .tour_location import TourLocationGUI
 
 
 class TourGUI:
@@ -14,7 +15,7 @@ class TourGUI:
         ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", TourCharacteristicGUI.content_render],
         ["tour_type_tab_bar_menu_window", "Tour Type", TourTypeGUI.content_render],
         ["tour_price_tab_bar_menu_window", "Tour Price", TourPriceGUI.content_render],
-        ["location_tab_bar_menu_window", "Location", TourTourGUI.content_render]
+        ["location_tab_bar_menu_window", "Location", TourLocationGUI.content_render]
     ]
     
     @classmethod
@@ -69,4 +70,5 @@ class TourGUI:
     @classmethod
     def location_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        cls.location_render(str(sender))
+        TourLocationGUI.group_content_window = cls.group_content_window
+        TourLocationGUI.content_render(str(sender))
