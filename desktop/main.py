@@ -80,7 +80,9 @@ with dpg.viewport_menu_bar():
         dpg.add_menu_item(label="Use Gruvbox theme", callback=set_gruvbox_theme)
         dpg.add_menu_item(label="Use Green theme")  
 
-                
+
+dpg.set_viewport_title("Travel Management")
+dpg.set_viewport_small_icon("./GUI/icon.ico")
 dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.start_dearpygui()
