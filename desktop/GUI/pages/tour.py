@@ -1,16 +1,21 @@
 import dearpygui.dearpygui as dpg
 
 from .tour_tour import TourTourGUI
+from .tour_characteristic import TourCharacteristicGUI
+from .tour_type import TourTypeGUI
+from .tour_price import TourPriceGUI
+from .tour_location import TourLocationGUI
+
 
 class TourGUI:
     content_window = "content_window"
     group_content_window = None
     CONTENT_TAB_BAR = [
         ["tour_tab_bar_menu_window", "Tour", TourTourGUI.content_render],
-        ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", TourTourGUI.content_render],
-        ["tour_type_tab_bar_menu_window", "Tour Type", TourTourGUI.content_render],
-        ["tour_price_tab_bar_menu_window", "Tour Price", TourTourGUI.content_render],
-        ["location_tab_bar_menu_window", "Location", TourTourGUI.content_render]
+        ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", TourCharacteristicGUI.content_render],
+        ["tour_type_tab_bar_menu_window", "Tour Type", TourTypeGUI.content_render],
+        ["tour_price_tab_bar_menu_window", "Tour Price", TourPriceGUI.content_render],
+        ["location_tab_bar_menu_window", "Location", TourLocationGUI.content_render]
     ]
     
     @classmethod
@@ -47,19 +52,23 @@ class TourGUI:
     @classmethod
     def tour_characteristic_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        cls.tour_characteristic_render(str(sender))
+        TourCharacteristicGUI.group_content_window = cls.group_content_window
+        TourCharacteristicGUI.content_render(str(sender))
 
     @classmethod
     def tour_type_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        cls.tour_type_render(str(sender))
+        TourTypeGUI.group_content_window = cls.group_content_window
+        TourTypeGUI.content_render(str(sender))
 
     @classmethod
     def tour_price_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        cls.tour_price_render(str(sender))
+        TourPriceGUI.group_content_window = cls.group_content_window
+        TourPriceGUI.content_render(str(sender))
 
     @classmethod
     def location_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        cls.location_render(str(sender))
+        TourLocationGUI.group_content_window = cls.group_content_window
+        TourLocationGUI.content_render(str(sender))
