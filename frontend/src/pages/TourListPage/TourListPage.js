@@ -19,7 +19,7 @@ const TourListPage = () => {
     const characteristics = useSelector(selectTourCharacteristic);
     const types = useSelector(selectTourType);
     const details = useSelector(selectTourDetails);
-    const [tourList, setTourList] = useState(tours.results);
+    const [tourList, setTourList] = useState(tours);
 
     useEffect(() => {
         dispatch(getTourList());
@@ -27,7 +27,7 @@ const TourListPage = () => {
 
     const handleDelete = async (id) => {
         await dispatch(deleteTour(id));
-        setTourList(tours.results.filter(tour => tour.id !== id));
+        setTourList(tours.filter(tour => tour.id !== id));
     };
 
     const formatEditTour = (updateTour) => {
@@ -52,12 +52,12 @@ const TourListPage = () => {
     const saveEdit = async (updateTour) => {
         await formatEditTour(updateTour);
         await dispatch(editTour(updateTour));
-        tours.results.forEach(tour => {
+        tours.forEach(tour => {
             if(tour.id === updateTour.id) {
                 tour = {...tour, ...updateTour};
             };
         });
-        setTourList(tours.results);
+        setTourList(tours);
     };
 
     const handleDetails = (id) => {
@@ -65,7 +65,7 @@ const TourListPage = () => {
     };
 
     return (
-        <TourListForm tours={tours.results} remove={handleDelete} update={saveEdit} setDetails={handleDetails} tourDetails={details} />
+        <TourListForm tours={tours} remove={handleDelete} update={saveEdit} setDetails={handleDetails} tourDetails={details} />
     )
 }
 
