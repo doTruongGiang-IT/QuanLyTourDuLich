@@ -69,13 +69,77 @@ content-type: application/json
 
 
 ### Group Detail ###
-GET {{api_url}}/group/2 HTTP/1.1
+GET {{api_url}}/group/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Create ###
+POST {{api_url}}/group/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour ádas",
+    "tour": 1,
+    "start_date": "2023-05-12",
+    "end_date": "2023-05-15"
+}
+
+### Group Update ###
+PATCH {{api_url}}/group/10 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour avsd"
+}
+
+### Group Delete ###
+DELETE {{api_url}}/group/10 HTTP/1.1
 content-type: application/json
 
 
 
+###############################
+#      3. Group Journey       #
+###############################
+
+
+### Group Journey List ###
+GET {{api_url}}/group/journey?group_id=1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journey Detail ###
+GET {{api_url}}/group/journey/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journey Create ###
+POST {{api_url}}/group/journey HTTP/1.1
+content-type: application/json
+
+{
+    "group": 10,
+    "content": "Hạ cách sân bay Incheon",
+    "start_date": "2021-10-22T09:40:00Z",
+    "end_date": "2021-10-22T10:20:00Z",
+    "location": 7
+}
+
+### Group Journey Update ###
+PATCH {{api_url}}/group/journey/19 HTTP/1.1
+content-type: application/json
+
+{
+    "content": "Hạ cách sân bay Incheos"
+}
+
+### Group Journey Delete ###
+DELETE {{api_url}}/group/journey/19 HTTP/1.1
+content-type: application/json
+
+
 ##################################
-#     3. Tour Characteristic     #
+#     4. Tour Characteristic     #
 ##################################
 
 
@@ -114,7 +178,7 @@ content-type: application/json
 
 
 ############################
-#       4. Tour Type       #
+#       5. Tour Type       #
 ############################
 
 
@@ -150,7 +214,7 @@ DELETE {{api_url}}/tour/tour_type/5 HTTP/1.1
 content-type: application/json
 
 #############################
-#       5. Tour Price       #
+#       6. Tour Price       #
 #############################
 
 
@@ -196,7 +260,7 @@ content-type: application/json
 
 
 ############################
-#       6. Location        #
+#       7. Location        #
 ############################
 
 

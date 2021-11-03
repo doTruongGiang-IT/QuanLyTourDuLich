@@ -28,7 +28,7 @@ class GroupJourneySerializer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        exclude = ('revenue', )
+        fields = '__all__'
         
     def to_representation(self, instance):
         representation = super().to_representation(instance)
