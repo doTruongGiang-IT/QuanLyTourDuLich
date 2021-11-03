@@ -11,18 +11,19 @@ class TourGUI:
     content_window = "content_window"
     group_content_window = None
     CONTENT_TAB_BAR = [
-        ["tour_tab_bar_menu_window", "Tour", TourTourGUI.content_render],
-        ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", TourCharacteristicGUI.content_render],
-        ["tour_type_tab_bar_menu_window", "Tour Type", TourTypeGUI.content_render],
-        ["tour_price_tab_bar_menu_window", "Tour Price", TourPriceGUI.content_render],
-        ["location_tab_bar_menu_window", "Location", TourLocationGUI.content_render]
+        ["tour_tab_bar_menu_window", "Tour", TourTourGUI],
+        ["tour_characteristic_tab_bar_menu_window", "Tour Characteristic", TourCharacteristicGUI],
+        ["tour_type_tab_bar_menu_window", "Tour Type", TourTypeGUI],
+        ["tour_price_tab_bar_menu_window", "Tour Price", TourPriceGUI],
+        ["location_tab_bar_menu_window", "Location", TourLocationGUI]
     ]
     
     @classmethod
     def tab_bar_call_back(cls, sender, data):
         for tab in cls.CONTENT_TAB_BAR:
             if dpg.get_item_label(data) == tab[1]:
-                tab[2](tab[1])
+                tab[2].group_content_window = cls.group_content_window
+                tab[2].content_render(tab[1])
                 break
     
     @classmethod    

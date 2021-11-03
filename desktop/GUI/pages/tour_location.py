@@ -19,8 +19,8 @@ class TourLocationGUI:
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
         header = ['id', 'name', 'type', 'level']
+        type_columns = [int, str, str, str]
         data = []
-        width_columns = [32, 148, 123, 435]
         location_bus = LocationBUS()
         location_data = location_bus.objects
         
@@ -36,7 +36,7 @@ class TourLocationGUI:
             header=header,
             data=data,
             parent=cls.group_content_window,
-            width_columns=width_columns,
+            type_columns=type_columns,
             is_action=True,
             modified_callback=cls.modified_window,
             delete_callback=cls.delete_window,

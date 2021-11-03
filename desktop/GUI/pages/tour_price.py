@@ -21,8 +21,9 @@ class TourPriceGUI:
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
         header = ['id', 'name', 'price', 'start_date', 'end_date']
+        datetime_type = lambda d: datetime.strptime(d, '%Y-%m-%d')
+        type_columns = [int, str, int, datetime_type, datetime_type]
         data = []
-        width_columns = [32, 148, 120, 130, 127]
         tour_price_bus = TourPriceBUS()
         tour_price_data = tour_price_bus.objects
         
@@ -39,7 +40,7 @@ class TourPriceGUI:
             header=header,
             data=data,
             parent=cls.group_content_window,
-            width_columns=width_columns,
+            type_columns=type_columns,
             is_action=True,
             modified_callback=cls.modified_window,
             delete_callback=cls.delete_window,

@@ -19,8 +19,8 @@ class TourTypeGUI:
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
         header = ['id', 'name']
+        type_columns = [int, str]
         data = []
-        width_columns = [32, 148]
         tour_type_bus = TourTypeBUS()
         tour_type_data = tour_type_bus.objects
         
@@ -34,7 +34,7 @@ class TourTypeGUI:
             header=header,
             data=data,
             parent=cls.group_content_window,
-            width_columns=width_columns,
+            type_columns=type_columns,
             is_action=True,
             modified_callback=cls.modified_window,
             delete_callback=cls.delete_window,
