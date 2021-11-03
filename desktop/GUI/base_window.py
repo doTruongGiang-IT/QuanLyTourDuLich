@@ -1,15 +1,24 @@
 import dearpygui.dearpygui as dpg
+
 from .base_data import MENU
 
-def init_window():
+
+def init_menu_window():
     with dpg.window(tag="menu_window", label="Menu", pos=[0, 0], width=400, height=800):
         for collapsing_header, header_data in MENU.items():
-            with dpg.collapsing_header(tag=collapsing_header, label=header_data['name']):
+            # with dpg.collapsing_header(tag=collapsing_header, label=header_data['name']):
+            with dpg.collapsing_header(label=header_data['name']):
                 for item_data in header_data['data']:
-                    dpg.add_button(tag=item_data[0], label=item_data[1], width=380, indent=20, callback=item_data[2])
-        
+                    # dpg.add_button(tag=item_data[0], label=item_data[1], width=380, indent=20, callback=item_data[2])
+                    dpg.add_button(label=item_data[1], width=380, indent=20, callback=item_data[2])
+            
+def init_content_window():
     with dpg.window(tag="content_window", label="Content", pos=[400, 0], width=865, height=800):
         pass
+
+def init_window():
+    init_menu_window()
+    init_content_window()
     
 def init_font():
     with dpg.font_registry() as main_font_registry:
