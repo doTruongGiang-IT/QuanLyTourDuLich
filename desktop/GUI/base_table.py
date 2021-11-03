@@ -1,19 +1,22 @@
 import dearpygui.dearpygui as dpg
 
 
-def sort_callback(sender, sort_specs):
+def sort_callback(sender, sort_specs, user_data):
     if sort_specs is None: return
-
+    
+    type_columns = user_data
     rows = dpg.get_item_children(sender, 1)
+    ind = type_columns[sort_specs[0][0]][0]
+    data_type = type_columns[sort_specs[0][0]][1]
 
     sortable_list = []
     for row in rows:
-        first_cell = dpg.get_item_children(row, 1)[0]
-        sortable_list.append([row, dpg.get_value(first_cell)])
+        ind_cell = dpg.get_item_children(row, 1)[ind]
+        sortable_list.append([row, dpg.get_value(ind_cell)])
 
     def _sorter(e):
-        return e[1]
-
+        return data_type(e[1])
+    
     sortable_list.sort(key=_sorter, reverse=sort_specs[0][1] < 0)
 
     new_order = [] 
@@ -26,8 +29,8 @@ def init_table(
     header, 
     data, 
     parent, 
-    width_columns = None, 
-    is_action = False, 
+    type_columns=None,
+    is_action=False, 
     modified_callback=None, 
     delete_callback=None, 
     view_callback=None
@@ -41,15 +44,21 @@ def init_table(
         row_background=True,
         resizable=True,
         sortable=True,
+        hideable=True,
+        precise_widths=True,
+        no_host_extendX=True,
         callback=sort_callback,
         parent=parent)
 
-    for idx, column in enumerate(header):
-        width = width_columns[idx] if width_columns else 0
-        dpg.add_table_column(label=column, width=width, parent=table)
+    type_column_map = {}
+    
+    for ind, column in enumerate(header):
+        col = dpg.add_table_column(label=column, width_fixed=True, parent=table)
+        if type_columns:
+            type_column_map[col] = (ind, type_columns[ind])
 
     if is_action is True:
-        dpg.add_table_column(label="Action", parent=table)
+        dpg.add_table_column(label="Action", parent=table, no_sort=True)
         
     for row in data:
         table_row = dpg.add_table_row(parent=table)
@@ -58,9 +67,17 @@ def init_table(
         
         if is_action is True:
             action_group = dpg.add_group(horizontal=True, parent=table_row)
-            dpg.add_button(label='M', parent=action_group, callback=modified_callback, user_data=row[0])
-            dpg.add_button(label='D', parent=action_group, callback=delete_callback, user_data=row[0])
-            dpg.add_button(label='V', parent=action_group, callback=view_callback, user_data=row[0])
-            dpg.add_image_button
+            modified_button= dpg.add_button(label='M', parent=action_group, callback=modified_callback, user_data=row[0])
+            delete_button = dpg.add_button(label='D', parent=action_group, callback=delete_callback, user_data=row[0])
+            view_button = dpg.add_button(label='V', parent=action_group, callback=view_callback, user_data=row[0])
+            tooltip_modified_button = dpg.add_tooltip(parent=modified_button)
+            tooltip_delete_button = dpg.add_tooltip(parent=delete_button)
+            tooltip_view_button = dpg.add_tooltip(parent=view_button)
+            dpg.add_text("Modified", parent=tooltip_modified_button)
+            dpg.add_text("Delete", parent=tooltip_delete_button)
+            dpg.add_text("View", parent=tooltip_view_button)
+            dpg.add_selectable(parent=action_group, span_columns=True)
             
+    dpg.configure_item(table, user_data=type_column_map)    
+    
     return table
