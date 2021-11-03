@@ -1,12 +1,12 @@
-from base.views import TrackingMixin
+from base.views import PaginateMixin, TrackingMixin
 from django.db.models import Q
 from rest_framework import viewsets
 
 from .models import Group, GroupJourney
-from .serializers import GroupSerializer, GroupJourneySerializer
+from .serializers import GroupJourneySerializer, GroupSerializer
 
 
-class GroupViewSet(TrackingMixin, viewsets.ModelViewSet):
+class GroupViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
     object_name = 'group'
@@ -22,7 +22,7 @@ class GroupViewSet(TrackingMixin, viewsets.ModelViewSet):
         return super().filter_queryset(queryset)
     
     
-class GroupJourneyViewSet(TrackingMixin, viewsets.ModelViewSet):
+class GroupJourneyViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = GroupJourneySerializer
     queryset = GroupJourney.objects.all()
     object_name = 'group_journey'

@@ -107,7 +107,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getTourCharacteristic.fulfilled, (state, action) => {
-                return {...state, loading: false, tourCharacteristics: action.payload.results};
+                return {...state, loading: false, tourCharacteristics: action.payload};
             })
             .addCase(getTourCharacteristic.rejected, (state) => {
                 return {...state, error: true, loading: false};
@@ -116,7 +116,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getTourType.fulfilled, (state, action) => {
-                return {...state, loading: false, tourTypes: action.payload.results};
+                return {...state, loading: false, tourTypes: action.payload};
             })
             .addCase(getTourType.rejected, (state) => {
                 return {...state, error: true, loading: false};
@@ -125,7 +125,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getTourPrice.fulfilled, (state, action) => {
-                return {...state, loading: false, tourPrices: action.payload.results};
+                return {...state, loading: false, tourPrices: action.payload};
             })
             .addCase(getTourPrice.rejected, (state) => {
                 return {...state, error: true, loading: false};
@@ -143,7 +143,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getListLocation.fulfilled, (state, action) => {
-                return {...state, loading: false, listLocation: action.payload.results};
+                return {...state, loading: false, listLocation: action.payload};
             })
             .addCase(getListLocation.rejected, (state) => {
                 return {...state, error: true, loading: false};
@@ -152,7 +152,7 @@ export const tourSlice = createSlice({
                 return {...state, loading: true };
             })
             .addCase(getTourDetails.fulfilled, (state, action) => {
-                return {...state, loading: false, tourDetails: action.payload.results};
+                return {...state, loading: false, tourDetails: action.payload};
             })
             .addCase(getTourDetails.rejected, (state) => {
                 return {...state, error: true, loading: false};

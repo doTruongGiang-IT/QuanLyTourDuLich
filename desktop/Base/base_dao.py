@@ -54,7 +54,7 @@ class BaseDAO:
             response = request.json()
             result = []
             
-            for data in response['results']:
+            for data in response:
                 result.append(self.get_object(data))
                 
             return (Error(False, None), result)

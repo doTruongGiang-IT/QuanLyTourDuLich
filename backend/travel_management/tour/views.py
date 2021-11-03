@@ -1,11 +1,13 @@
+from base.views import PaginateMixin, TrackingMixin
 from rest_framework import viewsets
 
-from base.views import TrackingMixin
-from .models import Tour, TourCharacteristic, TourType, TourPrice, Location
-from .serializers import TourSerializer, TourCharacteristicSerializer, TourTypeSerializer, TourPriceSerializer, LocationSerializer
+from .models import Location, Tour, TourCharacteristic, TourPrice, TourType
+from .serializers import (LocationSerializer, TourCharacteristicSerializer,
+                          TourPriceSerializer, TourSerializer,
+                          TourTypeSerializer)
 
 
-class TourViewSet(TrackingMixin, viewsets.ModelViewSet):
+class TourViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourSerializer
     queryset = Tour.objects.all()
     object_name = 'tour'
@@ -22,25 +24,25 @@ class TourViewSet(TrackingMixin, viewsets.ModelViewSet):
         return contexts
     
     
-class TourCharacteristicViewSet(TrackingMixin, viewsets.ModelViewSet):
+class TourCharacteristicViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourCharacteristicSerializer
     queryset = TourCharacteristic.objects.all()
     object_name = 'tour_characteristic'
     
     
-class TourTypeViewSet(TrackingMixin, viewsets.ModelViewSet):
+class TourTypeViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourTypeSerializer
     queryset = TourType.objects.all()
     object_name = 'tour_type'
     
     
-class TourPriceViewSet(TrackingMixin, viewsets.ModelViewSet):
+class TourPriceViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourPriceSerializer
     queryset = TourPrice.objects.all()
     object_name = 'tour_price'
     
     
-class LocationViewSet(TrackingMixin, viewsets.ModelViewSet):
+class LocationViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
     object_name = 'location'
