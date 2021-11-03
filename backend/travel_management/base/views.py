@@ -18,3 +18,8 @@ class TrackingMixin:
         return response
     
     
+class PaginateMixin:
+    def paginate_queryset(self, queryset):
+        paginator = super().paginate_queryset(queryset)
+        page = self.request.query_params.get("page", None)
+        return None if page is None else paginator
