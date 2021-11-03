@@ -30,6 +30,9 @@ class LocationLevel(object):
 class TourCharacteristic(models.Model):
     name                = models.TextField()
     
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f"{self.id} | {self.name}" 
 
@@ -37,6 +40,9 @@ class TourCharacteristic(models.Model):
 class TourType(models.Model):
     name                = models.TextField()
     
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f"{self.id} | {self.name}" 
 
@@ -47,6 +53,9 @@ class TourPrice(models.Model):
     start_date          = models.DateField()
     end_date            = models.DateField()
     
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f"{self.id} | {self.name}" 
 
@@ -63,7 +72,9 @@ class Location(models.Model):
                             choices=LocationLevel.CHOICES,
                             default=LocationLevel.UNKNOWN,
                         )
-    
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return f"{self.id} | {self.name}" 
 
@@ -74,6 +85,9 @@ class Tour(models.Model):
     type                = models.ForeignKey(TourType, on_delete=models.CASCADE)
     price               = models.ForeignKey(TourPrice, on_delete=models.CASCADE)
     location            = models.ForeignKey(Location, on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ['id']
     
     def __str__(self):
         return f"{self.id} | {self.name}" 

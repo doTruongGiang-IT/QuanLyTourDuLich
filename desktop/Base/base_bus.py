@@ -6,12 +6,20 @@ class BaseBUS:
     DTO_CLASS = None
     DAO_CLASS = None
     
+    # These are for lazy loading
+    STORED_OBJECTS = None
+    TRACKING_STATUS = False
+    
     def __init__(self):
         self.query = self.DAO_CLASS()
         
     @property
     def objects(self) -> list[DTO_CLASS]:
-        return self.read()
+        if self.__class__.TRACKING_STATUS is False:
+            self.__class__.TRACKING_STATUS = True
+            self.__class__.STORED_OBJECTS = self.read()
+        
+        return self.__class__.STORED_OBJECTS
         
     def read(self) -> list[DTO_CLASS]:
         """
