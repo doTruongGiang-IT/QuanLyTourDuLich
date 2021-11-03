@@ -1,8 +1,7 @@
 from Base.base_bus import BaseBUS
-from DTO.group import Group
-from DAO.group import GroupDAO
-from desktop.DAO.group import GroupJourneyDAO
-from desktop.DTO.group import GroupJourney
+from DAO.group import GroupDAO, GroupJourneyDAO
+from DTO.group import Group, GroupJourney
+
 
 class GroupBUS(BaseBUS):
     DTO_CLASS = Group
