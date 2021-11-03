@@ -6,8 +6,8 @@ MENU = {
         "data": [
             ["menu_tour_management_tour", "Tour", TourGUI.tour_render_callback],
             ["menu_tour_management_tour_characteristic", "Tour Characteristic", TourGUI.tour_characteristic_render_callback],
-            ["menu_tour_management_tour_price", "Tour Price", TourGUI.tour_type_render_callback],
-            ["menu_tour_management_tour_type", "Tour Type", TourGUI.tour_price_render_callback],
+            ["menu_tour_management_tour_type", "Tour Type", TourGUI.tour_type_render_callback],
+            ["menu_tour_management_tour_price", "Tour Price", TourGUI.tour_price_render_callback],
             ["menu_tour_management_tour_location", "Location", TourGUI.location_render_callback],
         ]
     },
