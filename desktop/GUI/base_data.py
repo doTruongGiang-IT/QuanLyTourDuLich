@@ -1,4 +1,5 @@
 from .pages.tour import TourGUI
+from .pages.group import GroupGUI
 
 MENU = {
     "menu_tour_management": {
@@ -14,7 +15,7 @@ MENU = {
     "menu_group_management": {
         "name": "Group Management",
         "data": [
-            ["menu_group_management_group", "Group", TourGUI.tour_render_callback],
+            ["menu_group_management_group", "Group", GroupGUI.group_render_callback],
         ]
     },
     "menu_statictis": {
