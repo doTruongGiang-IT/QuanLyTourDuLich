@@ -13,6 +13,9 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     let journeys = [];
     let nameLocation = "";
     let contents = [];
+    let journeys2 = [];
+    let containers = [];
+    let days = [];
 
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
@@ -23,14 +26,21 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     tourDetails.forEach(detail => {
       if(detail.journey.length > 0) {
         detail.journey.forEach((item) => {
-          contents.push(`${new Date(item.start_date).getHours()}h - ${new Date(item.end_date).getHours()}h: ${item.content}.`);
+          contents.push(`${new Date(item.start_date).getUTCHours()}h:${new Date(item.start_date).getUTCMinutes()}m - ${new Date(item.end_date).getUTCHours()}h:${new Date(item.end_date).getUTCMinutes()}m: ${item.content}.`);
+          containers.push({day: new Date(item.start_date).getUTCDate(), content: `${new Date(item.start_date).getUTCHours()}h:${new Date(item.start_date).getUTCMinutes()}m - ${new Date(item.end_date).getUTCHours()}h:${new Date(item.end_date).getUTCMinutes()}m: ${item.content}.`});
+          if(!days.includes(new Date(item.start_date).getUTCDate())) {
+            days.push(new Date(item.start_date).getUTCDate());
+          };
+          
           if(item.location.type === "Hotel") {
             hotel = item.location.name;
           };
         });
         journeys.push({id: detail.id, contents});
+        journeys2.push({id: detail.id, containers});
       }else {
         journeys.push({id: detail.id, contents: []});
+        journeys2.push({id: detail.id, containers: []});
       };
 
       listLocation.forEach(locationItem => {
@@ -215,14 +225,21 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             <Table bordered columns={columns} dataSource={details} />
             <Modal title="Journey for this group" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
               {
-                journeys.map(journey => {
-                  return <p key={journey.id}>
+                journeys2.map(journey => {
+                  return <div key={journey.id}>
                     {
-                      journey.id === isRowActive ? journey.contents.map((content, index) => {
-                        return <p key={index}>{content}</p>
-                      }) : ""
+                      days.map((day, index) => {
+                        return <div key={index}>
+                                  <strong>DAY: {day}</strong>
+                                  {
+                                    journey.id === isRowActive ? journey.containers.map((content, index) => {
+                                      return content.day === day ? <p key={index}>{content.content}</p> : ""
+                                    }) : ""
+                                  }
+                              </div>
+                      })
                     }
-                  </p>
+                  </div>
                 })
               }
             </Modal>
