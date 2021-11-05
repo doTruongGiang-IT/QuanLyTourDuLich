@@ -19,12 +19,9 @@ const MenuApp = () => {
             <Menu.Item key="" icon={<HomeFilled />}>
                 HOME
             </Menu.Item>
-            <SubMenu key="tour" title="TOUR">
-                <Menu.Item key="tour_type">Tour Type</Menu.Item>
-                <Menu.Item key="tour_price">Tour Price</Menu.Item>
-                <Menu.Item key="tour_characteristic">Tour Characteristic</Menu.Item>
-                <Menu.Item key="tour_location">Tour Location</Menu.Item>
-            </SubMenu>
+            <Menu.Item key="tour_factors">
+                TOUR FACTORS
+            </Menu.Item>
         </Menu>
     )
 }
