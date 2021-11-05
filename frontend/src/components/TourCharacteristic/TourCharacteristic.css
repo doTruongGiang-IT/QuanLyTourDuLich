@@ -1,0 +1,36 @@
+.characteristicForm {
+    height: fit-content;
+    padding: 50px 50px;
+    width: 48%;
+}
+
+.characteristicForm h2 {
+    text-align: center;
+    color: white;
+    background-color: blue;
+    font-size: 28px;
+    padding: 5px 0;
+}
+
+.characteristicContent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.characteristicList {
+    width: 65%;
+}
+
+.characteristicAddForm {
+    width: 33%;
+    max-height: fit-content;
+    overflow: hidden;
+    border: 1px solid blue;
+}
+
+.characteristicAddForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: blue;
+    color: white;
+}
