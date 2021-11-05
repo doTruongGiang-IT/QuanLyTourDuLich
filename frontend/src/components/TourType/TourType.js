@@ -1,26 +1,26 @@
 import React, {useState} from 'react';
-import './TourCharacteristic.css';
+import '../TourCharacteristic/TourCharacteristic.css';
 import { Table, Input, Button, Space, Popconfirm, Form, notification, Select} from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import EditableCell from '../EditableCell/EditableCell';
 
 const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 14,
-  },
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 14,
+    },
+};
+  
+  const tailLayout = {
+    wrapperCol: {
+      offset: 3,
+      span: 14,
+    },
 };
 
-const tailLayout = {
-  wrapperCol: {
-    offset: 3,
-    span: 14,
-  },
-};
-
-const TourCharacteristic = () => {
+const TourType = () => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
@@ -308,8 +308,8 @@ const TourCharacteristic = () => {
     };
 
     return (
-        <div className="characteristicForm">
-            <h2>Tour Characteristic list</h2>
+        <div className="typeForm">
+            <h2>Tour Type list</h2>
             {contextHolder}
             <div className="characteristicContent">
                 <div className="characteristicList">
@@ -354,4 +354,4 @@ const TourCharacteristic = () => {
     )
 }
 
-export default TourCharacteristic;
+export default TourType;

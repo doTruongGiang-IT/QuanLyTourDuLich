@@ -1,0 +1,9 @@
+.tourFactorsPage {
+    display: flex;
+    flex-direction: column;
+}
+
+.tourItem {
+    display: flex;
+    justify-content: space-between;
+}
