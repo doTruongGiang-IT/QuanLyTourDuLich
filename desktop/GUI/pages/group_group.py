@@ -13,19 +13,24 @@ class GroupGroupGUI:
     table = None
 
     @classmethod
-    def content_render(cls, data):
+    def content_render(cls, data, default_choice=None):
         dpg.delete_item(cls.group_content_window, children_only=True)
+        cls.table = None
         
         tours = [f'{t.id} | {t.name}' for t in TourBUS().objects]
         
         high_top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_text(default_value=data, parent=high_top_group)
-        dpg.add_combo(label="Tour", items=tours, parent=high_top_group, callback=cls.choice_tour_combo)
+        tour_combo = dpg.add_combo(label="Tour", items=tours, parent=high_top_group, callback=cls.choice_tour_combo)
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new group", callback=cls.create_window, parent=top_group)
         dpg.add_input_text(label="Search", parent=top_group)
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
+        
+        if default_choice is not None:
+            dpg.configure_item(tour_combo, default_value=default_choice)
+            cls.choice_tour_combo(tour_combo, default_choice)
         
     @classmethod
     def choice_tour_combo(cls, sender, app_data):
@@ -50,6 +55,7 @@ class GroupGroupGUI:
         
         if cls.table is not None:
             dpg.delete_item(cls.table)
+            cls.table = None
         
         cls.table = init_table(
             header=header,
@@ -72,12 +78,13 @@ class GroupGroupGUI:
 
         datenow = {
             'month_day': date.today().day,
-            'year': date.today().year-1970+70,
+            'year': date.today().year-1900,
             'month': date.today().month-1
         }
         group_start_date = dpg.add_date_picker(label="Start Date ", parent=window, default_value=datenow)
         group_end_date = dpg.add_date_picker(label="End Date ", parent=window, default_value=datenow)
-        group_revenue = dpg.add_input_text(label="Revenue ", parent=window)
+        
+        dpg.add_button(label="Add Journey", callback=cls.create_journey_window_callback, parent=window, user_data=group_tour)
         
         group = dpg.add_group(horizontal=True, parent=window)
         button = dpg.add_button(label="Add new group", callback=cls.create_window_callback, parent=group)
@@ -107,15 +114,30 @@ class GroupGroupGUI:
                         'field': 'end_date',
                         'name': 'End date',
                         'item': group_end_date,
-                    },
-                    {
-                        'field': 'revenue',
-                        'name': 'Revenue',
-                        'item': group_revenue,
                     }
                 ]
             }
         )
+        
+    @classmethod
+    def create_journey_window_callback(cls, sender, app_data, user_data):
+        group_id = dpg.get_value(user_data)
+        int(group_id.split('|')[0])
+            
+        window = dpg.add_window(label="Add Journey list", width=400, autosize=True, pos=[500, 200])
+        title = dpg.add_text(default_value="Journey List (0)", parent=window)
+        group = dpg.add_group(horizontal=True, parent=window)
+        user_data = {
+            'title': title,
+            'group': group,
+            'group_id': group_id
+        }
+        dpg.add_button(label="[+] New Journey", callback=cls.add_journey_callback, parent=window)
+        
+    def add_journey_callback(cls, sender, app_data, user_data):
+        window = dpg.add_window(label="Add Journey list", width=400, autosize=True, pos=[500, 200])
+        status = dpg.add_text(default_value="Journey List (0)", parent=window)
+        dpg.add_button(label="[+] New Journey", callback=cls.add_journey_window_callback, parent=window)
         
     @classmethod
     def create_window_callback(cls, sender, app_data, user_data):
@@ -136,12 +158,11 @@ class GroupGroupGUI:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
             print(request_data)
             
+            tour_choice_value = request_data['tour']
             request_data['tour']  = int(request_data['tour'].split('|')[0])
 
-            start_date = datetime(request_data['start_date']['year']-70+1970, request_data['start_date']['month']+1, request_data['start_date']['month_day'])
-            end_date = datetime(request_data['end_date']['year']-70+1970, request_data['end_date']['month']+1, request_data['end_date']['month_day'])
-
-            request_data['revenue'] = int(request_data['revenue'])
+            start_date = datetime(request_data['start_date']['year']+1900, request_data['start_date']['month']+1, request_data['start_date']['month_day'])
+            end_date = datetime(request_data['end_date']['year']+1900, request_data['end_date']['month']+1, request_data['end_date']['month_day'])
             
             group_obj = Group(
                 id = 0,
@@ -149,7 +170,7 @@ class GroupGroupGUI:
                 tour = request_data['tour'],
                 start_date = start_date,
                 end_date = end_date,
-                revenue = request_data['revenue'],
+                revenue = 0,
                 journey = []
             )
 
@@ -160,7 +181,7 @@ class GroupGroupGUI:
                 dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
             else:
                 dpg.delete_item(user_data['window'])
-                cls.content_render("group")
+                cls.content_render("group", default_choice=tour_choice_value)
                 
     @classmethod
     def modified_window(cls, sender, app_data, user_data):
@@ -179,17 +200,16 @@ class GroupGroupGUI:
 
         start_date={
             'month_day': group_object.start_date.day,
-            'year': group_object.start_date.year-1970+70,
+            'year': group_object.start_date.year-1900,
             'month': group_object.start_date.month-1
         }
         end_date={
             'month_day': group_object.end_date.day,
-            'year': group_object.end_date.year-1970+70,
+            'year': group_object.end_date.year-1900,
             'month': group_object.end_date.month-1
         }
         group_start_date = dpg.add_date_picker(label="Start Date ", parent=window, default_value=start_date)
         group_end_date = dpg.add_date_picker(label="End Date ", parent=window, default_value=end_date)
-        group_revenue = dpg.add_input_text(label="Revenue ", parent=window, default_value=group_object.revenue)
         
         group = dpg.add_group(horizontal=True, parent=window)
         button = dpg.add_button(label="Save the group", callback=cls.modified_window_callback, parent=group)
@@ -220,11 +240,6 @@ class GroupGroupGUI:
                         'field': 'end_date',
                         'name': 'End date',
                         'item': group_end_date,
-                    },
-                    {
-                        'field': 'revenue',
-                        'name': 'Revenue',
-                        'item': group_revenue,
                     }
                 ]
             }
@@ -249,12 +264,11 @@ class GroupGroupGUI:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
             print(request_data)
             
+            tour_choice_value = request_data['tour']
             request_data['tour']  = int(request_data['tour'].split('|')[0])
 
-            start_date = datetime(request_data['start_date']['year']-70+1970, request_data['start_date']['month']+1, request_data['start_date']['month_day'])
-            end_date = datetime(request_data['end_date']['year']-70+1970, request_data['end_date']['month']+1, request_data['end_date']['month_day'])
-
-            request_data['revenue'] = int(request_data['revenue'])
+            start_date = datetime(request_data['start_date']['year']+1900, request_data['start_date']['month']+1, request_data['start_date']['month_day'])
+            end_date = datetime(request_data['end_date']['year']+1900, request_data['end_date']['month']+1, request_data['end_date']['month_day'])
             
             group_obj = Group(
                 id = user_data['id'],
@@ -262,7 +276,7 @@ class GroupGroupGUI:
                 tour = request_data['tour'],
                 start_date = start_date,
                 end_date = end_date,
-                revenue = request_data['revenue'],
+                revenue = 0,
                 journey = []
             )
 
@@ -273,7 +287,7 @@ class GroupGroupGUI:
                 dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
             else:
                 dpg.delete_item(user_data['window'])
-                cls.content_render("group")
+                cls.content_render("group", default_choice=tour_choice_value)
         
     @classmethod
     def delete_window(cls, sender, app_data, user_data):
@@ -315,11 +329,14 @@ class GroupGroupGUI:
         dpg.add_text(default_value=f"Tour: {tour}", parent=window)
         dpg.add_text(default_value=f"Start date: {group.start_date}", parent=window)
         dpg.add_text(default_value=f"End date: {group.end_date}", parent=window)
-        journey = ""
-        for j in group.journey:
-                start_hour = str(j.start_date.hour) + " h " + str(j.start_date.minute)
-                end_hour = str(j.end_date.hour) + " h " + str(j.end_date.minute)
-                journey +=  start_hour + " - " + end_hour + ": " + j.content + "\n"
-        dpg.add_text(default_value=f"Journey: {journey}", parent=window)
+        dpg.add_text(default_value=f"Journey:", parent=window)
+        
+        for journey in group.journey:
+                start_hour = "{:02d}h{:02d}".format(journey.start_date.hour, journey.start_date.minute)
+                end_hour = "{:02d}h{:02d}".format(journey.end_date.hour, journey.end_date.minute)
+                journey =  start_hour + " - " + end_hour + ": " + journey.content + "\n"
+                
+                dpg.add_text(default_value=journey, bullet=True, parent=window)
+                
         dpg.add_text(default_value=f"Revenue: {group.revenue}", parent=window)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
