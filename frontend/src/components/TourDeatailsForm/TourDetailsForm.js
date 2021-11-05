@@ -3,7 +3,7 @@
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
 import { Table, Input, Button, Space, Modal } from 'antd';
-import { SearchOutlined, BookOutlined, TeamOutlined } from '@ant-design/icons';
+import { SearchOutlined, BookOutlined, TeamOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
 import { useHistory } from 'react-router';
 
@@ -12,8 +12,6 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     let hotel = "";
     let journeys = [];
     let nameLocation = "";
-    let contents = [];
-    let journeys2 = [];
     let containers = [];
     let days = [];
 
@@ -26,21 +24,20 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     tourDetails.forEach(detail => {
       if(detail.journey.length > 0) {
         detail.journey.forEach((item) => {
-          contents.push(`${new Date(item.start_date).getUTCHours()}h:${new Date(item.start_date).getUTCMinutes()}m - ${new Date(item.end_date).getUTCHours()}h:${new Date(item.end_date).getUTCMinutes()}m: ${item.content}.`);
-          containers.push({day: new Date(item.start_date).getUTCDate(), content: `${new Date(item.start_date).getUTCHours()}h:${new Date(item.start_date).getUTCMinutes()}m - ${new Date(item.end_date).getUTCHours()}h:${new Date(item.end_date).getUTCMinutes()}m: ${item.content}.`});
-          if(!days.includes(new Date(item.start_date).getUTCDate())) {
-            days.push(new Date(item.start_date).getUTCDate());
+          let day = `${new Date(item.start_date).getUTCDate()}-${new Date(item.start_date).getUTCMonth()}-${new Date(item.start_date).getUTCFullYear()}`;
+          let content = `${new Date(item.start_date).getUTCHours()}h:${new Date(item.start_date).getUTCMinutes()} - ${new Date(item.end_date).getUTCHours()}h:${new Date(item.end_date).getUTCMinutes()}: ${item.content}.`;
+          containers.push({day, content});
+          if(!days.includes(day)) {
+            days.push(day);
           };
           
           if(item.location.type === "Hotel") {
             hotel = item.location.name;
           };
         });
-        journeys.push({id: detail.id, contents});
-        journeys2.push({id: detail.id, containers});
+        journeys.push({id: detail.id, containers});
       }else {
-        journeys.push({id: detail.id, contents: []});
-        journeys2.push({id: detail.id, containers: []});
+        journeys.push({id: detail.id, containers: []});
       };
 
       listLocation.forEach(locationItem => {
@@ -225,7 +222,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             <Table bordered columns={columns} dataSource={details} />
             <Modal title="Journey for this group" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
               {
-                journeys2.map(journey => {
+                journeys.map(journey => {
                   return <div key={journey.id}>
                     {
                       days.map((day, index) => {
@@ -233,7 +230,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
                                   {(journey.id === isRowActive && journey.containers.length > 0) ? <strong>DAY: {day}</strong> : ""}
                                   {
                                     journey.id === isRowActive ? journey.containers.map((content, index) => {
-                                      return content.day === day ? <p key={index}>{content.content}</p> : ""
+                                      return content.day === day ? <div key={index}><p><ClockCircleOutlined /> {content.content}</p></div> : ""
                                     }) : ""
                                   }
                               </div>
