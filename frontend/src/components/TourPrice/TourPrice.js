@@ -373,7 +373,7 @@ const TourPrice = () => {
                                 },
                             ]}
                         >
-                            <InputNumber style={{ width: 185 }} min="0" />
+                            <InputNumber style={{ width: 165 }} min="0" />
                         </Form.Item>
                         <Form.Item
                             name="date"
