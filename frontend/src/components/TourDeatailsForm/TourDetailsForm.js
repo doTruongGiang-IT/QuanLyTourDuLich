@@ -230,7 +230,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
                     {
                       days.map((day, index) => {
                         return <div key={index}>
-                                  <strong>DAY: {day}</strong>
+                                  {(journey.id === isRowActive && journey.containers.length > 0) ? <strong>DAY: {day}</strong> : ""}
                                   {
                                     journey.id === isRowActive ? journey.containers.map((content, index) => {
                                       return content.day === day ? <p key={index}>{content.content}</p> : ""
