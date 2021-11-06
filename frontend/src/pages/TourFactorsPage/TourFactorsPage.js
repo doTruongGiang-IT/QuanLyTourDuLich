@@ -11,23 +11,31 @@ import {
     updateCharacteristicsFactor,
     deleteCharacteristicsFactor,
     createCharacteristicsFactor,
+    selectTypeFactor,
+    getTypesFactor,
+    updateTypesFactor,
+    deleteTypesFactor,
+    createTypesFactor,
 } from '../../features/tourFactor/tourFactorSlice';
 
 const TourFactorPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const dispatch = useDispatch();
     const characteristicsFactor = useSelector(selectCharacteristicFactor);
-    const [factor, setFactor] = useState(characteristicsFactor);
+    const typesFactor = useSelector(selectTypeFactor);
+    const [charFactor, setCharFactor] = useState(characteristicsFactor);
+    const [typeFactor, setTypeFactor] = useState(typesFactor);
 
     useEffect(() => {
         dispatch(getCharacteristicsFactor());
-    }, [dispatch, factor]);
+        dispatch(getTypesFactor());
+    }, [dispatch, charFactor, typeFactor]);
 
     const handleVisible = () => {
         setIsVisible(!isVisible);
     };
 
-    const saveEdit = async (charUpdate) => {
+    const handleUpdateChar = async (charUpdate) => {
         delete charUpdate.key;
         await dispatch(updateCharacteristicsFactor(charUpdate));
         characteristicsFactor.forEach(char => {
@@ -35,17 +43,38 @@ const TourFactorPage = () => {
                 char = {...char, ...charUpdate};
             };
         });
-        setFactor(characteristicsFactor);
+        setCharFactor(characteristicsFactor);
     };
 
-    const handleDelete = async (id) => {
+    const handleDeleteChar = async (id) => {
         await dispatch(deleteCharacteristicsFactor(id));
-        setFactor(characteristicsFactor.filter(char => char.id !== id));
+        setCharFactor(characteristicsFactor.filter(char => char.id !== id));
     };
 
-    const handleSubmit = async (newChar) => {
+    const handleSubmitChar = async (newChar) => {
         await dispatch(createCharacteristicsFactor(newChar));
-        setFactor(characteristicsFactor.map(() => ([...characteristicsFactor, newChar])));
+        setCharFactor(characteristicsFactor.map(() => ([...characteristicsFactor, newChar])));
+    };
+
+    const handleUpdateType = async (typeUpdate) => {
+        delete typeUpdate.key;
+        await dispatch(updateTypesFactor(typeUpdate));
+        typesFactor.forEach(type => {
+            if(type.id === typeUpdate.id) {
+                type = {...type, ...typeUpdate};
+            };
+        });
+        setTypeFactor(typesFactor);
+    };
+
+    const handleDeleteType = async (id) => {
+        await dispatch(deleteTypesFactor(id));
+        setTypeFactor(typesFactor.filter(type => type.id !== id));
+    };
+
+    const handleSubmitType = async (newType) => {
+        await dispatch(createTypesFactor(newType));
+        setTypeFactor(typesFactor.map(() => ([...typesFactor, newType])));
     };
 
     return (
@@ -53,10 +82,13 @@ const TourFactorPage = () => {
             <div className="tourItem">
                 <TourCharacteristic 
                     characteristicsFactor={characteristicsFactor} 
-                    update={saveEdit} remove={handleDelete}
-                    submit={handleSubmit}
+                    update={handleUpdateChar} remove={handleDeleteChar}
+                    submit={handleSubmitChar}
                 />
-                <TourType />
+                <TourType 
+                    typeFactor={typesFactor} update={handleUpdateType} 
+                    remove={handleDeleteType} submit={handleSubmitType}
+                />
             </div>
             {
                 !isVisible ?

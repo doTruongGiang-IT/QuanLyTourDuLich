@@ -45,6 +45,38 @@ export const deleteCharacteristicsFactor = createAsyncThunk(
     }
 );
 
+export const getTypesFactor = createAsyncThunk(
+    'factor/getTypesFactor',
+    async () => {
+        const res = await axios.get(`${api_url}/api/tour/tour_type`);
+        return res.data;
+    }
+);
+
+export const createTypesFactor = createAsyncThunk(
+    'factor/createTypeFactor',
+    async (newType) => {
+        const res = await axios.post(`${api_url}/api/tour/tour_type`, newType);
+        return res.data;
+    }
+);
+
+export const updateTypesFactor = createAsyncThunk(
+    'factor/updateTypeFactor',
+    async (typeUpdate) => {
+        const res = await axios.patch(`${api_url}/api/tour/tour_type/${typeUpdate.id}`, typeUpdate);
+        return res.data;
+    }
+);
+
+export const deleteTypesFactor = createAsyncThunk(
+    'factor/deleteTypeFactor',
+    async (id) => {
+        const res = await axios.delete(`${api_url}/api/tour/tour_type/${id}`);
+        return res.data;
+    }
+);
+
 export const tourFactorSlice = createSlice({
     name: 'factor',
     initialState,
@@ -85,6 +117,42 @@ export const tourFactorSlice = createSlice({
                 return {...state, loading: false};
             })
             .addCase(deleteCharacteristicsFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(getTypesFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(getTypesFactor.fulfilled, (state, action) => {
+                return {...state, loading: false, types: action.payload};
+            })
+            .addCase(getTypesFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(createTypesFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(createTypesFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(createTypesFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(updateTypesFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(updateTypesFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(updateTypesFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(deleteTypesFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(deleteTypesFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(deleteTypesFactor.rejected, (state) => {
                 return {...state, loading: false, error: true};
             })
     }
