@@ -2,6 +2,7 @@ import TourDetailsPage from "./pages/TourDetails/TourDetailsPage";
 import TourListPage from "./pages/TourListPage/TourListPage";
 import AddTourPage from "./pages/AddTourPage/AddTourPage";
 import GuestsPage from "./pages/GuestsPage/GuestsPage";
+import TourFactorPage from "./pages/TourFactorsPage/TourFactorsPage";
 
 const routes = [
     {
@@ -23,6 +24,11 @@ const routes = [
         exact: true,
         path: '/guests/:id',
         main: () => <GuestsPage />
+    }, 
+    {
+        exact: true,
+        path: '/tour_factors',
+        main: () => <TourFactorPage />
     }
 ];
 
