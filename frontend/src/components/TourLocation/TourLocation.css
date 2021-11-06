@@ -1,0 +1,40 @@
+.locationsForm {
+    height: fit-content;
+    padding: 50px 50px;
+
+}
+
+.locationsForm h2 {
+    text-align: center;
+    color: white;
+    background-color: blue;
+    font-size: 28px;
+    padding: 5px 0;
+}
+
+.locationContent {
+    display: flex;
+    justify-content: space-between;
+}
+
+.locationList {
+    width: 78%;
+}
+
+.locationAddForm {
+    width: 20%;
+    max-height: 400px;
+    overflow: hidden;
+    border: 1px solid blue;
+}
+
+.locationAddForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: blue;
+    color: white;
+}
+
+.tourLocationFactorItem {
+    margin: 15% 0;
+}

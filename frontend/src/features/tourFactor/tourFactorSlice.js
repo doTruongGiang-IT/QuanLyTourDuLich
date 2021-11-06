@@ -77,12 +77,45 @@ export const deleteTypesFactor = createAsyncThunk(
     }
 );
 
+export const getLocationsFactor = createAsyncThunk(
+    'factor/getLocationsFactor',
+    async () => {
+        const res = await axios.get(`${api_url}/api/tour/location`);
+        return res.data;
+    }
+);
+
+export const createLocationsFactor = createAsyncThunk(
+    'factor/createLocationsFactor',
+    async (newLocate) => {
+        const res = await axios.post(`${api_url}/api/tour/location`, newLocate);
+        return res.data;
+    }
+);
+
+export const updateLocationsFactor = createAsyncThunk(
+    'factor/updateLocationsFactor',
+    async (locateUpdate) => {
+        const res = await axios.patch(`${api_url}/api/tour/location/${locateUpdate.id}`, locateUpdate);
+        return res.data;
+    }
+);
+
+export const deleteLocationsFactor = createAsyncThunk(
+    'factor/deleteLocationsFactor',
+    async (id) => {
+        const res = await axios.delete(`${api_url}/api/tour/location/${id}`);
+        return res.data;
+    }
+);
+
 export const tourFactorSlice = createSlice({
     name: 'factor',
     initialState,
     reducers: {},
     extraReducers: builder => {
         builder
+            // Characteristic
             .addCase(getCharacteristicsFactor.pending, (state) => {
                 return {...state, loading: true};
             })
@@ -119,6 +152,8 @@ export const tourFactorSlice = createSlice({
             .addCase(deleteCharacteristicsFactor.rejected, (state) => {
                 return {...state, loading: false, error: true};
             })
+
+            // Types
             .addCase(getTypesFactor.pending, (state) => {
                 return {...state, loading: true};
             })
@@ -153,6 +188,44 @@ export const tourFactorSlice = createSlice({
                 return {...state, loading: false};
             })
             .addCase(deleteTypesFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            
+            // Locations
+            .addCase(getLocationsFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(getLocationsFactor.fulfilled, (state, action) => {
+                return {...state, loading: false, locations: action.payload};
+            })
+            .addCase(getLocationsFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(createLocationsFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(createLocationsFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(createLocationsFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(updateLocationsFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(updateLocationsFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(updateLocationsFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(deleteLocationsFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(deleteLocationsFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(deleteLocationsFactor.rejected, (state) => {
                 return {...state, loading: false, error: true};
             })
     }
