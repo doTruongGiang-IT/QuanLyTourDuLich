@@ -20,7 +20,7 @@ const layout = {
     },
 };
 
-const TourType = () => {
+const TourType = ({typeFactor, update, remove, submit}) => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
@@ -30,65 +30,17 @@ const TourType = () => {
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
 
+    let typeFactorList = typeFactor ? typeFactor.map((type, index) => {
+        return {key: index, ...type};
+    }) : [];
+
     const onFinish = (values) => {
-        // submit(values);
+        submit(values);
         form.resetFields();
     };
     
       const onReset = () => {
         form.resetFields();
-    };
-
-    const onSelectChange = (selectedRowKeys) => {
-        setSelectedKeys(selectedRowKeys);
-    };
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-        selections: [
-          Table.SELECTION_ALL,
-          Table.SELECTION_INVERT,
-          Table.SELECTION_NONE,
-          {
-            key: 'odd',
-            text: 'Select Odd Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return false;
-                    };
-                    return true;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'even',
-            text: 'Select Even Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return true;
-                    };
-                    return false;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'delete',
-            text: 'Delete Selected Rows',
-            onSelect: () => {
-                if(selectedRowKeys.length > 0) {
-                    selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
-                };
-                setSelectedKeys([]);
-            },
-          },
-        ],
     };
 
     const getColumnSearchProps = dataIndex => ({
@@ -149,7 +101,7 @@ const TourType = () => {
 
     const handleDelete = (id) => {
         // setDataInfo(data.filter((item) => item.key !== key));
-        // remove(id);
+        remove(id);
         openNotification("Deleted");
     };
 
@@ -166,28 +118,28 @@ const TourType = () => {
         setEditingKey('');
     };
 
-    // const saveEdit = async (id) => {
-    //     try {
-    //       const row = await form.validateFields();
-    //       const newData = [...tourList];
-    //       const index = newData.findIndex((item) => id === item.id);
+    const saveEdit = async (id) => {
+        try {
+          const row = await form.validateFields();
+          const newData = [...typeFactorList];
+          const index = newData.findIndex((item) => id === item.id);
     
-    //       if (index > -1) {
-    //         const item = newData[index];
-    //         newData.splice(index, 1, { ...item, ...row });
-    //         setEditData(newData);
-    //         // update(newData[index]);
-    //         setEditingKey('');
-    //         openNotification("Update");
-    //       } else {
-    //         newData.push(row);
-    //         setEditData(newData);
-    //         setEditingKey('');
-    //       }
-    //     } catch (errInfo) {
-    //       console.log('Validate Failed:', errInfo);
-    //     }
-    // };
+          if (index > -1) {
+            const item = newData[index];
+            newData.splice(index, 1, { ...item, ...row });
+            setEditData(newData);
+            update(newData[index]);
+            setEditingKey('');
+            openNotification("Update");
+          } else {
+            newData.push(row);
+            setEditData(newData);
+            setEditingKey('');
+          }
+        } catch (errInfo) {
+          console.log('Validate Failed:', errInfo);
+        }
+    };
 
     const quickSort = (values) => {
         if (values.length <= 1) {
@@ -207,7 +159,7 @@ const TourType = () => {
         return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
     };
 
-    // tourList = quickSort(tourList);
+    typeFactorList = quickSort(typeFactorList);
 
     const columns = [
         {
@@ -240,7 +192,7 @@ const TourType = () => {
                 return editable ? (
                     <Space>
                         <Button
-                            // onClick={() => saveEdit(record.id)}
+                            onClick={() => saveEdit(record.id)}
                             type="primary"
                             size="small"
                             style={{ width: 60 }}
@@ -319,14 +271,14 @@ const TourType = () => {
                                 cell: EditableCell,
                             },
                         }} 
-                        rowSelection={rowSelection}
-                        bordered columns={mergedColumns} dataSource={[]} pagination={{defaultPageSize: 20}} scroll={{ y: 500 }} />
+                        bordered columns={mergedColumns} dataSource={typeFactorList} pagination={{defaultPageSize: 20}} scroll={{ y: 200 }} />
                     </Form>
                 </div>
                 <div className="characteristicAddForm">
                     <h2>ADD FORM</h2>
                     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                         <Form.Item
+                            className="tourCharacteristicFactorItem"
                             name="name"
                             label="Name"
                             rules={[
@@ -337,7 +289,7 @@ const TourType = () => {
                         >
                             <Input />
                         </Form.Item>
-                        <Form.Item {...tailLayout}>
+                        <Form.Item {...tailLayout} className="tourCharacteristicFactorItem">
                             <Space>
                                 <Button type="primary" htmlType="submit">
                                     Submit
