@@ -30,6 +30,7 @@
 .characteristicContent {
     display: flex;
     justify-content: space-between;
+    height: fit-content;
 }
 
 .characteristicList {
@@ -38,7 +39,7 @@
 
 .characteristicAddForm {
     width: 33%;
-    max-height: fit-content;
+    max-height: 300px;
     overflow: hidden;
     border: 1px solid blue;
 }
@@ -48,4 +49,8 @@
     margin-bottom: 20px;
     background-color: blue;
     color: white;
+}
+
+.tourCharacteristicFactorItem {
+    margin: 20% 0;
 }
