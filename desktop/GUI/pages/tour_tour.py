@@ -1,8 +1,11 @@
 import dearpygui.dearpygui as dpg
 
+from DAO.group import GroupDAO
+
 from ..base_table import init_table
 from BUS.tour import TourBUS, TourCharacteristicBUS, TourTypeBUS, TourPriceBUS, LocationBUS
 from DTO.tour import Tour, TourCharacteristic, TourType, TourPrice, Location
+from BUS.group import GroupBUS, GroupJourneyBUS
 
 
 class TourTourGUI:
@@ -284,7 +287,16 @@ class TourTourGUI:
     @classmethod
     def view_window(cls, sender, app_data, user_data):
         tours = TourBUS().objects
+        groups = GroupBUS().objects
         tour = [t for t in tours if t.id == user_data][0]
+        group = [g for g in groups if g.tour == user_data][0]
+        location = ''
+        for j in group.journey:
+            if(j == group.journey[0]):
+                location += '*' + j.location.name + '\n'
+            if(j == group.journey.pop()):
+                location += '\t\t  *' + j.location.name
+            location += '\t\t  *' + j.location.name + '\n'
         
         window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
         dpg.add_text(default_value=f"id: {tour.id}", parent=window)
@@ -292,5 +304,5 @@ class TourTourGUI:
         dpg.add_text(default_value=f"Characteristic: {tour.characteristic.id} | {tour.characteristic.name}", parent=window)
         dpg.add_text(default_value=f"Type: {tour.type.id} | {tour.type.name}", parent=window)
         dpg.add_text(default_value=f"Price: {tour.price.id} | {tour.price.name}", parent=window)
-        dpg.add_text(default_value=f"Location: {tour.location.id} | {tour.location.name}", parent=window)
+        dpg.add_text(default_value=f"Location: {location}", parent=window)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
