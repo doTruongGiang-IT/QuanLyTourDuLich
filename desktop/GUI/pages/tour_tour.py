@@ -294,9 +294,13 @@ class TourTourGUI:
         for j in group.journey:
             if(j == group.journey[0]):
                 location += '*' + j.location.name + '\n'
-            if(j == group.journey.pop()):
-                location += '\t\t  *' + j.location.name
-            location += '\t\t  *' + j.location.name + '\n'
+                location += '\t\t\t\t|\n' 
+            else:
+                if(j == group.journey.pop()):
+                    location += '\t\t  *' + j.location.name
+                else:
+                    location += '\t\t  *' + j.location.name + '\n'
+                    location += '\t\t\t\t|\n'
         
         window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
         dpg.add_text(default_value=f"id: {tour.id}", parent=window)
