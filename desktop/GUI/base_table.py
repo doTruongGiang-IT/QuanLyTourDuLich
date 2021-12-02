@@ -1,4 +1,7 @@
+from typing import List
 import dearpygui.dearpygui as dpg
+
+from DTO.group import GroupJourney
 
 
 def sort_callback(sender, sort_specs, user_data):
@@ -63,7 +66,14 @@ def init_table(
     for row in data:
         table_row = dpg.add_table_row(parent=table)
         for d in row:
-            dpg.add_text(d, parent=table_row)
+            if type(d) == list:
+                data = []
+                for j in d:
+                    content = str(j.start_date.hour) + "h" + str(j.start_date.minute) + "-" + str(j.end_date.hour) + "h" + str(j.start_date.minute) + " : " + j.content
+                    data.append(content)
+                dpg.add_combo(items=data, parent=table_row, no_preview=True)
+            else:
+                dpg.add_text(d, parent=table_row)
         
         if is_action is True:
             action_group = dpg.add_group(horizontal=True, parent=table_row)

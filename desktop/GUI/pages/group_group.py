@@ -36,7 +36,7 @@ class GroupGroupGUI:
     def choice_tour_combo(cls, sender, app_data):
         tour_id = int(app_data.split('|')[0])
         
-        header = ['id', 'name', 'start_date', "end_date", "revenue"]
+        header = ['id', 'name', 'start_date', "end_date", "revenue", "journey"]
         datetime_type = lambda d: datetime.strptime(d, '%Y-%m-%d')
         type_columns = [int, str, datetime_type, datetime_type, int, str]
         data = []
@@ -50,7 +50,8 @@ class GroupGroupGUI:
                 d.name,
                 d.start_date.strftime("%Y-%m-%d"),
                 d.end_date.strftime("%Y-%m-%d"),
-                d.revenue
+                d.revenue,
+                d.journey
             ])
         
         if cls.table is not None:
