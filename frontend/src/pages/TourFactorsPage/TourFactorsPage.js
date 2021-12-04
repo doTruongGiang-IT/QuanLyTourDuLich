@@ -16,6 +16,11 @@ import {
     updateTypesFactor,
     deleteTypesFactor,
     createTypesFactor,
+    selectLocationFactor,
+    getLocationsFactor,
+    updateLocationsFactor,
+    deleteLocationsFactor,
+    createLocationsFactor,
 } from '../../features/tourFactor/tourFactorSlice';
 
 const TourFactorPage = () => {
@@ -23,13 +28,16 @@ const TourFactorPage = () => {
     const dispatch = useDispatch();
     const characteristicsFactor = useSelector(selectCharacteristicFactor);
     const typesFactor = useSelector(selectTypeFactor);
+    const locationsFactor = useSelector(selectLocationFactor);
     const [charFactor, setCharFactor] = useState(characteristicsFactor);
     const [typeFactor, setTypeFactor] = useState(typesFactor);
+    const [locateFactor, setLocateFactor] = useState(locationsFactor);
 
     useEffect(() => {
         dispatch(getCharacteristicsFactor());
         dispatch(getTypesFactor());
-    }, [dispatch, charFactor, typeFactor]);
+        dispatch(getLocationsFactor());
+    }, [dispatch, charFactor, typeFactor, locateFactor]);
 
     const handleVisible = () => {
         setIsVisible(!isVisible);
@@ -77,6 +85,27 @@ const TourFactorPage = () => {
         setTypeFactor(typesFactor.map(() => ([...typesFactor, newType])));
     };
 
+    const handleUpdateLocate = async (locateUpdate) => {
+        delete locateUpdate.key;
+        await dispatch(updateLocationsFactor(locateUpdate));
+        locationsFactor.forEach(locate => {
+            if(locate.id === locateUpdate.id) {
+                locate = {...locate, ...locateUpdate};
+            };
+        });
+        setLocateFactor(locationsFactor);
+    };
+
+    const handleDeleteLocate = async (id) => {
+        await dispatch(deleteLocationsFactor(id));
+        setLocateFactor(locationsFactor.filter(locate => locate.id !== id));
+    };
+
+    const handleSubmitLocate = async (newLocate) => {
+        await dispatch(createLocationsFactor(newLocate));
+        setLocateFactor(locationsFactor.map(() => ([...locationsFactor, newLocate])));
+    };
+
     return (
         <div className="tourFactorsPage">
             <div className="tourItem">
@@ -100,7 +129,10 @@ const TourFactorPage = () => {
                                 <TourPrice />
                             </div>
                             <div className="tourItem">
-                                <TourLocation />
+                                <TourLocation 
+                                    locationsFactor={locationsFactor} update={handleUpdateLocate}
+                                    remove={handleDeleteLocate} submit={handleSubmitLocate} 
+                                />
                             </div>
                         </div>
                         <p id="showMore" onClick={handleVisible}>Show less...</p>

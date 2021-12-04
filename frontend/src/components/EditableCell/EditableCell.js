@@ -40,7 +40,7 @@ const EditableCell = ({
                 ]}
                 >
                 {
-                    title === "Name" ?
+                    (title !== "Characteristic" && title !== "ID Type") ?
                     <Input /> :
                     <Select placeholder="Please select one" allowClear>
                         {

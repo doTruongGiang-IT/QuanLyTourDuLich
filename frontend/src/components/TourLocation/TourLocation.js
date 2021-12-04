@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import '../GuestsForm/GuestsForm.css';
+import './TourLocation.css';
 import { Table, Input, Button, Space, Popconfirm, Form, notification } from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import EditableCell from '../EditableCell/EditableCell';
@@ -20,7 +20,7 @@ const tailLayout = {
     },
 };
 
-const TourLocation = () => {
+const TourLocation = ({locationsFactor, update, remove, submit}) => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
@@ -30,66 +30,17 @@ const TourLocation = () => {
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
 
+    let locateFactorList = locationsFactor ? locationsFactor.map((locate, index) => {
+        return {key: index, ...locate};
+    }) : [];
+
     const onFinish = (values) => {
-        // submit(values);
+        submit(values);
         form.resetFields();
-        console.log(values);
     };
     
       const onReset = () => {
         form.resetFields();
-    };
-
-    const onSelectChange = (selectedRowKeys) => {
-        setSelectedKeys(selectedRowKeys);
-    };
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-        selections: [
-          Table.SELECTION_ALL,
-          Table.SELECTION_INVERT,
-          Table.SELECTION_NONE,
-          {
-            key: 'odd',
-            text: 'Select Odd Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return false;
-                    };
-                    return true;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'even',
-            text: 'Select Even Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return true;
-                    };
-                    return false;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'delete',
-            text: 'Delete Selected Rows',
-            onSelect: () => {
-                if(selectedRowKeys.length > 0) {
-                    selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
-                };
-                setSelectedKeys([]);
-            },
-          },
-        ],
     };
 
     const getColumnSearchProps = dataIndex => ({
@@ -150,7 +101,7 @@ const TourLocation = () => {
 
     const handleDelete = (id) => {
         // setDataInfo(data.filter((item) => item.key !== key));
-        // remove(id);
+        remove(id);
         openNotification("Deleted");
     };
 
@@ -167,28 +118,28 @@ const TourLocation = () => {
         setEditingKey('');
     };
 
-    // const saveEdit = async (id) => {
-    //     try {
-    //       const row = await form.validateFields();
-    //       const newData = [...tourList];
-    //       const index = newData.findIndex((item) => id === item.id);
+    const saveEdit = async (id) => {
+        try {
+          const row = await form.validateFields();
+          const newData = [...locateFactorList];
+          const index = newData.findIndex((item) => id === item.id);
     
-    //       if (index > -1) {
-    //         const item = newData[index];
-    //         newData.splice(index, 1, { ...item, ...row });
-    //         setEditData(newData);
-    //         // update(newData[index]);
-    //         setEditingKey('');
-    //         openNotification("Update");
-    //       } else {
-    //         newData.push(row);
-    //         setEditData(newData);
-    //         setEditingKey('');
-    //       }
-    //     } catch (errInfo) {
-    //       console.log('Validate Failed:', errInfo);
-    //     }
-    // };
+          if (index > -1) {
+            const item = newData[index];
+            newData.splice(index, 1, { ...item, ...row });
+            setEditData(newData);
+            update(newData[index]);
+            setEditingKey('');
+            openNotification("Update");
+          } else {
+            newData.push(row);
+            setEditData(newData);
+            setEditingKey('');
+          }
+        } catch (errInfo) {
+          console.log('Validate Failed:', errInfo);
+        }
+    };
 
     const quickSort = (values) => {
         if (values.length <= 1) {
@@ -208,7 +159,7 @@ const TourLocation = () => {
         return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
     };
 
-    // tourList = quickSort(tourList);
+    locateFactorList = quickSort(locateFactorList);
 
     const columns = [
         {
@@ -232,7 +183,7 @@ const TourLocation = () => {
             sortDirections: ['descend', 'ascend'],
         },
         {
-            title: 'Type',
+            title: 'Type Location',
             dataIndex: 'type',
             key: 'type',
             width: '20%',
@@ -257,7 +208,7 @@ const TourLocation = () => {
                 return editable ? (
                     <Space>
                         <Button
-                            // onClick={() => saveEdit(record.id)}
+                            onClick={() => saveEdit(record.id)}
                             type="primary"
                             size="small"
                             style={{ width: 60 }}
@@ -282,7 +233,7 @@ const TourLocation = () => {
                                 type="primary"
                                 icon={<DeleteOutlined />}
                                 size="small"
-                                style={{ width: 40 }}
+                                style={{ width: 60 }}
                                 danger
                             />
                         </Popconfirm>
@@ -292,7 +243,7 @@ const TourLocation = () => {
                             type="primary"
                             icon={<EditOutlined />}
                             size="small"
-                            style={{ width: 40 }}
+                            style={{ width: 60 }}
                         />
                     </Space>   
                 )
@@ -309,7 +260,7 @@ const TourLocation = () => {
           ...col,
           onCell: (record) => ({
             record,
-            inputType: record.key === 'price' ? 'number' : 'text',
+            inputType: 'text',
             dataIndex: col.dataIndex,
             title: col.title,
             editing: isEditing(record),
@@ -325,25 +276,25 @@ const TourLocation = () => {
     };
 
     return (
-        <div className="guestsForm">
+        <div className="locationsForm">
             <h2>Tour Location list</h2>
             {contextHolder}
-            <div className="guestContent">
-                <div className="guestList">
+            <div className="locationContent">
+                <div className="locationList">
                     <Form form={form} component={false}>
                         <Table components={{
                             body: {
                                 cell: EditableCell,
                             },
                         }} 
-                        rowSelection={rowSelection}
-                        bordered columns={mergedColumns} dataSource={[]} pagination={{defaultPageSize: 20}} scroll={{ y: 500}} />
+                        bordered columns={mergedColumns} dataSource={locateFactorList} pagination={{defaultPageSize: 10}} scroll={{ y: 300}} />
                     </Form>
                 </div>
-                <div className="guestAddForm">
+                <div className="locationAddForm">
                     <h2>ADD FORM</h2>
                     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                         <Form.Item
+                            className="tourLocationFactorItem"
                             name="name"
                             label="Name"
                             rules={[
@@ -355,6 +306,7 @@ const TourLocation = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item
+                            className="tourLocationFactorItem"
                             name="type"
                             label="Type"
                             rules={[
@@ -366,6 +318,7 @@ const TourLocation = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item
+                            className="tourLocationFactorItem"
                             name="level"
                             label="Level"
                             rules={[
@@ -376,7 +329,7 @@ const TourLocation = () => {
                         >    
                             <Input />
                         </Form.Item>
-                        <Form.Item {...tailLayout}>
+                        <Form.Item {...tailLayout} className="tourLocationFactorItem">
                             <Space>
                                 <Button type="primary" htmlType="submit">
                                     Submit
