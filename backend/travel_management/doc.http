@@ -36,6 +36,7 @@ content-type: application/json
 
 {   
     "name": "Let the games begin",
+    "description": "description tour new",
     "characteristic": 2,
     "type": 3,
     "price": 2,
@@ -44,11 +45,11 @@ content-type: application/json
 
 
 ### Tour Update ###
-PATCH {{api_url}}/tour/12 HTTP/1.1
+PATCH {{api_url}}/tour/1 HTTP/1.1
 content-type: application/json
 
 {   
-    "name": "Hi there"
+    "description": "description tour 1"
 }
 
 
