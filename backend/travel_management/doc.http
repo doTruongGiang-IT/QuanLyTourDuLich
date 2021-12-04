@@ -299,3 +299,63 @@ content-type: application/json
 ### Location Delete###
 DELETE {{api_url}}/tour/location/17 HTTP/1.1
 content-type: application/json
+
+
+############################
+#       8. Customer        #
+############################
+
+
+### Customer List All ###
+GET {{api_url}}/customer HTTP/1.1
+content-type: application/json
+
+
+### Customer Detail ###
+GET {{api_url}}/customer/1 HTTP/1.1
+content-type: application/json
+
+
+### Customer Create ###
+POST {{api_url}}/customer/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1",
+    "id_number": "113120381203",
+    "address": "Address 1",
+    "gender": "Male",
+    "phone_number": "123981273"
+}
+
+### Customer Update ###
+PATCH {{api_url}}/customer/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1 updated"
+}
+
+
+### Customer Delete ###
+DELETE {{api_url}}/customer/1 HTTP/1.1
+content-type: application/json
+
+
+### Customer List by Group ###
+GET {{api_url}}/customer/group/1 HTTP/1.1
+content-type: application/json
+
+
+### Customer Add To Group ###
+POST {{api_url}}/customer/group/ HTTP/1.1
+content-type: application/json
+
+{
+    "group": 3,
+    "customer": 2
+}
+
+### Customer Delete From Group ###
+DELETE {{api_url}}/customer/group/?group_id=1&customer_id=2 HTTP/1.1
+content-type: application/json
