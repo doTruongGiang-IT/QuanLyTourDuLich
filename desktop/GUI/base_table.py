@@ -69,7 +69,7 @@ def init_table(
             if type(d) == list:
                 data = []
                 for j in d:
-                    content = str(j.start_date.hour) + "h" + str(j.start_date.minute) + "-" + str(j.end_date.hour) + "h" + str(j.start_date.minute) + " : " + j.content
+                    content = f"{str(j.start_date.strftime('%Y-%m-%d'))} | {str(j.start_date.strftime('%Hh%M'))}-{str(j.end_date.strftime('%Hh%M'))} : {j.content}"
                     data.append(content)
                 dpg.add_combo(items=data, parent=table_row, no_preview=True)
             else:
