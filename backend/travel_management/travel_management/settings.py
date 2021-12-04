@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'tour.apps.TourConfig',
     'group.apps.GroupConfig',
     'customer.apps.CustomerConfig',
+    'staff.apps.StaffConfig',
 ]
 
 MIDDLEWARE = [
