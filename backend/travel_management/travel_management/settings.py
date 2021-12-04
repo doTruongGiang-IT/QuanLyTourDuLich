@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'group.apps.GroupConfig',
     'customer.apps.CustomerConfig',
     'staff.apps.StaffConfig',
+    'stats.apps.StatsConfig',
 ]
 
 MIDDLEWARE = [

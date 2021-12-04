@@ -450,3 +450,14 @@ content-type: application/json
 ### Staff Delete From Group ###
 DELETE {{api_url}}/staff/group/?group_id=1&staff_id=2 HTTP/1.1
 content-type: application/json
+
+
+
+############################
+#        10. Stats         #
+############################
+
+
+### Staff Number of tours of staff ###
+GET {{api_url}}/stats/tour_of_staff HTTP/1.1
+content-type: application/json
