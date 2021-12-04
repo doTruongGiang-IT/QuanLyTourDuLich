@@ -360,3 +360,93 @@ content-type: application/json
 ### Customer Delete From Group ###
 DELETE {{api_url}}/customer/group/?group_id=1&customer_id=2 HTTP/1.1
 content-type: application/json
+
+
+
+############################
+#       9. Staff        #
+############################
+
+
+### Staff List All ###
+GET {{api_url}}/staff HTTP/1.1
+content-type: application/json
+
+
+### Staff Detail ###
+GET {{api_url}}/staff/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Create ###
+POST {{api_url}}/staff/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name Staff 3"
+}
+
+### Staff Update ###
+PATCH {{api_url}}/staff/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1 updated"
+}
+
+
+### Staff Delete ###
+DELETE {{api_url}}/staff/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Type List All ###
+GET {{api_url}}/staff/staff_type HTTP/1.1
+content-type: application/json
+
+
+### Staff Type Detail ###
+GET {{api_url}}/staff/staff_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Type Create ###
+POST {{api_url}}/staff/staff_type/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name Type 1"
+}
+
+### Staff Type Update ###
+PATCH {{api_url}}/staff/staff_type/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1 updated"
+}
+
+
+### Staff Type Delete ###
+DELETE {{api_url}}/staff/staff_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff List by Group ###
+GET {{api_url}}/staff/group/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Add To Group ###
+POST {{api_url}}/staff/group/ HTTP/1.1
+content-type: application/json
+
+{
+    "group": 1,
+    "staff": 2,
+    "staff_type": 2
+}
+
+### Staff Delete From Group ###
+DELETE {{api_url}}/staff/group/?group_id=1&staff_id=2 HTTP/1.1
+content-type: application/json
