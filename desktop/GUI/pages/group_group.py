@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 import dearpygui.dearpygui as dpg
 from BUS.group import GroupBUS, GroupJourneyBUS
-from BUS.tour import TourBUS
+from BUS.tour import LocationBUS, TourBUS
 from DTO.group import Group, GroupJourney
 
 from ..base_table import init_table
@@ -85,7 +85,7 @@ class GroupGroupGUI:
         group_start_date = dpg.add_date_picker(label="Start Date ", parent=window, default_value=datenow)
         group_end_date = dpg.add_date_picker(label="End Date ", parent=window, default_value=datenow)
         
-        dpg.add_button(label="Add Journey", callback=cls.create_journey_window_callback, parent=window, user_data=group_tour)
+        dpg.add_button(label="Add Journey", callback=cls.create_journey_list_window_callback, parent=window, user_data=group_tour)
         
         group = dpg.add_group(horizontal=True, parent=window)
         button = dpg.add_button(label="Add new group", callback=cls.create_window_callback, parent=group)
@@ -121,24 +121,117 @@ class GroupGroupGUI:
         )
         
     @classmethod
-    def create_journey_window_callback(cls, sender, app_data, user_data):
+    def create_journey_list_window_callback(cls, sender, app_data, user_data):
         group_id = dpg.get_value(user_data)
         int(group_id.split('|')[0])
             
         window = dpg.add_window(label="Add Journey list", width=400, autosize=True, pos=[500, 200])
         title = dpg.add_text(default_value="Journey List (0)", parent=window)
-        group = dpg.add_group(horizontal=True, parent=window)
+        group = dpg.add_group(parent=window)
         user_data = {
             'title': title,
             'group': group,
             'group_id': group_id
         }
-        dpg.add_button(label="[+] New Journey", callback=cls.add_journey_callback, parent=window)
+        dpg.add_button(label="[+] New Journey", callback=cls.add_journey_window_callback, user_data=user_data, parent=window)
         
+    @classmethod
+    def add_journey_window_callback(cls, sender, app_data, user_data):
+        window = dpg.add_window(label="New Journey", width=400, autosize=True, pos=[500, 200])
+        
+        content = dpg.add_input_text(label="Content ", parent=window,)
+        datenow = {
+            'month_day': date.today().day,
+            'year': date.today().year-1900,
+            'month': date.today().month-1
+        }
+        start_date = dpg.add_date_picker(label="Start Date ", parent=window, default_value=datenow)
+        end_date = dpg.add_date_picker(label="End Date ", parent=window, default_value=datenow)
+        
+        location = LocationBUS().objects
+        location = [f'{d.id} | {d.name}' for d in location]
+        location = dpg.add_combo(label="Location", items=location, parent=window)
+        group = dpg.add_group(horizontal=True, parent=window)
+        add_button = dpg.add_button(label="[+] Add", callback=cls.add_journey_callback, parent=group)
+        status = dpg.add_text(default_value="Status", parent=group)
+        
+        dpg.set_item_user_data(
+            add_button, 
+            {
+                'window': window,
+                'status': status, 
+                'journey_list_window': user_data['group'],
+                'items': [
+                    {
+                        'field': 'content',
+                        'name': 'Journey content',
+                        'item': content,
+                    },
+                    {
+                        'field': 'start_date',
+                        'name': 'Start date',
+                        'item': start_date,
+                    },
+                    {
+                        'field': 'end_date',
+                        'name': 'End date',
+                        'item': end_date,
+                    },
+                    {
+                        'field': 'location',
+                        'name': 'Location',
+                        'item': location,
+                    }
+                ]
+            }
+        )
+        
+    @classmethod
     def add_journey_callback(cls, sender, app_data, user_data):
-        window = dpg.add_window(label="Add Journey list", width=400, autosize=True, pos=[500, 200])
-        status = dpg.add_text(default_value="Journey List (0)", parent=window)
-        dpg.add_button(label="[+] New Journey", callback=cls.add_journey_window_callback, parent=window)
+        is_valid = True
+        request_data = {}
+        
+        for item in user_data['items']:
+            data = dpg.get_value(item['item'])
+            if data != "": 
+                print(data)
+                request_data[item['field']] = data
+            else:
+                is_valid = False
+                dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is invalid', color=[255, 92, 88])               
+                break
+            
+        if is_valid:
+            dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
+            print(request_data)
+            
+            request_data['location']  = int(request_data['location'].split('|')[0])
+            location = [l for l in LocationBUS().objects if l.id == request_data['location']][0]
+            
+            start_date = datetime(request_data['start_date']['year']+1900, request_data['start_date']['month']+1, request_data['start_date']['month_day'])
+            end_date = datetime(request_data['end_date']['year']+1900, request_data['end_date']['month']+1, request_data['end_date']['month_day'])
+            
+            journey_obj = GroupJourney(
+                id = 0,
+                group = 1,
+                content = request_data['content'],
+                start_date = start_date,
+                end_date = end_date,
+                location = location
+            )
+
+            journey_bus = GroupJourneyBUS()
+            error = journey_bus.create(journey_obj)
+            
+            if error.status is True:
+                dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+            else:
+                dpg.delete_item(user_data['window'])
+                journey_list_window = user_data['journey_list_window']
+                group_journey = dpg.add_group(horizontal=True, parent=journey_list_window)
+                content = dpg.add_text(default_value=journey_obj.content, parent=group_journey)
+                modified_button = dpg.add_button(label="[Modified]", parent=group_journey)
+                delete_button = dpg.add_button(label="[Delete]", parent=group_journey)
         
     @classmethod
     def create_window_callback(cls, sender, app_data, user_data):
