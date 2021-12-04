@@ -16,7 +16,7 @@ lazy_loading_thread = threading.Thread(target=async_lazy_loading, args=(), daemo
 lazy_loading_thread.start()
             
 dpg.show_style_editor()
-# dpg.show_imgui_demo()
+dpg.show_imgui_demo()
 # dpg.show_debug()
 # dpg.show_item_registry()
 
