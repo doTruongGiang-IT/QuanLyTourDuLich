@@ -289,18 +289,13 @@ class TourTourGUI:
         tours = TourBUS().objects
         groups = GroupBUS().objects
         tour = [t for t in tours if t.id == user_data][0]
-        group = [g for g in groups if g.tour == user_data][0]
+        group = [g for g in groups if g.tour == user_data]
         location = ''
-        for j in group.journey:
-            if(j == group.journey[0]):
-                location += '*' + j.location.name + '\n'
-                location += '\t\t\t\t|\n' 
-            else:
-                if(j == group.journey.pop()):
-                    location += '\t\t  *' + j.location.name
-                else:
-                    location += '\t\t  *' + j.location.name + '\n'
-                    location += '\t\t\t\t|\n'
+        
+        if len(group) > 0:
+            group = group[0]
+            location = f'*{group.journey[0].location.name}\n\t\t\t\t|\n'
+            location += '\t\t\t\t|\n'.join([f'\t\t  *{j.location.name}\n' for j in group.journey[1:]])
         
         window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
         dpg.add_text(default_value=f"id: {tour.id}", parent=window)
