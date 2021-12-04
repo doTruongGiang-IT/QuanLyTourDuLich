@@ -81,6 +81,7 @@ class Location(models.Model):
 
 class Tour(models.Model):
     name                = models.TextField()
+    description         = models.TextField(null=True, blank=True)
     characteristic      = models.ForeignKey(TourCharacteristic, on_delete=models.CASCADE)
     type                = models.ForeignKey(TourType, on_delete=models.CASCADE)
     price               = models.ForeignKey(TourPrice, on_delete=models.CASCADE)
