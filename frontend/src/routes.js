@@ -3,6 +3,8 @@ import TourListPage from "./pages/TourListPage/TourListPage";
 import AddTourPage from "./pages/AddTourPage/AddTourPage";
 import GuestsPage from "./pages/GuestsPage/GuestsPage";
 import TourFactorPage from "./pages/TourFactorsPage/TourFactorsPage";
+import AddGroupPage from "./pages/AddGroupPage/AddGroupPage";
+import UpdateGroupPage from "./pages/UpdateGroupPage/UpdateGroupPage";
 
 const routes = [
     {
@@ -14,6 +16,16 @@ const routes = [
         exact: true,
         path: '/add',
         main: () => <AddTourPage />
+    }, 
+    {
+        exact: true,
+        path: '/add/groupTour/:id',
+        main: () => <AddGroupPage />
+    }, 
+    {
+        exact: true,
+        path: '/update/groupTour/:id',
+        main: () => <UpdateGroupPage />
     }, 
     {
         exact: true,

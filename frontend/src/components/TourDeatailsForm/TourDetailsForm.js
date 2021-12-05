@@ -2,12 +2,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
-import { Table, Input, Button, Space, Modal } from 'antd';
-import { SearchOutlined, BookOutlined, TeamOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Space, Modal, Popconfirm, notification, Form } from 'antd';
+import { Link } from 'react-router-dom';
+import { SearchOutlined, BookOutlined, TeamOutlined, ClockCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import EditableCell from '../EditableCell/EditableCell';
+import { useDispatch } from 'react-redux';
+import { updateGroup } from '../../features/group/groupSlice';
 
-const TourDetailsForm = ({tourDetails, location, listLocation}) => {
+const TourDetailsForm = ({tourDetails, location, listLocation, remove}) => {
     let details = [];
     let hotel = "";
     let journeys = [];
@@ -15,11 +19,18 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
     let containers = [];
     let days = [];
 
+    const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isRowActive, setIsRowActive] = useState(0);
     const history = useHistory();
+    const [api, contextHolder] = notification.useNotification();
+    const Context = React.createContext();
+    let {id} = useParams();
+    const [editData, setEditData] = useState([]);
+    const [editingKey, setEditingKey] = useState('');
+    const [form] = Form.useForm();
 
     tourDetails.forEach(detail => {
       if(detail.journey.length > 0) {
@@ -126,20 +137,71 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
         setSearchText({ searchText: '' });
     };
 
+    const handleDelete = (id) => {
+      // setDataInfo(data.filter((item) => item.key !== key));
+      remove(id);
+      openNotification("Deleted");
+    };
+
+    const isEditing = (record) => record.key === editingKey;
+
+    const edit = (record) => {
+        form.setFieldsValue({
+        ...record,
+        });
+        setEditingKey(record.key);
+    };
+
+    const cancel = () => {
+        setEditingKey('');
+    };
+
+    const saveEdit = async (id) => {
+        try {
+          const row = await form.validateFields();
+          const newData = [...tourDetails];
+          const index = newData.findIndex((item) => id === item.id);
+    
+          if (index > -1) {
+            const item = newData[index];
+            newData.splice(index, 1, { ...item, ...row });
+            setEditData(newData);
+            // update(newData[index]);
+            dispatch(updateGroup(newData[index]));
+            // setDataInfo(newData);
+            setEditingKey('');
+            openNotification("Update");
+          } else {
+            newData.push(row);
+            setEditData(newData);
+            setEditingKey('');
+          }
+        } catch (errInfo) {
+          console.log('Validate Failed:', errInfo);
+        }
+    };
+
     const columns = [
         {
             title: 'ID Tourist Group',
             dataIndex: 'id',
             key: 'id',
             width: '10%',
-            editable: true,
             ...getColumnSearchProps('id'),
+        },
+        {
+            title: 'Group Name',
+            dataIndex: 'name',
+            key: 'name',
+            width: '15%',
+            editable: true,
+            ...getColumnSearchProps('name'),
         },
         {
             title: 'StartDate',
             dataIndex: 'startDate',
             key: 'startDate',
-            width: '20%',
+            width: '10%',
             editable: true,
             ...getColumnSearchProps('startDate'),
             sorter: {
@@ -153,7 +215,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             title: 'EndDate',
             dataIndex: 'endDate',
             key: 'endDate',
-            width: '20%',
+            width: '10%',
             editable: true,
             ...getColumnSearchProps('endDate'),
             sorter: {
@@ -168,7 +230,6 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             dataIndex: 'journey',
             key: 'journey',
             width: '10%',
-            editable: true,
             render: (_, record) => {
               return(
                 <Button
@@ -185,8 +246,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             title: 'Hotel',
             dataIndex: 'hotel',
             key: 'hotel',
-            width: '10%',
-            editable: true,
+            width: '15%',
             ...getColumnSearchProps('hotel'),
         },
         {
@@ -194,32 +254,107 @@ const TourDetailsForm = ({tourDetails, location, listLocation}) => {
             dataIndex: 'location',
             key: 'location',
             width: '10%',
-            editable: true,
             ...getColumnSearchProps('location'),
         },
         {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
-            width: '10%',
+            // width: '10%',
             render: (_, record) => {
-              return(
-                <Button
-                    onClick={() => history.push(`/guests/${record.id}`)}
-                    type="primary"
-                    icon={<TeamOutlined />}
-                    size="medium"
-                    style={{ width: 100 }}
-                />
+              const editable = isEditing(record);
+              return editable ? (
+                <Space>
+                    <Button
+                        onClick={() => saveEdit(record.id)}
+                        type="primary"
+                        size="medium"
+                        style={{ width: 100 }}
+                    >
+                        Save
+                    </Button>
+                    <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
+                        <Button
+                            type="primary"
+                            size="medium"
+                            style={{ width: 100 }}
+                            danger
+                        >
+                            Cancel
+                        </Button>
+                    </Popconfirm>
+                </Space> 
+            ) : (
+                <Space>
+                    <Button
+                      onClick={() => history.push(`/guests/${record.id}`)}
+                      type="primary"
+                      icon={<TeamOutlined />}
+                      size="medium"
+                      style={{ width: 80 }}
+                    />
+                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
+                      <Button
+                          type="primary"
+                          icon={<DeleteOutlined />}
+                          size="medium"
+                          style={{ width: 80 }}
+                          danger
+                      />
+                    </Popconfirm>
+                    <Button
+                        // onClick={() => history.push(`/update/groupTour/${record.id}`)}
+                        onClick={() => edit(record)}
+                        type="primary"
+                        icon={<EditOutlined />}
+                        size="medium"
+                        style={{ width: 80 }}
+                    />
+                </Space>
               )
             },
         },
     ];
 
+    const mergedColumns = columns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+  
+      return {
+        ...col,
+        onCell: (record) => ({
+          record,
+          inputType: 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: isEditing(record),
+        }),
+      };
+    });
+
+    const openNotification = placement => {
+      api.info({
+          message: `Notification`,
+          description: <Context.Consumer>{() => `${placement} Success!`}</Context.Consumer>,
+      });
+    };
+
     return (
         <div className="tourDetailsForm">
+            {contextHolder}
+            <Link id="addTour" to={`/add/groupTour/${id}`}>Add Group</Link>
             <h2>Details for this tour</h2>
-            <Table bordered columns={columns} dataSource={details} />
+            <Form form={form} component={false}>
+              <Table 
+                components={{
+                    body: {
+                        cell: EditableCell,
+                    },
+                }} 
+                bordered columns={mergedColumns} dataSource={details} 
+              />
+            </Form>
             <Modal title="Journey for this group" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
               {
                 journeys.map(journey => {
