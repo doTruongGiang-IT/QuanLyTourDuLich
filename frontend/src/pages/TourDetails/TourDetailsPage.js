@@ -3,7 +3,7 @@ import TourDetailsForm from '../../components/TourDeatailsForm/TourDetailsForm';
 import { useParams } from 'react-router';
 import { selectTourDetails, getTourDetails, getTourLocation, selectTourLocation, selectListLocation, getListLocation } from '../../features/tour/tourSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteGroup } from '../../features/group/groupSlice';
+import { deleteGroup, updateGroup } from '../../features/group/groupSlice';
 
 const TourDetailsPage = () => {
     let {id} = useParams();
@@ -14,22 +14,33 @@ const TourDetailsPage = () => {
     const [groups, setgroups] = useState(tourDetails);
 
     useEffect(() => {
-        // dispatch(getTourDetails(id));
+        dispatch(getTourDetails(id));
         dispatch(getTourLocation(id));
         dispatch(getListLocation());
     }, [dispatch, id, groups]);
 
-    useEffect(() => {
-        dispatch(getTourDetails(id));
-    }, [tourDetails, dispatch, id]);
+    // useEffect(() => {
+    //     dispatch(getTourDetails(id));
+    // }, [tourDetails, dispatch, id]);
 
     const handleDelete = async (id) => {
         await dispatch(deleteGroup(id));
         setgroups(tourDetails.filter(tour => tour.id !== id));
     };
 
+    const handleUpdate = async (groupEdit) => {
+        // console.log(groupEdit);
+        await dispatch(updateGroup(groupEdit));
+        tourDetails.forEach(tour => {
+            if(tour.id === groupEdit.id) {
+                tour = {...tour, ...groupEdit};
+            };
+        });
+        setgroups(tourDetails);
+    };
+
     return (
-        <TourDetailsForm tourDetails={tourDetails} location={tourLocation} listLocation={listLocation} remove={handleDelete} />
+        <TourDetailsForm tourDetails={tourDetails} location={tourLocation} listLocation={listLocation} remove={handleDelete} update={handleUpdate} />
     )
 }
 

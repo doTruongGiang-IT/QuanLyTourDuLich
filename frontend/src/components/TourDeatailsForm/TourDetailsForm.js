@@ -11,7 +11,7 @@ import EditableCell from '../EditableCell/EditableCell';
 import { useDispatch } from 'react-redux';
 import { updateGroup } from '../../features/group/groupSlice';
 
-const TourDetailsForm = ({tourDetails, location, listLocation, remove}) => {
+const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) => {
     let details = [];
     let hotel = "";
     let journeys = [];
@@ -60,8 +60,8 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove}) => {
       let formatDetail  = {
         id: detail.id,
         name: detail.name,
-        startDate: detail.start_date,
-        endDate: detail.end_date,
+        start_date: detail.start_date,
+        end_date: detail.end_date,
         // journey: detail.journey.length > 0 ? journey.join(' || ') : "",
         hotel,
         location: nameLocation
@@ -166,8 +166,9 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove}) => {
             const item = newData[index];
             newData.splice(index, 1, { ...item, ...row });
             setEditData(newData);
-            // update(newData[index]);
-            dispatch(updateGroup(newData[index]));
+            update(newData[index]);
+            // console.log(newData[index]);
+            // dispatch(updateGroup(newData[index]));
             // setDataInfo(newData);
             setEditingKey('');
             openNotification("Update");
@@ -199,11 +200,11 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove}) => {
         },
         {
             title: 'StartDate',
-            dataIndex: 'startDate',
-            key: 'startDate',
+            dataIndex: 'start_date',
+            key: 'start_date',
             width: '10%',
             editable: true,
-            ...getColumnSearchProps('startDate'),
+            ...getColumnSearchProps('start_date'),
             sorter: {
               compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
               multiple: tourDetails.length
@@ -213,11 +214,11 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove}) => {
         },
         {
             title: 'EndDate',
-            dataIndex: 'endDate',
-            key: 'endDate',
+            dataIndex: 'end_date',
+            key: 'end_date',
             width: '10%',
             editable: true,
-            ...getColumnSearchProps('endDate'),
+            ...getColumnSearchProps('end_date'),
             sorter: {
               compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
               multiple: tourDetails.length
