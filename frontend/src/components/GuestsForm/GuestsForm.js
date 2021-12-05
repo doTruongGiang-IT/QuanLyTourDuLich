@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './GuestsForm.css';
 import { useParams } from 'react-router';
 import { Table, Input, Button, Space, Popconfirm, Form, notification, Select} from 'antd';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
 import EditableCell from '../EditableCell/EditableCell';
 
 const { Option } = Select;
@@ -22,77 +22,35 @@ const tailLayout = {
   },
 };
 
-const GuestsForm = () => {
+const GuestsForm = ({customerGroup, remove, submit, customers}) => {
     let {id} = useParams();
-
+    const customerlist = useState([]);
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
-    const [editData, setEditData] = useState([]);
-    const [editingKey, setEditingKey] = useState('');
-    const [selectedRowKeys, setSelectedKeys] = useState([]);
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
+    let temp = [];
+
+    for(let i = 0; i < customers.length; i++) {
+        for(let j = 0; j < customerGroup.length; j++) {
+            if(customers[i].id === customerGroup[j].customer) {
+                temp.push(customers[i]);
+            };
+        };
+    };
+
+    temp = temp.map((cus, index) => {
+        return {key: index, ...cus};
+    });
 
     const onFinish = (values) => {
-        // submit(values);
+        submit({group: Number.parseInt(id), customer: values.customer});
         form.resetFields();
     };
     
       const onReset = () => {
         form.resetFields();
-    };
-
-    const onSelectChange = (selectedRowKeys) => {
-        setSelectedKeys(selectedRowKeys);
-    };
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-        selections: [
-          Table.SELECTION_ALL,
-          Table.SELECTION_INVERT,
-          Table.SELECTION_NONE,
-          {
-            key: 'odd',
-            text: 'Select Odd Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return false;
-                    };
-                    return true;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'even',
-            text: 'Select Even Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return true;
-                    };
-                    return false;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'delete',
-            text: 'Delete Selected Rows',
-            onSelect: () => {
-                if(selectedRowKeys.length > 0) {
-                    selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
-                };
-                setSelectedKeys([]);
-            },
-          },
-        ],
     };
 
     const getColumnSearchProps = dataIndex => ({
@@ -151,82 +109,25 @@ const GuestsForm = () => {
         setSearchText({ searchText: '' });
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = (value) => {
         // setDataInfo(data.filter((item) => item.key !== key));
-        // remove(id);
+        remove(value);
         openNotification("Deleted");
     };
-
-    const isEditing = (record) => record.key === editingKey;
-
-    const edit = (record) => {
-        form.setFieldsValue({
-        ...record,
-        });
-        setEditingKey(record.key);
-    };
-
-    const cancel = () => {
-        setEditingKey('');
-    };
-
-    // const saveEdit = async (id) => {
-    //     try {
-    //       const row = await form.validateFields();
-    //       const newData = [...tourList];
-    //       const index = newData.findIndex((item) => id === item.id);
-    
-    //       if (index > -1) {
-    //         const item = newData[index];
-    //         newData.splice(index, 1, { ...item, ...row });
-    //         setEditData(newData);
-    //         // update(newData[index]);
-    //         setEditingKey('');
-    //         openNotification("Update");
-    //       } else {
-    //         newData.push(row);
-    //         setEditData(newData);
-    //         setEditingKey('');
-    //       }
-    //     } catch (errInfo) {
-    //       console.log('Validate Failed:', errInfo);
-    //     }
-    // };
-
-    const quickSort = (values) => {
-        if (values.length <= 1) {
-            return values
-        };
-
-        var lessThanPivot = [];
-        var greaterThanPivot = [];
-        var pivot = values[0];
-        for (var i = 1; i < values.length; i++) {
-            if (values[i].id <= pivot.id) {
-                lessThanPivot.push(values[i]);
-            } else {
-                greaterThanPivot.push(values[i]);
-            }
-        }
-        return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
-    };
-
-    // tourList = quickSort(tourList);
 
     const columns = [
         {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
-            width: '5%',
+            width: '10%',
             ...getColumnSearchProps('id'),
         },
         {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: '15%',
-            editable: true,
+            width: '20%',
             ...getColumnSearchProps('name'),
             sorter: {
               compare: (a, b) => new Date(a.startDate) - new Date(b.startDate),
@@ -236,18 +137,16 @@ const GuestsForm = () => {
         },
         {
             title: 'Identify',
-            dataIndex: 'identify',
-            key: 'identify',
-            width: '15%',
-            editable: true,
-            ...getColumnSearchProps('identify'),
+            dataIndex: 'id_number',
+            key: 'id_number',
+            width: '10%',
+            ...getColumnSearchProps('id_number'),
         },
         {
             title: 'Address',
             dataIndex: 'address',
             key: 'address',
-            width: '20%',
-            editable: true,
+            width: '30%',
             ...getColumnSearchProps('address'),
         },
         {
@@ -255,24 +154,14 @@ const GuestsForm = () => {
             dataIndex: 'gender',
             key: 'gender',
             width: '10%',
-            editable: true,
             ...getColumnSearchProps('gender'),
         },
         {
             title: 'Phone',
-            dataIndex: 'phone',
-            key: 'phone',
-            width: '15%',
-            editable: true,
-            ...getColumnSearchProps('phone'),
-        },
-        {
-            title: 'Country',
-            dataIndex: 'country',
-            key: 'country',
+            dataIndex: 'phone_number',
+            key: 'phone_number',
             width: '10%',
-            editable: true,
-            ...getColumnSearchProps('country'),
+            ...getColumnSearchProps('phone_number'),
         },
         {
             title: 'Actions',
@@ -280,69 +169,20 @@ const GuestsForm = () => {
             key: 'actions',
             width: '10%',
             render: (_, record) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <Space>
+                return (
+                    <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete({group_id: Number.parseInt(id), customer_id: record.id})}>
                         <Button
-                            // onClick={() => saveEdit(record.id)}
                             type="primary"
-                            size="small"
-                            style={{ width: 60 }}
-                        >
-                            Save
-                        </Button>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <Button
-                                type="primary"
-                                size="small"
-                                style={{ width: 60 }}
-                                danger
-                            >
-                                Cancel
-                            </Button>
-                        </Popconfirm>
-                    </Space> 
-                ) : (
-                    <Space>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
-                            <Button
-                                type="primary"
-                                icon={<DeleteOutlined />}
-                                size="small"
-                                style={{ width: 40 }}
-                                danger
-                            />
-                        </Popconfirm>
-                        <Button
-                            disabled={editingKey !== ''} 
-                            onClick={() => edit(record)}
-                            type="primary"
-                            icon={<EditOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            icon={<DeleteOutlined />}
+                            size="medium"
+                            style={{ width: 90 }}
+                            danger
                         />
-                    </Space>   
+                    </Popconfirm>
                 )
             },
         },
     ];
-
-    const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
-          return col;
-        }
-    
-        return {
-          ...col,
-          onCell: (record) => ({
-            record,
-            inputType: 'text',
-            dataIndex: col.dataIndex,
-            title: col.title,
-            editing: isEditing(record),
-          }),
-        };
-    });
 
     const openNotification = placement => {
         api.info({
@@ -364,81 +204,29 @@ const GuestsForm = () => {
                                 cell: EditableCell,
                             },
                         }} 
-                        rowSelection={rowSelection}
-                        bordered columns={mergedColumns} dataSource={[]} pagination={{defaultPageSize: 20}} scroll={{ y: 500}} />
+                        bordered columns={columns} dataSource={temp} pagination={{defaultPageSize: 20}} scroll={{ y: 500}} />
                     </Form>
                 </div>
                 <div className="guestAddForm">
                     <h2>ADD FORM</h2>
                     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
                         <Form.Item
-                            name="name"
-                            label="Name"
+                            name="customer"
+                            label="Customer"
                             rules={[
                                 {
                                     required: true,
                                 },
                             ]}
                         >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="identify"
-                            label="Identify"
-                            rules={[
+                            <Select placeholder="Select customer" allowClear>
                                 {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="address"
-                            label="Address"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="gender"
-                            label="Gender"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Select placeholder="Select gender" allowClear>
-                                <Option value="male">Male</Option>
-                                <Option value="female">Female</Option>
+                                    customers ?
+                                    customers.map((customer, index) => {
+                                        return <Option key={index} value={customer.id}>{customer.name}</Option>
+                                    }) : null
+                                }
                             </Select>
-                        </Form.Item>
-                        <Form.Item
-                            name="phone"
-                            label="Phone"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="country"
-                            label="Country"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Space>

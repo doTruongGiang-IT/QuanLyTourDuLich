@@ -70,8 +70,8 @@ export const addCustomerToGroup = createAsyncThunk(
 
 export const deleteCustomerFromGroup = createAsyncThunk(
     'customer/deleteCustomerFromGroup',
-    async (groupId, cusId) => {
-        const res = await axios.delete(`${api_url}/api/customer/group/?group_id=${groupId}&customer_id=${cusId}`);
+    async (value) => {
+        const res = await axios.delete(`${api_url}/api/customer/group/?group_id=${value.group_id}&customer_id=${value.customer_id}`);
         return res.data;
     }
 );
@@ -139,7 +139,7 @@ export const customerSlice = createSlice({
             .addCase(addCustomerToGroup.pending, (state) => {
                 return {...state, loading: true };
             })
-            .addCase(addCustomerToGroup.fulfilled, (state, action) => {
+            .addCase(addCustomerToGroup.fulfilled, (state) => {
                 return {...state, loading: false};
             })
             .addCase(addCustomerToGroup.rejected, (state) => {
@@ -148,7 +148,7 @@ export const customerSlice = createSlice({
             .addCase(deleteCustomerFromGroup.pending, (state) => {
                 return {...state, loading: true };
             })
-            .addCase(deleteCustomerFromGroup.fulfilled, (state, action) => {
+            .addCase(deleteCustomerFromGroup.fulfilled, (state) => {
                 return {...state, loading: false};
             })
             .addCase(deleteCustomerFromGroup.rejected, (state) => {
