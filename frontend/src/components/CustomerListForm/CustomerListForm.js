@@ -162,7 +162,7 @@ const CustomerListForm = ({remove, update, customers}) => {
             title: 'Identify',
             dataIndex: 'id_number',
             key: 'id_number',
-            width: '20%',
+            width: '10%',
             editable: true,
             ...getColumnSearchProps('id_number'),
         },
@@ -181,6 +181,14 @@ const CustomerListForm = ({remove, update, customers}) => {
             width: '10%',
             editable: true,
             ...getColumnSearchProps('gender'),
+        },
+        {
+            title: 'Phone',
+            dataIndex: 'phone_number',
+            key: 'phone_number',
+            width: '10%',
+            editable: true,
+            ...getColumnSearchProps('phone_number'),
         },
         {
             title: 'Actions',
