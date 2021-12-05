@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import '../GuestsForm/GuestsForm.css';
 import { Table, Input, Button, Space, Popconfirm, Form, notification, DatePicker, InputNumber } from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import EditableCell from '../EditableCell/EditableCell';
+import moment from 'moment';
+import EditableCellForPriceList from '../EditableCellForPriceList/EditableCellForPriceList';
 
 const layout = {
     labelCol: {
@@ -22,76 +23,38 @@ const layout = {
 
 const { RangePicker } = DatePicker;
 
-const TourPrice = () => {
+const TourPrice = ({priceFactor, submit, update, remove}) => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
     const [editData, setEditData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
-    const [selectedRowKeys, setSelectedKeys] = useState([]);
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
+    let count = 0;
+    let start = new Date(); 
+    let end = new Date();
+
+    let priceFactorList = priceFactor ? priceFactor.map((price, index) => {
+        return {key: index, id: price.id, name: price.name, price: price.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}), start_date: price.start_date, end_date: price.end_date};
+    }) : [];
+    
+    const handleDate = (date) => {
+        if(count === 0) {
+            start = date;
+            count++;
+        }else {
+            end = date;
+        };
+    };
 
     const onFinish = (values) => {
-        // submit(values);
+        submit({name: values.name, price: values.price, start_date: start, end_date: end});
         form.resetFields();
-        console.log(values);
     };
     
       const onReset = () => {
         form.resetFields();
-    };
-
-    const onSelectChange = (selectedRowKeys) => {
-        setSelectedKeys(selectedRowKeys);
-    };
-
-    const rowSelection = {
-        selectedRowKeys,
-        onChange: onSelectChange,
-        selections: [
-          Table.SELECTION_ALL,
-          Table.SELECTION_INVERT,
-          Table.SELECTION_NONE,
-          {
-            key: 'odd',
-            text: 'Select Odd Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return false;
-                    };
-                    return true;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'even',
-            text: 'Select Even Row',
-            onSelect: changableRowKeys => {
-                let newSelectedRowKeys = [];
-                newSelectedRowKeys = changableRowKeys.filter((key, index) => {
-                    if (index % 2 !== 0) {
-                        return true;
-                    };
-                    return false;
-                });
-                setSelectedKeys(newSelectedRowKeys);
-            },
-          },
-          {
-            key: 'delete',
-            text: 'Delete Selected Rows',
-            onSelect: () => {
-                if(selectedRowKeys.length > 0) {
-                    selectedRowKeys.forEach(async (selectedRowKey) => await handleDelete(selectedRowKey-1));
-                };
-                setSelectedKeys([]);
-            },
-          },
-        ],
     };
 
     const getColumnSearchProps = dataIndex => ({
@@ -152,7 +115,7 @@ const TourPrice = () => {
 
     const handleDelete = (id) => {
         // setDataInfo(data.filter((item) => item.key !== key));
-        // remove(id);
+        remove(id);
         openNotification("Deleted");
     };
 
@@ -169,28 +132,40 @@ const TourPrice = () => {
         setEditingKey('');
     };
 
-    // const saveEdit = async (id) => {
-    //     try {
-    //       const row = await form.validateFields();
-    //       const newData = [...tourList];
-    //       const index = newData.findIndex((item) => id === item.id);
+    const formatData = (editPrice) => {
+        delete editPrice.date;
+        delete editPrice.key;
+        if(typeof editPrice.price === "string") {
+            editPrice.price = editPrice.price.slice(0, editPrice.price.length-4);
+            editPrice.price = editPrice.price.replaceAll('.', '');  
+            editPrice.price = Number.parseInt(editPrice.price);
+        };
+        return editPrice;
+    };
+
+    const saveEdit = async (id) => {
+        try {
+          const row = await form.validateFields();
+          const newData = [...priceFactorList];
+          const index = newData.findIndex((item) => id === item.id);
     
-    //       if (index > -1) {
-    //         const item = newData[index];
-    //         newData.splice(index, 1, { ...item, ...row });
-    //         setEditData(newData);
-    //         // update(newData[index]);
-    //         setEditingKey('');
-    //         openNotification("Update");
-    //       } else {
-    //         newData.push(row);
-    //         setEditData(newData);
-    //         setEditingKey('');
-    //       }
-    //     } catch (errInfo) {
-    //       console.log('Validate Failed:', errInfo);
-    //     }
-    // };
+          if (index > -1) {
+            const item = newData[index];
+            newData.splice(index, 1, { ...item, ...row });
+            setEditData(newData);
+            const editPrice = formatData(newData[index]);
+            update(editPrice);
+            setEditingKey('');
+            openNotification("Update");
+          } else {
+            newData.push(row);
+            setEditData(newData);
+            setEditingKey('');
+          }
+        } catch (errInfo) {
+          console.log('Validate Failed:', errInfo);
+        }
+    };
 
     const quickSort = (values) => {
         if (values.length <= 1) {
@@ -210,7 +185,7 @@ const TourPrice = () => {
         return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
     };
 
-    // tourList = quickSort(tourList);
+    priceFactorList = quickSort(priceFactorList);
 
     const columns = [
         {
@@ -267,18 +242,18 @@ const TourPrice = () => {
                 return editable ? (
                     <Space>
                         <Button
-                            // onClick={() => saveEdit(record.id)}
+                            onClick={() => saveEdit(record.id)}
                             type="primary"
-                            size="small"
-                            style={{ width: 60 }}
+                            size="medium"
+                            style={{ width: 70 }}
                         >
                             Save
                         </Button>
                         <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
                             <Button
                                 type="primary"
-                                size="small"
-                                style={{ width: 60 }}
+                                size="medium"
+                                style={{ width: 70 }}
                                 danger
                             >
                                 Cancel
@@ -291,8 +266,8 @@ const TourPrice = () => {
                             <Button
                                 type="primary"
                                 icon={<DeleteOutlined />}
-                                size="small"
-                                style={{ width: 40 }}
+                                size="medium"
+                                style={{ width: 70 }}
                                 danger
                             />
                         </Popconfirm>
@@ -301,8 +276,8 @@ const TourPrice = () => {
                             onClick={() => edit(record)}
                             type="primary"
                             icon={<EditOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 70 }}
                         />
                     </Space>   
                 )
@@ -343,11 +318,10 @@ const TourPrice = () => {
                     <Form form={form} component={false}>
                         <Table components={{
                             body: {
-                                cell: EditableCell,
+                                cell: EditableCellForPriceList,
                             },
                         }} 
-                        rowSelection={rowSelection}
-                        bordered columns={mergedColumns} dataSource={[]} pagination={{defaultPageSize: 20}} scroll={{ y: 500}} />
+                        bordered columns={mergedColumns} dataSource={priceFactorList} pagination={{defaultPageSize: 10}} scroll={{ y: 230}} />
                     </Form>
                 </div>
                 <div className="guestAddForm">
@@ -356,6 +330,7 @@ const TourPrice = () => {
                         <Form.Item
                             name="name"
                             label="Name"
+                            initialValue=""
                             rules={[
                                 {
                                     required: true,
@@ -367,6 +342,7 @@ const TourPrice = () => {
                         <Form.Item
                             name="price"
                             label="Price"
+                            initialValue=""
                             rules={[
                                 {
                                     required: true,
@@ -378,13 +354,14 @@ const TourPrice = () => {
                         <Form.Item
                             name="date"
                             label="Date"
+                            initialValue={[moment(start, 'YYYY-MM-DD'), moment(end, 'YYYY-MM-DD')]}
                             rules={[
                                 {
                                     required: true,
                                 },
                             ]}
                         >    
-                            <RangePicker />
+                            <RangePicker format="YYYY-MM-DD" value={[moment('', 'YYYY-MM-DD'), moment('', 'YYYY-MM-DD')]} onBlur={e => handleDate(e.target.value)} />
                         </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Space>
