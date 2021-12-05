@@ -109,6 +109,38 @@ export const deleteLocationsFactor = createAsyncThunk(
     }
 );
 
+export const getPricesFactor = createAsyncThunk(
+    'factor/getPricesFactor',
+    async () => {
+        const res = await axios.get(`${api_url}/api/tour/tour_price`);
+        return res.data;
+    }
+);
+
+export const createPriceFactor = createAsyncThunk(
+    'factor/createPriceFactor',
+    async (newPrice) => {
+        const res = await axios.post(`${api_url}/api/tour/tour_price`, newPrice);
+        return res.data;
+    }
+);
+
+export const updatePriceFactor = createAsyncThunk(
+    'factor/updatePriceFactor',
+    async (priceUpdate) => {
+        const res = await axios.patch(`${api_url}/api/tour/tour_price/${priceUpdate.id}`, priceUpdate);
+        return res.data;
+    }
+);
+
+export const deletePriceFactor = createAsyncThunk(
+    'factor/deletePriceFactor',
+    async (id) => {
+        const res = await axios.delete(`${api_url}/api/tour/tour_price/${id}`);
+        return res.data;
+    }
+);
+
 export const tourFactorSlice = createSlice({
     name: 'factor',
     initialState,
@@ -226,6 +258,44 @@ export const tourFactorSlice = createSlice({
                 return {...state, loading: false};
             })
             .addCase(deleteLocationsFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+
+            // Prices
+            .addCase(getPricesFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(getPricesFactor.fulfilled, (state, action) => {
+                return {...state, loading: false, prices: action.payload};
+            })
+            .addCase(getPricesFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(createPriceFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(createPriceFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(createPriceFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(updatePriceFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(updatePriceFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(updatePriceFactor.rejected, (state) => {
+                return {...state, loading: false, error: true};
+            })
+            .addCase(deletePriceFactor.pending, (state) => {
+                return {...state, loading: true};
+            })
+            .addCase(deletePriceFactor.fulfilled, (state) => {
+                return {...state, loading: false};
+            })
+            .addCase(deletePriceFactor.rejected, (state) => {
                 return {...state, loading: false, error: true};
             })
     }

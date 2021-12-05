@@ -21,6 +21,11 @@ import {
     updateLocationsFactor,
     deleteLocationsFactor,
     createLocationsFactor,
+    selectPriceFactor,
+    getPricesFactor,
+    createPriceFactor,
+    updatePriceFactor,
+    deletePriceFactor
 } from '../../features/tourFactor/tourFactorSlice';
 
 const TourFactorPage = () => {
@@ -29,15 +34,18 @@ const TourFactorPage = () => {
     const characteristicsFactor = useSelector(selectCharacteristicFactor);
     const typesFactor = useSelector(selectTypeFactor);
     const locationsFactor = useSelector(selectLocationFactor);
+    const pricesFactor = useSelector(selectPriceFactor);
     const [charFactor, setCharFactor] = useState(characteristicsFactor);
     const [typeFactor, setTypeFactor] = useState(typesFactor);
     const [locateFactor, setLocateFactor] = useState(locationsFactor);
+    const [priceFactor, setPriceFactor] = useState(pricesFactor);
 
     useEffect(() => {
         dispatch(getCharacteristicsFactor());
         dispatch(getTypesFactor());
         dispatch(getLocationsFactor());
-    }, [dispatch, charFactor, typeFactor, locateFactor]);
+        dispatch(getPricesFactor());
+    }, [dispatch, charFactor, typeFactor, locateFactor, priceFactor]);
 
     const handleVisible = () => {
         setIsVisible(!isVisible);
@@ -106,10 +114,30 @@ const TourFactorPage = () => {
         setLocateFactor(locationsFactor.map(() => ([...locationsFactor, newLocate])));
     };
 
+    const handleUpdatePrice = async (priceUpdate) => {
+        await dispatch(updatePriceFactor(priceUpdate));
+        pricesFactor.forEach(price => {
+            if(price.id === priceUpdate.id) {
+                price = {...price, ...priceUpdate};
+            };
+        });
+        setPriceFactor(pricesFactor);
+    };
+
+    const handleDeletePrice = async (id) => {
+        await dispatch(deletePriceFactor(id));
+        setPriceFactor(pricesFactor.filter(price => price.id !== id));
+    };
+
+    const handleSubmitPrice = async (newPrice) => {
+        await dispatch(createPriceFactor(newPrice));
+        setPriceFactor(pricesFactor.map(() => ([...pricesFactor, newPrice])));
+    };
+
     return (
         <div className="tourFactorsPage">
             <div className="tourItem">
-                <TourPrice />
+                <TourPrice priceFactor={pricesFactor} submit={handleSubmitPrice} update={handleUpdatePrice} remove={handleDeletePrice} />
             </div>
             {
                 !isVisible ?
