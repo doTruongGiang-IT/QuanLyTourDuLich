@@ -40,7 +40,7 @@ const EditableCell = ({
                 ]}
                 >
                 {
-                    (title !== "Characteristic" && title !== "ID Type") ?
+                    (title !== "Characteristic" && title !== "ID Type" && title !== "Gender") ?
                     <Input /> :
                     <Select placeholder="Please select one" allowClear>
                         {
@@ -48,9 +48,18 @@ const EditableCell = ({
                             characteristics.map(characteristic => {
                                 return <Option key={characteristic.id} value={characteristic.id}>{characteristic.name}</Option>
                             }):
-                            types.map(type => {
-                                return <Option key={type.id} value={type.id}>{type.name}</Option>
-                            })
+                            (
+                                title === "ID Type" ?
+                                types.map(type => {
+                                    return <Option key={type.id} value={type.id}>{type.name}</Option>
+                                }) :
+                                (
+                                    <>
+                                        <Option value="Male">Male</Option>
+                                        <Option value="Female">Female</Option>
+                                    </>
+                                )
+                            )
                         }
                     </Select>
                 }

@@ -5,12 +5,24 @@ import GuestsPage from "./pages/GuestsPage/GuestsPage";
 import TourFactorPage from "./pages/TourFactorsPage/TourFactorsPage";
 import AddGroupPage from "./pages/AddGroupPage/AddGroupPage";
 import UpdateGroupPage from "./pages/UpdateGroupPage/UpdateGroupPage";
+import CustomerPage from "./pages/CustomerPage/CustomerPage";
+import CreateCustomerPage from "./pages/CreateCustomerPage/CreateCustomerPage";
 
 const routes = [
     {
         exact: true,
         path: '/',
         main: () => <TourListPage />
+    }, 
+    {
+        exact: true,
+        path: '/customer',
+        main: () => <CustomerPage />
+    }, 
+    {
+        exact: true,
+        path: '/create_customer',
+        main: () => <CreateCustomerPage />
     }, 
     {
         exact: true,
