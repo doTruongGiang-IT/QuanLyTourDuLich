@@ -11,7 +11,7 @@ import { useHistory } from 'react-router';
 const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
     let formatLocations = [];
     let tourList = tours ? tours.map((tour) => {
-        return {key: tour.id + 1, ...tour};
+        return {key: tour.id + 1, id: tour.id, name: tour.name, description: tour.description, price: tour.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}), type: tour.type};
     }) : [];
 
     let locations = tourDetails.length > 0 ? tourDetails[0].journey.map(location => {
@@ -232,7 +232,7 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: '30%',
+            width: '20%',
             editable: true,
             ...getColumnSearchProps('name'),
             sorter: (a, b) => a.name.length - b.name.length,
@@ -240,22 +240,31 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
         },
         {
             title: 'Characteristic',
-            dataIndex: 'characteristic',
-            key: 'characteristic',
+            dataIndex: 'description',
+            key: 'description',
+            width: '30%',
             editable: true,
-            ...getColumnSearchProps('characteristic'),
+            ...getColumnSearchProps('description'),
+        },
+        {
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
+            width: '10%',
+            editable: true,
+            ...getColumnSearchProps('price'),
         },
         {
             title: 'ID Type',
             dataIndex: 'type',
             key: 'type',
-            width: '17%',
+            width: '15%',
             editable: true,
             ...getColumnSearchProps('type'),
         },
         {
             title: 'Actions',
-            width: '13%',
+            width: '15%',
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (

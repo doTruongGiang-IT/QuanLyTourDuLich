@@ -45,7 +45,7 @@ content-type: application/json
 
 
 ### Tour Update ###
-PATCH {{api_url}}/tour/1 HTTP/1.1
+PATCH {{api_url}}/tour/5 HTTP/1.1
 content-type: application/json
 
 {   

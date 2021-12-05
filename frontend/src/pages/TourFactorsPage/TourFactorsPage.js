@@ -109,15 +109,7 @@ const TourFactorPage = () => {
     return (
         <div className="tourFactorsPage">
             <div className="tourItem">
-                <TourCharacteristic 
-                    characteristicsFactor={characteristicsFactor} 
-                    update={handleUpdateChar} remove={handleDeleteChar}
-                    submit={handleSubmitChar}
-                />
-                <TourType 
-                    typeFactor={typesFactor} update={handleUpdateType} 
-                    remove={handleDeleteType} submit={handleSubmitType}
-                />
+                <TourPrice />
             </div>
             {
                 !isVisible ?
@@ -126,7 +118,15 @@ const TourFactorPage = () => {
                     <>
                         <div id="moreItem">
                             <div className="tourItem">
-                                <TourPrice />
+                                <TourCharacteristic 
+                                    characteristicsFactor={characteristicsFactor} 
+                                    update={handleUpdateChar} remove={handleDeleteChar}
+                                    submit={handleSubmitChar}
+                                />
+                                <TourType 
+                                    typeFactor={typesFactor} update={handleUpdateType} 
+                                    remove={handleDeleteType} submit={handleSubmitType}
+                                />
                             </div>
                             <div className="tourItem">
                                 <TourLocation 

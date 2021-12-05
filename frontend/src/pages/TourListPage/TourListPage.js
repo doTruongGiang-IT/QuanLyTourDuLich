@@ -7,16 +7,16 @@ import { selectTourList,
     getTourList, 
     editTour, 
     deleteTour, 
-    selectTourCharacteristic, 
+    selectTourPrice, 
     selectTourType, 
-    getTourCharacteristic, 
+    getTourPrice, 
     getTourType 
 } from '../../features/tour/tourSlice';
 
 const TourListPage = () => {
     const dispatch = useDispatch();
     const tours = useSelector(selectTourList);
-    const characteristics = useSelector(selectTourCharacteristic);
+    const prices = useSelector(selectTourPrice);
     const types = useSelector(selectTourType);
     const details = useSelector(selectTourDetails);
     const [tourList, setTourList] = useState(tours);
@@ -32,14 +32,18 @@ const TourListPage = () => {
 
     const formatEditTour = (updateTour) => {
         delete updateTour.key;
-        delete updateTour.price;
         delete updateTour.location;
         delete updateTour.price_name;
-        dispatch(getTourCharacteristic());
+        // delete updateTour.characteristic;
+        dispatch(getTourPrice());
         dispatch(getTourType());
-        characteristics.forEach(characteristic => {
-            if(characteristic.name === updateTour.characteristic) {
-                updateTour.characteristic = characteristic.id;
+        if(typeof updateTour.price === "string") {
+            updateTour.price = updateTour.price.slice(0, updateTour.price.length-4);
+            updateTour.price = updateTour.price.replaceAll('.', '');  
+        };
+        prices.forEach(price => {
+            if(price.price === Number.parseInt(updateTour.price)) {
+                updateTour.price = price.id;
             };
         });
         types.forEach(type => {
@@ -51,6 +55,7 @@ const TourListPage = () => {
 
     const saveEdit = async (updateTour) => {
         await formatEditTour(updateTour);
+        // console.log(updateTour);
         await dispatch(editTour(updateTour));
         tours.forEach(tour => {
             if(tour.id === updateTour.id) {
