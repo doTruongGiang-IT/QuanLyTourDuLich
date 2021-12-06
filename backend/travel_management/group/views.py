@@ -2,8 +2,8 @@ from base.views import PaginateMixin, TrackingMixin
 from django.db.models import Q
 from rest_framework import viewsets
 
-from .models import Group, GroupJourney
-from .serializers import GroupJourneySerializer, GroupSerializer
+from .models import Group, GroupJourney, GroupJourneyCostType, GroupJourneyCost
+from .serializers import GroupJourneySerializer, GroupSerializer, GroupJourneyCostTypeSerializer, GroupJourneyCostSerializer
 
 
 class GroupViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
@@ -37,6 +37,19 @@ class GroupJourneyViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
         queryset = queryset.filter(query)
         return super().filter_queryset(queryset)
     
+    
+class GroupJourneyCostTypeViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
+    serializer_class = GroupJourneyCostTypeSerializer
+    queryset = GroupJourneyCostType.objects.all()
+    object_name = 'group_journey_cost_type'
+    
+
+class GroupJourneyCostViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
+    serializer_class = GroupJourneyCostSerializer
+    queryset = GroupJourneyCost.objects.all()
+    object_name = 'group_journey_cost'
+    
+    
 group_list = GroupViewSet.as_view({
     'get': 'list',
     'post': 'create'
@@ -58,3 +71,27 @@ group_journey_detail = GroupJourneyViewSet.as_view({
     'patch': 'partial_update',
     'delete': 'destroy'
 })
+
+group_journey_cost_type_list = GroupJourneyCostTypeViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+group_journey_cost_type_detail = GroupJourneyCostTypeViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
+
+group_journey_cost_list = GroupJourneyCostViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+group_journey_cost_detail = GroupJourneyCostViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
+})
+
+

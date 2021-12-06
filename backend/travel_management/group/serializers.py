@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from tour.models import Location
-from .models import Group, GroupJourney
+from .models import Group, GroupJourney, GroupJourneyCostType, GroupJourneyCost
 
 
 class GroupJourneySerializer(serializers.ModelSerializer):
@@ -50,3 +50,15 @@ class GroupSerializer(serializers.ModelSerializer):
         
         
         return representation
+
+    
+class GroupJourneyCostTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupJourneyCostType
+        fields = '__all__'
+        
+        
+class GroupJourneyCostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroupJourneyCost
+        fields = '__all__'
