@@ -54,7 +54,7 @@ class GroupJourneyCostType(models.Model):
 
 class GroupJourneyCost(models.Model):
     name                = models.TextField()
-    group_journey       = models.ForeignKey(GroupJourney, on_delete=models.CASCADE)
+    group               = models.ForeignKey(Group, on_delete=models.CASCADE)
     type                = models.ForeignKey(GroupJourneyCostType, on_delete=models.CASCADE)
     price               = models.IntegerField()
     

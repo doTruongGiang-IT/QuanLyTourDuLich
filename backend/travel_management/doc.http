@@ -45,7 +45,7 @@ content-type: application/json
 
 
 ### Tour Update ###
-PATCH {{api_url}}/tour/5 HTTP/1.1
+PATCH {{api_url}}/tour/1 HTTP/1.1
 content-type: application/json
 
 {   
@@ -463,32 +463,72 @@ GET {{api_url}}/stats/tour_of_staff HTTP/1.1
 content-type: application/json
 
 
+### Cost and Revenue of group ###
+GET {{api_url}}/stats/stats_cost_revenue_group_list/2 HTTP/1.1
+content-type: application/json
+
+
+
 
 #########################################
 #        11. Group Journey Cost         #
 #########################################
 
 
-### Group Journet cost list ###
-GET {{api_url}}/group/journey/cost_type HTTP/1.1
+### Group Journet cost type list ###
+GET {{api_url}}/group/cost_type HTTP/1.1
 content-type: application/json
 
 
-### Group Journet cost detal ###
-GET {{api_url}}/group/journey/cost_type/1 HTTP/1.1
+### Group Journet cost type detal ###
+GET {{api_url}}/group/cost_type/1 HTTP/1.1
 content-type: application/json
 
 
-### Group Journet cost create ###
-POST {{api_url}}/group/journey/cost_type HTTP/1.1
+### Group Journet cost type create ###
+POST {{api_url}}/group/cost_type HTTP/1.1
 content-type: application/json
 
 {
     "name": "Phí vé máy bay"
 }
 
+### Group Journet cost type update ###
+PATCH {{api_url}}/group/cost_type/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay mới"
+}
+
+### Group Journet cost type delete ###
+DELETE {{api_url}}/group/cost_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost list ###
+GET {{api_url}}/group/cost HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost detal ###
+GET {{api_url}}/group/cost/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost create ###
+POST {{api_url}}/group/cost HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay",
+    "price": 10000000,
+    "group": 2,
+    "type": 2
+}
+
 ### Group Journet cost update ###
-PATCH {{api_url}}/group/journey/cost_type/1 HTTP/1.1
+PATCH {{api_url}}/group/cost/3 HTTP/1.1
 content-type: application/json
 
 {
@@ -496,6 +536,6 @@ content-type: application/json
 }
 
 ### Group Journet cost delete ###
-DELETE {{api_url}}/group/journey/cost_type/1 HTTP/1.1
+DELETE {{api_url}}/group/cost/1 HTTP/1.1
 content-type: application/json
 

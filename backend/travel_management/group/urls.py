@@ -9,9 +9,9 @@ urlpatterns = [
     path('journey',                     group_journey_list,                 name='group-journey-list'),
     path('journey/<int:pk>',            group_journey_detail,               name='group-journey-detail'),
     
-    path('journey/cost',                group_journey_cost_list,            name='group-journey-cost-list'),
-    path('journey/cost/<int:pk>',       group_journey_cost_detail,          name='group-journey-cost-detail'),
+    path('cost',                        group_journey_cost_list,            name='group-journey-cost-list'),
+    path('cost/<int:pk>',               group_journey_cost_detail,          name='group-journey-cost-detail'),
     
-    path('journey/cost_type',           group_journey_cost_type_list,       name='group-journey-cost-type-list' ),
-    path('journey/cost_type/<int:pk>',  group_journey_cost_type_detail,     name='group-journey-cost-type-detail' ),
+    path('cost_type',                   group_journey_cost_type_list,       name='group-journey-cost-type-list' ),
+    path('cost_type/<int:pk>',          group_journey_cost_type_detail,     name='group-journey-cost-type-detail' ),
 ]
