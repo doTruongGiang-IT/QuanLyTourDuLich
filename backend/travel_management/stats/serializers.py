@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from customer.models import GroupCustomer
 from staff.models import Staff, GroupStaff
+from tour.models import Tour
 from group.models import Group, GroupJourneyCost
 
 
@@ -44,3 +45,29 @@ class StatsCostRevenueGroupSerializer(serializers.ModelSerializer):
           
         return representation
     
+    
+class StatsCostRevenueTourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tour
+        fields = '__all__'
+        
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+    
+        total_of_cost = 0
+        revenue = 0
+        groups = Group.objects.filter(tour=instance.id)
+        
+        for group in groups:
+            group_costs = GroupJourneyCost.objects.filter(group=group.id)
+            
+            for cost in group_costs:
+                total_of_cost += cost.price
+                
+            number_of_guests = GroupCustomer.objects.filter(group=group.id).__len__()
+            revenue += number_of_guests * group.tour.price.price
+            
+        representation['cost'] = total_of_cost
+        representation['revenue'] = revenue
+          
+        return representation

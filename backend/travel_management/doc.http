@@ -464,9 +464,13 @@ content-type: application/json
 
 
 ### Cost and Revenue of group ###
-GET {{api_url}}/stats/stats_cost_revenue_group_list/2 HTTP/1.1
+GET {{api_url}}/stats/stats_cost_revenue_group/2 HTTP/1.1
 content-type: application/json
 
+
+### Cost and Revenue of Tour ###
+GET {{api_url}}/stats/stats_cost_revenue_tour HTTP/1.1
+content-type: application/json
 
 
 
