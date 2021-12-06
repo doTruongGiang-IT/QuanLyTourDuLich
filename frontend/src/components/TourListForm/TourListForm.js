@@ -272,16 +272,16 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
                         <Button
                             onClick={() => saveEdit(record.id)}
                             type="primary"
-                            size="small"
-                            style={{ width: 60 }}
+                            size="medium"
+                            style={{ width: 100 }}
                         >
                             Save
                         </Button>
                         <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
                             <Button
                                 type="primary"
-                                size="small"
-                                style={{ width: 60 }}
+                                size="medium"
+                                style={{ width: 100 }}
                                 danger
                             >
                                 Cancel
@@ -294,8 +294,8 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
                             <Button
                                 type="primary"
                                 icon={<DeleteOutlined />}
-                                size="small"
-                                style={{ width: 40 }}
+                                size="medium"
+                                style={{ width: 60 }}
                                 danger
                             />
                         </Popconfirm>
@@ -304,23 +304,23 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
                             onClick={() => edit(record)}
                             type="primary"
                             icon={<EditOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 60 }}
                         />
                         <Button
                             disabled={editingKey !== ''} 
                             onClick={() => history.push(`/details/${record.id}`)}
                             type="primary"
                             icon={<EyeOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 60 }}
                         />
                         <Button
                             onClick={() => showModal(record.id)}
                             type="primary"
                             icon={<BookOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 60 }}
                         />
                     </Space>   
                 )

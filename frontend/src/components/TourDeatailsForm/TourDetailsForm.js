@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import 'antd/dist/antd.css';
 import React, {useState} from 'react';
-import { Table, Input, Button, Space, Modal, Popconfirm, notification, Form } from 'antd';
+import { Table, Input, Button, Space, Modal, Popconfirm, notification, Form, DatePicker } from 'antd';
 import { Link } from 'react-router-dom';
 import { SearchOutlined, BookOutlined, TeamOutlined, ClockCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
@@ -10,14 +10,16 @@ import { useHistory, useParams } from 'react-router';
 import EditableCell from '../EditableCell/EditableCell';
 import { useDispatch } from 'react-redux';
 import { updateGroup } from '../../features/group/groupSlice';
+import moment from 'moment';
 
-const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) => {
+const TourDetailsForm = ({tourDetails, location, listLocation, remove, update, submit, removeJourney}) => {
     let details = [];
     let hotel = "";
     let journeys = [];
     let nameLocation = "";
     let containers = [];
     let days = [];
+    const { RangePicker } = DatePicker;
 
     const dispatch = useDispatch();
     const [searchText, setSearchText] = useState("");
@@ -31,13 +33,39 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) 
     const [editData, setEditData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
     const [form] = Form.useForm();
+    const [modalInputDisable, setModalInputDisable] = useState(true);
+    const [modalInput, setModalInput] = useState("");
+    const [modalDate, setModalDate] = useState("");
+    const [isEditJourney, setIsEditJourney] = useState(false);
+    const [contentJourney, setContentJourney] = useState('');
+    let locationId = 0;
+
+    const quickSort = (values) => {
+      if (values.length <= 1) {
+          return values
+      };
+
+      var lessThanPivot = [];
+      var greaterThanPivot = [];
+      var pivot = values[0];
+      for (var i = 1; i < values.length; i++) {
+          if (new Date(values[i].start_date) <= new Date(pivot.start_date)) {
+              lessThanPivot.push(values[i]);
+          } else {
+              greaterThanPivot.push(values[i]);
+          }
+      }
+      return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
+    };
+    // console.log(journey.containers);
 
     tourDetails.forEach(detail => {
+      let journeySort = quickSort(detail.journey);
       if(detail.journey.length > 0) {
-        detail.journey.forEach((item) => {
+        journeySort.forEach((item) => {
           let day = `${new Date(item.start_date).getUTCDate()}-${new Date(item.start_date).getUTCMonth()}-${new Date(item.start_date).getUTCFullYear()}`;
           let content = `${new Date(item.start_date).getUTCHours()}h:${new Date(item.start_date).getUTCMinutes()} - ${new Date(item.end_date).getUTCHours()}h:${new Date(item.end_date).getUTCMinutes()}: ${item.content}.`;
-          containers.push({day, content});
+          containers.push({id: detail.id, content_id: item.id, day, content});
           if(!days.includes(day)) {
             days.push(day);
           };
@@ -54,6 +82,7 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) 
       listLocation.forEach(locationItem => {
         if(locationItem.id === location.location) {
           nameLocation = locationItem.name;
+          locationId = locationItem.id;
         };
       });
 
@@ -69,6 +98,16 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) 
       details.push(formatDetail);
       details = details.map((detail) => {
         return {key: detail.id + 1, ...detail};
+      });
+    });
+
+    journeys.forEach(journey => {
+      let temp = [];
+      journey.containers.filter(container => {
+        if(container.id === journey.id) {
+          temp.push(container);
+        };
+        journey.containers = temp;  
       });
     });
 
@@ -341,6 +380,50 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) 
       });
     };
 
+    const handleOk = () => {
+      setModalInputDisable(false);
+    };
+
+    const handleSubmit = () => {
+      const journey = {group: isRowActive, content: modalInput, start_date: modalDate[0], end_date: modalDate[1], location: locationId};
+      // console.log(journey);
+      submit(journey);
+      setModalInput("");
+      setModalDate("");
+      setModalInputDisable(true);
+    };
+
+    const onChange = (value, dateString) => {
+      // console.log('Selected Time: ', value);
+      // console.log('Formatted Selected Time: ', dateString);
+      setModalDate(dateString);
+    };
+
+    const disabledDate = (current) => {
+      // Can not select days before today and today
+      let start = "";
+      let end = "";
+      tourDetails.forEach(detail => {
+        if(detail.id === isRowActive) {
+          start = detail.start_date;
+          end = detail.end_date;
+        };
+      });
+      return (current && current < moment(start).startOf("day")) || (current && current > moment(end).endOf("day"));
+    };
+
+    // const handleUpdateJourney = (content) => {
+    //   // updateJourney(content)
+    //   setIsEditJourney(true);
+    //   let contents = content.content.split(': ');
+    //   console.log(contents[1]);
+    //   let times = contents[0].split(' - ');
+    //   console.log(times[0])
+    //   console.log(times[1])
+    //   console.log(content.day)
+    //   setModalInput(contents[1]);
+    // };
+
     return (
         <div className="tourDetailsForm">
             {contextHolder}
@@ -356,17 +439,35 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update}) 
                 bordered columns={mergedColumns} dataSource={details} 
               />
             </Form>
-            <Modal title="Journey for this group" visible={isModalVisible} onCancel={handleCancel} footer={[]}>
+            <Modal title="Journey for this group" visible={isModalVisible} onCancel={handleCancel} footer={[
+              <Space>
+                <RangePicker defaultValue="" disabledDate={disabledDate} showTime onChange={onChange} disabled={modalInputDisable} />
+                <Input value={modalInput} disabled={modalInputDisable} onChange={e => setModalInput(e.target.value)} />
+                {
+                  (!isEditJourney && modalInputDisable) ?
+                  <Button key="submit" type="primary" onClick={handleOk}>
+                    Create
+                  </Button> :
+                  <Button key="submit" type="primary" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                }
+              </Space>
+            ]}>
               {
                 journeys.map(journey => {
                   return <div key={journey.id}>
                     {
                       days.map((day, index) => {
                         return <div key={index}>
-                                  {(journey.id === isRowActive && journey.containers.length > 0) ? <strong>DAY: {day}</strong> : ""}
+                                  {(journey.id === isRowActive) ? <strong>DAY: {day}</strong> : ""}
                                   {
                                     journey.id === isRowActive ? journey.containers.map((content, index) => {
-                                      return content.day === day ? <div key={index}><p><ClockCircleOutlined /> {content.content}</p></div> : ""
+                                      return content.day === day ? 
+                                              <div className="contentJourney" key={index}>
+                                                <p><ClockCircleOutlined /> {content.content}</p>
+                                                <Button type="primary" size="small" danger onClick={() => removeJourney(content)}><DeleteOutlined /></Button>
+                                              </div> : ""
                                     }) : ""
                                   }
                               </div>
