@@ -43,3 +43,21 @@ class GroupJourney(models.Model):
     
     def __str__(self):
         return f"{self.id} | {self.group} | {self.content[:50]}" 
+    
+
+class GroupJourneyCostType(models.Model):
+    name                = models.TextField()
+    
+    def __str__(self):
+        return f"{self.id} | {self.name}"
+    
+
+class GroupJourneyCost(models.Model):
+    name                = models.TextField()
+    group_journey       = models.ForeignKey(GroupJourney, on_delete=models.CASCADE)
+    type                = models.ForeignKey(GroupJourneyCostType, on_delete=models.CASCADE)
+    price               = models.IntegerField()
+    
+    def __str__(self):
+        return f"{self.id} | {self.name}"
+    

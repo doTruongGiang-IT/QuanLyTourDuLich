@@ -461,3 +461,41 @@ content-type: application/json
 ### Staff Number of tours of staff ###
 GET {{api_url}}/stats/tour_of_staff HTTP/1.1
 content-type: application/json
+
+
+
+#########################################
+#        11. Group Journey Cost         #
+#########################################
+
+
+### Group Journet cost list ###
+GET {{api_url}}/group/journey/cost_type HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost detal ###
+GET {{api_url}}/group/journey/cost_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost create ###
+POST {{api_url}}/group/journey/cost_type HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay"
+}
+
+### Group Journet cost update ###
+PATCH {{api_url}}/group/journey/cost_type/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay mới"
+}
+
+### Group Journet cost delete ###
+DELETE {{api_url}}/group/journey/cost_type/1 HTTP/1.1
+content-type: application/json
+
