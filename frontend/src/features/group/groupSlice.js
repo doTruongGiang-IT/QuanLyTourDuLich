@@ -42,6 +42,30 @@ export const deleteGroup = createAsyncThunk(
     }
 );
 
+export const createGroupJourney = createAsyncThunk(
+    'group/createGroupJourney',
+    async (journey) => {
+        const res = await axios.post(`${api_url}/api/group/journey`, journey);
+        return res.data;
+    }
+);
+
+export const updateGroupJourney = createAsyncThunk(
+    'group/updateGroupJourney',
+    async (journey) => {
+        const res = await axios.patch(`${api_url}/api/group/journey/${journey.content_id}`, journey);
+        return res.data;
+    }
+);
+
+export const deleteGroupJourney = createAsyncThunk(
+    'group/deleteGroupJourney',
+    async (id) => {
+        const res = await axios.delete(`${api_url}/api/group/journey/${id}`);
+        return res.data;
+    }
+);
+
 export const groupSlice = createSlice({
     name: "group",
     initialState,
@@ -82,6 +106,33 @@ export const groupSlice = createSlice({
                 return {...state, loading: false};
             })
             .addCase(deleteGroup.rejected, (state) => {
+                return {...state, error: true, loading: false};
+            })
+            .addCase(createGroupJourney.pending, (state) => {
+                return {...state, loading: true };
+            })
+            .addCase(createGroupJourney.fulfilled, (state, ) => {
+                return {...state, loading: false};
+            })
+            .addCase(createGroupJourney.rejected, (state) => {
+                return {...state, error: true, loading: false};
+            })
+            .addCase(deleteGroupJourney.pending, (state) => {
+                return {...state, loading: true };
+            })
+            .addCase(deleteGroupJourney.fulfilled, (state, ) => {
+                return {...state, loading: false};
+            })
+            .addCase(deleteGroupJourney.rejected, (state) => {
+                return {...state, error: true, loading: false};
+            })
+            .addCase(updateGroupJourney.pending, (state) => {
+                return {...state, loading: true };
+            })
+            .addCase(updateGroupJourney.fulfilled, (state, ) => {
+                return {...state, loading: false};
+            })
+            .addCase(updateGroupJourney.rejected, (state) => {
                 return {...state, error: true, loading: false};
             })
     }
