@@ -6,7 +6,7 @@ class CustomerDAO(BaseDAO):
     DTO_CLASS = Customer
     API_URL = {
         'read':         f'{BASE_API_URL}/customer',
-        'create':       f'{BASE_API_URL}/customer',
+        'create':       f'{BASE_API_URL}/customer/',
         'read_detail':  f'{BASE_API_URL}/customer/{{}}',
         'update':       f'{BASE_API_URL}/customer/{{}}',
         'delete':       f'{BASE_API_URL}/customer/{{}}'

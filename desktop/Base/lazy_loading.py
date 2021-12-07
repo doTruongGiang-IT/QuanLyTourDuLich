@@ -5,6 +5,7 @@ import websockets
 from BUS.group import GroupBUS, GroupJourneyBUS
 from BUS.tour import (LocationBUS, TourBUS, TourCharacteristicBUS,
                       TourPriceBUS, TourTypeBUS)
+from BUS.customer import CustomerBUS
 
 SOCKER_URL = 'ws://localhost:8000/ws/tracking'
 
@@ -15,7 +16,7 @@ CLASS_TO_OBJECT_NAMES = {
     'tour_price': TourPriceBUS,
     'location': LocationBUS,
     'group': GroupBUS,
-    'group_journey': GroupJourneyBUS
+    'customer': CustomerBUS,
 }
 
 async def lazy_loading():
