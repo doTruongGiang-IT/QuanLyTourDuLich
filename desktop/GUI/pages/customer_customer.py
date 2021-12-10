@@ -1,47 +1,107 @@
 import dearpygui.dearpygui as dpg
-from BUS.customer import CustomerBUS
+from BUS.customer import CustomerBUS, GroupCustomerBUS
 from DTO.customer import Customer
+from BUS.group import GroupBUS
+from DAO.customer import GroupCustomerDAO
 from ..base_table import init_table
+import re
 
 class CustomerCustomerGUI:
     group_content_window = None
+    table = None
 
     @classmethod
-    def content_render(cls, data):
+    def content_render(cls, data, choice_default=None):
         dpg.delete_item(cls.group_content_window, children_only=True)
-        dpg.add_text(default_value=data, parent=cls.group_content_window)
+        #dpg.add_text(default_value=data, parent=cls.group_content_window)
+        cls.table = None
+
+        if choice_default is None:
+            choice_default = 'All'
+
+        groups = ['All']
+        groups += [f'{g.id} | {g.name}' for g in GroupBUS().objects]
+
+        high_top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
+        dpg.add_text(default_value=data, parent=high_top_group)
+        group_combo = dpg.add_combo(label="Group", items=groups, parent=high_top_group, default_value=choice_default, callback=cls.choice_group_combo)
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new customer", callback=cls.create_window, parent=top_group)
+        #dpg.add_button(label="Add a customer to a group", parent=top_group)
         dpg.add_input_text(label="Search", parent=top_group)
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
-        
+
+        cls.choice_group_combo(group_combo, choice_default)
+
+
+    @classmethod
+    def choice_group_combo(cls, sender, app_data):
         header = ['id', 'name', 'id number', "address", "gender", "phone number"]
         type_columns = [int, str, str, str, str, str]
-        data = []
-        customer_bus = CustomerBUS()
-        tour_data = customer_bus.objects
 
-        for d in tour_data:
-            data.append([
-                d.id,
-                d.name,
-                d.id_number,
-                d.address,
-                d.gender,
-                d.phone_number
-            ])
-        
-        table = init_table(
-            header=header,
-            data=data,
-            parent=cls.group_content_window,
-            type_columns=type_columns,
-            is_action=True,
-            modified_callback=cls.modified_window,
-            delete_callback=cls.delete_window,
-            view_callback=cls.view_window
-        )
+        if app_data == 'All':
+            data = []
+            customer_bus = CustomerBUS()
+            customer_data = customer_bus.objects
+            for c in customer_data:
+                data.append([
+                    c.id,
+                    c.name,
+                    c.id_number,
+                    c.address,
+                    c.gender,
+                    c.phone_number
+                ])
+
+            if cls.table is not None:
+                dpg.delete_item(cls.table)
+                cls.table = None
+
+            cls.table = init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )
+        else:
+            group_id = int(app_data.split('|')[0])
+            print (group_id)
+
+            data = []
+            group_customer_bus = GroupCustomerBUS()
+            # print (group_customer_bus.objects(group_id))
+            group_customer_data = group_customer_bus.read(group_id)
+            for gc in group_customer_data:
+                customer_bus = CustomerBUS()
+                customer = [c for c in customer_bus.objects if c.id == gc.customer][0]
+                data.append([
+                    customer.id,
+                    customer.name,
+                    customer.id_number,
+                    customer.address,
+                    customer.gender,
+                    customer.phone_number
+                ])
+            
+            if cls.table is not None:
+                    dpg.delete_item(cls.table)
+                    cls.table = None
+
+            cls.table = init_table(
+                    header=header,
+                    data=data,
+                    parent=cls.group_content_window,
+                    type_columns=type_columns,
+                    is_action=True,
+                    modified_callback=cls.modified_window,
+                    delete_callback=cls.delete_window,
+                    view_callback=cls.view_window
+            )
 
     @classmethod
     def create_window(cls):
@@ -100,8 +160,18 @@ class CustomerCustomerGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
+                if item['field'] == 'id_number':
+                    pattern_id_number = re.compile('^([0-9]{9}|[0-9]{12})+$')
+                    if pattern_id_number.match(data) is None:
+                        is_valid = False
+                        dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is not id number', color=[255, 92, 88])
+
+                if item['field'] == 'phone_number':
+                    pattern_id_number = re.compile('^([0-9]{10}|[0-9]{11})+$')
+                    if pattern_id_number.match(data) is None:
+                        is_valid = False
+                        dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is not phone number', color=[255, 92, 88])
             else:
                 is_valid = False
                 dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is invalid', color=[255, 92, 88])               
@@ -192,6 +262,17 @@ class CustomerCustomerGUI:
             if data != "": 
                 print(data)
                 request_data[item['field']] = data
+                if item['field'] == 'id_number':
+                    pattern_id_number = re.compile('^([0-9]{9}|[0-9]{12})+$')
+                    if pattern_id_number.match(data) is None:
+                        is_valid = False
+                        dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is not id number', color=[255, 92, 88])
+
+                if item['field'] == 'phone_number':
+                    pattern_id_number = re.compile('^([0-9]{10}|[0-9]{11})+$')
+                    if pattern_id_number.match(data) is None:
+                        is_valid = False
+                        dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is not phone number', color=[255, 92, 88])
             else:
                 is_valid = False
                 dpg.configure_item(user_data['status'], default_value=f'Status: {item["name"]} is invalid', color=[255, 92, 88])               

@@ -39,7 +39,7 @@ class CustomerGUI:
     def customer_render_callback(cls, sender, app_data):
         cls.init_content_window()
         CustomerCustomerGUI.group_content_window = cls.group_content_window
-        CustomerCustomerGUI.content_render(str(sender))
+        CustomerCustomerGUI.content_render(str(sender), app_data)
     
 
     

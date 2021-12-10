@@ -16,3 +16,15 @@ class Customer:
         self.gender = gender
         self.phone_number = phone_number
 
+class GroupCustomer:
+    def __init__(
+        self,
+        id: int,
+        group: int,
+        customer: int
+        ):
+        self.id = id
+        self.group = group
+        self.customer = customer
+
+
