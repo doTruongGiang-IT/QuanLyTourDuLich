@@ -56,6 +56,7 @@ class Tour:
         self,
         id: int,
         name: str,
+        description: str,
         characteristic: TourCharacteristic,
         type: TourType,
         price: TourPrice,
@@ -63,6 +64,7 @@ class Tour:
     ):
         self.id             = id 
         self.name           = name 
+        self.description    = description
         self.characteristic = characteristic 
         self.type           = type 
         self.price          = price 

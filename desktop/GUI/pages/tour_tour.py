@@ -21,7 +21,7 @@ class TourTourGUI:
         dpg.add_input_text(label="Search", parent=top_group)
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
-        header = ['id', 'name', 'characteristic', "type", "price", "location"]
+        header = ['id', 'name', 'type', "description", "price", "location"]
         type_columns = [int, str, str, str, int, str]
         data = []
         tour_bus = TourBUS()
@@ -31,8 +31,8 @@ class TourTourGUI:
             data.append([
                 d.id,
                 d.name,
-                d.characteristic.name,
                 d.type.name,
+                d.description,
                 d.price.price,
                 d.location.name
             ])
@@ -53,18 +53,16 @@ class TourTourGUI:
         window = dpg.add_window(label="Add new tour", width=400, autosize=True, pos=[500, 200])
         tour_name = dpg.add_input_text(label="Name ", parent=window)
         
-        tour_characteristics    = TourCharacteristicBUS().objects
         tour_types              = TourTypeBUS().objects
         tour_prices             = TourPriceBUS().objects
         locations               = LocationBUS().objects
         
-        tour_characteristics    = [f'{d.id} | {d.name}' for d in tour_characteristics]
         tour_types              = [f'{d.id} | {d.name}' for d in tour_types]
         tour_prices             = [f'{d.id} | {d.name}' for d in tour_prices]
         locations               = [f'{d.id} | {d.name}' for d in locations]
         
-        tour_characteristics    = dpg.add_combo(label="Characteristic", items=tour_characteristics, parent=window)
         tour_types              = dpg.add_combo(label="Type", items=tour_types, parent=window)
+        tour_descriptions       = dpg.add_input_text(label="Description", parent=window)
         tour_prices             = dpg.add_combo(label="Price", items=tour_prices, parent=window)
         locations               = dpg.add_combo(label="Location", items=locations, parent=window)
         
@@ -83,14 +81,14 @@ class TourTourGUI:
                         'item': tour_name,
                     },
                     {
-                        'field': 'characteristic',
-                        'name': 'Tour characteristic',
-                        'item': tour_characteristics,
-                    },
-                    {
                         'field': 'type',
                         'name': 'Tour type',
                         'item': tour_types,
+                    },
+                    {
+                        'field': 'description',
+                        'name': 'Tour description',
+                        'item': tour_descriptions,
                     },
                     {
                         'field': 'price',
@@ -114,7 +112,6 @@ class TourTourGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -123,19 +120,17 @@ class TourTourGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
-            request_data['characteristic']  = int(request_data['characteristic'].split('|')[0])        
-            request_data['type']            = int(request_data['type'].split('|')[0])        
+            request_data['type']            = int(request_data['type'].split('|')[0])                
             request_data['price']           = int(request_data['price'].split('|')[0])        
             request_data['location']        = int(request_data['location'].split('|')[0])    
             
-            print(request_data)
             
             tour_obj = Tour(
                 id=0,
                 name=request_data['name'],
-                characteristic=TourCharacteristic(request_data['characteristic'], None),
+                description=request_data['description'],
+                characteristic=TourCharacteristic(1, None),
                 type=TourType(request_data['type'], None),
                 price=TourPrice(request_data['price'], None, None, None, None),
                 location=Location(request_data['location'], None, None, None)
@@ -159,18 +154,16 @@ class TourTourGUI:
         tour_id = dpg.add_text(default_value=f"id: {tour.id}", parent=window)
         tour_name = dpg.add_input_text(label="Name ", parent=window, default_value=tour.name)
         
-        tour_characteristics    = TourCharacteristicBUS().objects
         tour_types              = TourTypeBUS().objects
         tour_prices             = TourPriceBUS().objects
         locations               = LocationBUS().objects
         
-        tour_characteristics    = [f'{d.id} | {d.name}' for d in tour_characteristics]
         tour_types              = [f'{d.id} | {d.name}' for d in tour_types]
         tour_prices             = [f'{d.id} | {d.name}' for d in tour_prices]
         locations               = [f'{d.id} | {d.name}' for d in locations]
         
-        tour_characteristics    = dpg.add_combo(label="Characteristic", items=tour_characteristics, default_value=f'{tour.characteristic.id} | {tour.characteristic.name}', parent=window)
         tour_types              = dpg.add_combo(label="Type", items=tour_types, default_value=f'{tour.type.id} | {tour.type.name}', parent=window)
+        tour_descriptions              = dpg.add_input_text(label="Description", default_value=tour.description, parent=window)
         tour_prices             = dpg.add_combo(label="Price", items=tour_prices, default_value=f'{tour.price.id} | {tour.price.name}', parent=window)
         locations               = dpg.add_combo(label="Location", items=locations, default_value=f'{tour.location.id} | {tour.location.name}', parent=window)
         
@@ -190,14 +183,14 @@ class TourTourGUI:
                         'item': tour_name,
                     },
                     {
-                        'field': 'characteristic',
-                        'name': 'Tour characteristic',
-                        'item': tour_characteristics,
-                    },
-                    {
                         'field': 'type',
                         'name': 'Tour type',
                         'item': tour_types,
+                    },
+                    {
+                        'field': 'description',
+                        'name': 'Tour description',
+                        'item': tour_descriptions,
                     },
                     {
                         'field': 'price',
@@ -221,7 +214,6 @@ class TourTourGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -230,19 +222,16 @@ class TourTourGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
-            request_data['characteristic']  = int(request_data['characteristic'].split('|')[0])        
-            request_data['type']            = int(request_data['type'].split('|')[0])        
+            request_data['type']            = int(request_data['type'].split('|')[0])                
             request_data['price']           = int(request_data['price'].split('|')[0])        
             request_data['location']        = int(request_data['location'].split('|')[0])    
-            
-            print(request_data)
             
             tour_obj = Tour(
                 id=user_data['id'],
                 name=request_data['name'],
-                characteristic=TourCharacteristic(request_data['characteristic'], None),
+                description=request_data['description'],
+                characteristic=TourCharacteristic(1, None),
                 type=TourType(request_data['type'], None),
                 price=TourPrice(request_data['price'], None, None, None, None),
                 location=Location(request_data['location'], None, None, None)
@@ -300,8 +289,8 @@ class TourTourGUI:
         window = dpg.add_window(label="Modified the tour", width=400, autosize=True, pos=[500, 200])
         dpg.add_text(default_value=f"id: {tour.id}", parent=window)
         dpg.add_text(default_value=f"Name: {tour.name}", parent=window)
-        dpg.add_text(default_value=f"Characteristic: {tour.characteristic.id} | {tour.characteristic.name}", parent=window)
         dpg.add_text(default_value=f"Type: {tour.type.id} | {tour.type.name}", parent=window)
+        dpg.add_text(default_value=f"Description: {tour.description}", parent=window)
         dpg.add_text(default_value=f"Price: {tour.price.id} | {tour.price.name}", parent=window)
         dpg.add_text(default_value=f"Location: {location}", parent=window)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
