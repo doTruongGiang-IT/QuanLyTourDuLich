@@ -21,6 +21,7 @@ class TourTourGUI:
         dpg.add_input_text(label="Search", parent=top_group)
         dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
+
         header = ['id', 'name', 'characteristic', "description", "price", "location"]
         type_columns = [int, str, str, str, int, str]
         data = []
@@ -91,6 +92,11 @@ class TourTourGUI:
                         'item': tour_descriptions,
                     },
                     {
+                        'field': 'description',
+                        'name': 'Tour description',
+                        'item': tour_descriptions,
+                    },
+                    {
                         'field': 'price',
                         'name': 'Tour price',
                         'item': tour_prices,
@@ -112,7 +118,6 @@ class TourTourGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -121,13 +126,11 @@ class TourTourGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
             request_data['characteristic']  = int(request_data['characteristic'].split('|')[0])                
             request_data['price']           = int(request_data['price'].split('|')[0])        
             request_data['location']        = int(request_data['location'].split('|')[0])    
             
-            print(request_data)
             
             tour_obj = Tour(
                 id=0,
@@ -196,6 +199,11 @@ class TourTourGUI:
                         'item': tour_descriptions,
                     },
                     {
+                        'field': 'description',
+                        'name': 'Tour description',
+                        'item': tour_descriptions,
+                    },
+                    {
                         'field': 'price',
                         'name': 'Tour price',
                         'item': tour_prices,
@@ -217,7 +225,6 @@ class TourTourGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -226,13 +233,10 @@ class TourTourGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
             request_data['characteristic']  = int(request_data['characteristic'].split('|')[0])                
             request_data['price']           = int(request_data['price'].split('|')[0])        
             request_data['location']        = int(request_data['location'].split('|')[0])    
-            
-            print(request_data)
             
             tour_obj = Tour(
                 id=user_data['id'],
