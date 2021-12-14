@@ -3,7 +3,11 @@ from datetime import date, datetime
 import dearpygui.dearpygui as dpg
 from BUS.group import GroupBUS, GroupJourneyBUS
 from BUS.tour import LocationBUS, TourBUS
+from BUS.customer import CustomerBUS, GroupCustomerBUS
 from DTO.group import Group, GroupJourney
+from DTO.customer import Customer, GroupCustomer
+from .customer_customer import CustomerCustomerGUI
+from .customer import CustomerGUI
 
 from ..base_table import init_table
 
@@ -431,6 +435,147 @@ class GroupGroupGUI:
                 journey =  start_hour + " - " + end_hour + ": " + journey.content + "\n"
                 
                 dpg.add_text(default_value=journey, bullet=True, parent=window)
-                
+
         dpg.add_text(default_value=f"Revenue: {group.revenue}", parent=window)
-        dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
+
+        group_bottom = dpg.add_group(horizontal=True, parent=window)
+        dpg.add_button(label="Customers", callback=lambda :cls.customers_callback(group.id), parent=group_bottom)
+        dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=group_bottom)
+
+    @classmethod
+    def customers_callback(cls, sender):
+        group_customer_bus = GroupCustomerBUS()
+        group_customer=group_customer_bus.read(sender)
+
+        window = dpg.add_window(label="Customers of the group", width=600, height=325, pos=[500, 200])
+        header = ['id', 'name', 'id number', "address", "gender", "phone number"]
+        type_columns = [int, str, str, str, str, str]
+        data = []
+        customer_bus = CustomerBUS()
+
+        for gc in group_customer:
+            customer = [c for c in customer_bus.objects if c.id == gc.customer][0]
+            data.append([
+                customer.id,
+                customer.name,
+                customer.id_number,
+                customer.address,
+                customer.gender,
+                customer.phone_number
+            ])
+
+        table = dpg.add_table(
+            header_row=True, 
+            borders_innerH=True, 
+            borders_outerH=True,
+            borders_innerV=True, 
+            borders_outerV=True, 
+            row_background=True,
+            resizable=True,
+            sortable=True,
+            hideable=True,
+            precise_widths=True,
+            no_host_extendX=True,
+            callback=None,
+            parent=window,
+            height=200)
+
+        type_column_map = {}
+    
+        for ind, column in enumerate(header):
+            col = dpg.add_table_column(label=column, width_fixed=True, parent=table)
+            if type_columns:
+                type_column_map[col] = (ind, type_columns[ind])
+
+        dpg.add_table_column(label="Action", parent=table, no_sort=True)
+        print(data)
+        for row in data:
+            table_row = dpg.add_table_row(parent=table)
+            for d in row:
+                dpg.add_text(d, parent=table_row)
+
+            remove_customer_button = dpg.add_button(label='Remove', parent=table_row, callback=cls.remove_customer)
+            dpg.set_item_user_data(
+                remove_customer_button,
+                {
+                    'window': window,
+                    'group_id': sender,
+                    'customer_id': row[0]
+                }
+            )
+        
+        customer_bus = CustomerBUS()
+        customers = [f'{c.id} | {c.name}' for c in customer_bus.objects]
+        customer_combo = dpg.add_combo(label='Customer', parent=window, items=customers, default_value=customers[0])
+        status = dpg.add_text(default_value="Status", parent=window)
+        bottom_group = dpg.add_group(horizontal=True, parent=window)
+        add_customer_button = dpg.add_button(label="Add customer", parent=bottom_group, callback=cls.add_customer_callback)
+        dpg.add_button(label="Close", parent=bottom_group, callback=lambda :dpg.delete_item(window))
+        dpg.set_item_user_data(
+            add_customer_button,
+            {
+                'window': window,
+                'status': status,
+                'group_id': sender,
+                'customer': customer_combo
+            }
+        )
+
+    @classmethod
+    def remove_customer(cls, sender, app_data, user_data):
+        window = dpg.add_window(label="Remove the customer from group", width=400, autosize=True, pos=[500, 200])
+        question = dpg.add_text(default_value=f"Do you want to remove the customer (id: {user_data['customer_id']} from ther group (id: {user_data['group_id']})?", parent=window)
+        status = dpg.add_text(default_value="Status", parent=window)
+        
+        group = dpg.add_group(horizontal=True, parent=window)
+        
+        user_data = {
+            'group_id': user_data['group_id'],
+            'customer_id': user_data['customer_id'],
+            'status': status,
+            'question_window': window,
+            'remove_customer_window': user_data['window']
+
+        }
+        button_yes = dpg.add_button(label="Yes", callback=cls.remove_customer_callback, user_data=user_data, parent=group)
+        button_no = dpg.add_button(label="Cancel", callback=lambda :dpg.delete_item(window), parent=group)
+
+    @classmethod
+    def remove_customer_callback(cls, sender, app_data, user_data):
+        group_customer_bus = GroupCustomerBUS()
+        error = group_customer_bus.delete(user_data['group_id'], user_data['customer_id'])
+        if error.status is True:
+            dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+        else:
+            dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
+            dpg.delete_item(user_data['question_window'])            
+            cls.customers_callback(user_data['group_id'])
+            dpg.delete_item(user_data['remove_customer_window'])
+
+
+    @classmethod
+    def add_customer_callback(cls, sender, app_data, user_data):
+        customer_id = int(dpg.get_value(user_data['customer']).split('|')[0])
+        group_customer_bus = GroupCustomerBUS()
+        group_customer_obj = GroupCustomer(
+            id = 0,
+            group = user_data['group_id'],
+            customer = customer_id
+        )
+        error = group_customer_bus.create(group_customer_obj)
+        if error.status is True:
+            dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+        else:
+            cls.customers_callback(user_data['group_id'])
+            dpg.delete_item(user_data['window'])
+
+
+
+
+        
+        
+
+
+        
+
+        
