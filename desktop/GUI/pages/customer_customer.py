@@ -29,8 +29,13 @@ class CustomerCustomerGUI:
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new customer", callback=cls.create_window, parent=top_group)
         #dpg.add_button(label="Add a customer to a group", parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
+        search_text = dpg.add_input_text(label="Search", parent=top_group, on_enter=True)
+        column_search = dpg.add_combo(label="Columns", items=['all', 'name', 'id number', 'address', 'gender', 'phone number'], parent=top_group, default_value='all')
+        dpg.set_item_user_data(search_text, {
+            'group': group_combo,
+            'column': column_search
+        })
+        dpg.set_item_callback(search_text, cls.search_callback)
 
         cls.choice_group_combo(group_combo, choice_default)
 
@@ -345,3 +350,106 @@ class CustomerCustomerGUI:
         dpg.add_text(default_value=f"Phone number: {customer.phone_number}", parent=window)
 
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
+
+    @classmethod
+    def search_callback(cls,sender, app_data, user_data):
+        customer_bus = CustomerBUS()
+        customer = []
+        if dpg.get_value(user_data['group']) != 'All':
+            group_id = int(dpg.get_value(user_data['group']).split('|')[0])
+            group_customer_bus = GroupCustomerBUS()
+            group_customer_data = group_customer_bus.read(group_id)
+            for gc in group_customer_data:
+                customer.append([ c for c in customer_bus.objects if c.id == gc.customer][0])
+        if dpg.get_value(user_data['group']) == 'All':
+            customer = customer_bus.objects
+        print(customer)
+        header = ['id', 'name', 'id number', "address", "gender", "phone number"]
+        type_columns = [int, str, str, str, str, str]
+        data = []
+        column_search = dpg.get_value(user_data['column'])
+        if (column_search == 'all'):
+            for c in customer:
+                multi_strings = f"{c.id} | {c.name} | {c.id_number} | {c.address} | {c.gender} | {c.phone_number}"
+                search = re.search(app_data, multi_strings)
+                if (search):
+                    data.append([
+                        c.id,
+                        c.name,
+                        c.id_number,
+                        c.address,
+                        c.gender,
+                        c.phone_number
+                    ])
+        if (column_search == 'name'):
+            for c in customer:
+                search = re.search(app_data, c.name)
+                if (search):
+                    data.append([
+                        c.id,
+                        c.name,
+                        c.id_number,
+                        c.address,
+                        c.gender,
+                        c.phone_number
+                    ])
+        if (column_search == 'id number'):
+            for c in customer:
+                search = re.search(app_data, c.id_number)
+                if (search):
+                    data.append([
+                        c.id,
+                        c.name,
+                        c.id_number,
+                        c.address,
+                        c.gender,
+                        c.phone_number
+                    ])
+        if (column_search == 'address'):
+            for c in customer:
+                search = re.search(app_data, c.address)
+                if (search):
+                    data.append([
+                        c.id,
+                        c.name,
+                        c.id_number,
+                        c.address,
+                        c.gender,
+                        c.phone_number
+                    ])
+        if (column_search == 'gender'):
+            for c in customer:
+                search = re.search(app_data, c.gender)
+                if (search):
+                    data.append([
+                        c.id,
+                        c.name,
+                        c.id_number,
+                        c.address,
+                        c.gender,
+                        c.phone_number
+                    ])
+        if (column_search == 'phone number'):
+            for c in customer:
+                search = re.search(app_data, c.phone_number)
+                if (search):
+                    data.append([
+                        c.id,
+                        c.name,
+                        c.id_number,
+                        c.address,
+                        c.gender,
+                        c.phone_number
+                    ])
+        
+        dpg.delete_item(cls.table)
+        cls.table= init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )

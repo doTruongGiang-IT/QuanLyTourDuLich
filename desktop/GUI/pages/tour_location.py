@@ -1,3 +1,4 @@
+import re
 import dearpygui.dearpygui as dpg
 
 from ..base_table import init_table
@@ -7,22 +8,30 @@ from DTO.tour import Location
 
 class TourLocationGUI:
     group_content_window = None
+    table = None
 
     @classmethod
     def content_render(cls, data):
         dpg.delete_item(cls.group_content_window, children_only=True)
         dpg.add_text(default_value=data, parent=cls.group_content_window)
-        
+        cls.table = None
+
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new location", callback=cls.create_window, parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
+        search_text = dpg.add_input_text(label="Search", parent=top_group, on_enter=True)
+        column_search = dpg.add_combo(label="Columns", items=['all', 'name', 'type', 'level'], parent=top_group, default_value='all')
+        dpg.set_item_user_data(search_text, column_search)
+        dpg.set_item_callback(search_text, cls.search_callback)
         
         header = ['id', 'name', 'type', 'level']
         type_columns = [int, str, str, str]
         data = []
         location_bus = LocationBUS()
         location_data = location_bus.objects
+
+        if cls.table is not None:
+            dpg.delete_item(cls.table)
+            cls.table = None
         
         for d in location_data:
             data.append([
@@ -32,7 +41,7 @@ class TourLocationGUI:
                 d.level
             ])
         
-        table = init_table(
+        cls.table = init_table(
             header=header,
             data=data,
             parent=cls.group_content_window,
@@ -230,3 +239,65 @@ class TourLocationGUI:
         dpg.add_text(default_value=f"Type: {location.type}", parent=window)
         dpg.add_text(default_value=f"Level: {location.level}", parent=window)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
+    
+    @classmethod
+    def search_callback(cls,sender, app_data, user_data):
+        location_bus = LocationBUS()
+        location = location_bus.objects
+        header = ['id', 'name', 'type', 'level']
+        type_columns = [int, str, str, str]
+        data = []
+        column_search = dpg.get_value(user_data)
+        if (column_search == 'all'):
+            for l in location:
+                multi_strings = f"{l.id} | {l.name} | {l.type} | {l.level}"
+                search = re.search(app_data, multi_strings)
+                if (search):
+                    data.append([
+                        l.id,
+                        l.name,
+                        l.type,
+                        l.level
+                    ])
+        if (column_search == 'name'):
+            for l in location:
+                search = re.search(app_data, l.name)
+                if (search):
+                    data.append([
+                        l.id,
+                        l.name,
+                        l.type,
+                        l.level
+                    ])
+        if (column_search == 'type'):
+            for l in location:
+                search = re.search(app_data, l.type)
+                if (search):
+                    data.append([
+                        l.id,
+                        l.name,
+                        l.type,
+                        l.level
+                    ])
+        if (column_search == 'level'):
+            for l in location:
+                search = re.search(app_data, l.level)
+                if (search):
+                    data.append([
+                        l.id,
+                        l.name,
+                        l.type,
+                        l.level
+                    ])
+        
+        dpg.delete_item(cls.table)
+        cls.table= init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )   
