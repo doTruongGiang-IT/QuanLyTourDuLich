@@ -25,6 +25,9 @@ const MenuApp = () => {
             <Menu.Item key="customer">
                 CUSTOMER
             </Menu.Item>
+            <Menu.Item key="stats">
+                STATISTICS
+            </Menu.Item>
         </Menu>
     )
 }
