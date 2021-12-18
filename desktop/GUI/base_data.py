@@ -1,3 +1,4 @@
+from GUI.pages.customer import CustomerGUI
 from .pages.tour import TourGUI
 from .pages.group import GroupGUI
 
@@ -16,6 +17,12 @@ MENU = {
         "name": "Group Management",
         "data": [
             ["menu_group_management_group", "Group", GroupGUI.group_render_callback],
+        ]
+    },
+    "menu_customer_managment": {
+        "name": "Customer Management",
+        "data": [
+            ["menu_customer_management_customer", "Customer", CustomerGUI.customer_render_callback],
         ]
     },
     "menu_statictis": {

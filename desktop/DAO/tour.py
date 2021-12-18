@@ -105,6 +105,7 @@ class TourDAO(BaseDAO):
     def to_create_request_data(self, data):
         request_data = {
             'name': data.name,
+            'description': data.description,
             'characteristic': data.characteristic.id,
             'type': data.type.id,
             'price': data.price.id,

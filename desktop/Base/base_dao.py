@@ -89,7 +89,7 @@ class BaseDAO:
         if request.status_code == 201:
             return Error(False, None)
         else:
-            return Error(True, 'create new tour that have an error')
+            return Error(True, str(request.status_code))
         
     def update(self, data: DTO_CLASS) -> Error:
         """
