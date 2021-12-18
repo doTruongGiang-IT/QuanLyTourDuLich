@@ -79,7 +79,6 @@ class TourTypeGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -139,7 +138,6 @@ class TourTypeGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False

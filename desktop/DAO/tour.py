@@ -100,6 +100,7 @@ class TourDAO(BaseDAO):
         _, data['type'] = self.tour_type_dao.read_detail(data['type'])
         _, data['price'] = self.tour_price_dao.read_detail(data['price'])
         _, data['location'] = self.location_dao.read_detail(data['location'])
+        print(data['location'])
         return self.DTO_CLASS(**data)
     
     def to_create_request_data(self, data):
