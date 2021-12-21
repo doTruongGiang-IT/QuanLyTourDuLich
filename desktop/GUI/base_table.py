@@ -56,7 +56,7 @@ def init_table(
     type_column_map = {}
     
     for ind, column in enumerate(header):
-        col = dpg.add_table_column(label=column, width_fixed=True, parent=table)
+        col = dpg.add_table_column(label=column, width_fixed=False, parent=table)
         if type_columns:
             type_column_map[col] = (ind, type_columns[ind])
 

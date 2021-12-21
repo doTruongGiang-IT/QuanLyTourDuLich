@@ -75,11 +75,9 @@ class CustomerCustomerGUI:
             )
         else:
             group_id = int(app_data.split('|')[0])
-            print (group_id)
 
             data = []
             group_customer_bus = GroupCustomerBUS()
-            # print (group_customer_bus.objects(group_id))
             group_customer_data = group_customer_bus.read(group_id)
             for gc in group_customer_data:
                 customer_bus = CustomerBUS()
@@ -184,7 +182,6 @@ class CustomerCustomerGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153]) 
-            print(request_data)
             
             customer_obj = Customer(
                 id=0,
@@ -265,7 +262,6 @@ class CustomerCustomerGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
                 if item['field'] == 'id_number':
                     pattern_id_number = re.compile('^([0-9]{9}|[0-9]{12})+$')
@@ -285,7 +281,6 @@ class CustomerCustomerGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153]) 
-            print(request_data)
             
             customer_obj = Customer(
                 id=user_data['id'],
@@ -306,7 +301,6 @@ class CustomerCustomerGUI:
         
         customers = CustomerBUS().objects
         customer = [c for c in customers if c.id == user_data['id']][0]
-        print(customer)
     
 
     @classmethod
@@ -363,7 +357,6 @@ class CustomerCustomerGUI:
                 customer.append([ c for c in customer_bus.objects if c.id == gc.customer][0])
         if dpg.get_value(user_data['group']) == 'All':
             customer = customer_bus.objects
-        print(customer)
         header = ['id', 'name', 'id number', "address", "gender", "phone number"]
         type_columns = [int, str, str, str, str, str]
         data = []
