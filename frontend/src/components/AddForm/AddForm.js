@@ -99,7 +99,7 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                         {
                             prices ?
                             prices.map(price => {
-                                return <Option key={price.id} value={price.id}>{price.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</Option>
+                                return <Option key={price.id} value={price.id}>{price.name}: {price.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</Option>
                             }) : null
                         }
                     </Select>
