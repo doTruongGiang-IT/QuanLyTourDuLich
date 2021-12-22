@@ -2,6 +2,7 @@ import dearpygui.dearpygui as dpg
 from .statistic_cost_tour import StatsCostTourGUI
 from .statistic_tour_performance import StatsTourPerfGUI
 from .statistic_cost_group import StatsCostGroupGUI
+from .statistics_tours_of_staff import StatsToursOfStaffGUI
 
 class StatisticGUI:
     content_window = "content_window"
@@ -9,7 +10,8 @@ class StatisticGUI:
     CONTENT_TAB_BAR = [
         ["stats_cost_tour_tab_bar_menu_window", "Stats cost tour", StatsCostTourGUI],
         ["stats_cost_group_tab_bar_menu_window", "Stats cost group", StatsCostGroupGUI],
-        ["stats_tour_perf_tab_bar_menu_window", "Stats tour's performance", StatsTourPerfGUI]
+        ["stats_tour_perf_tab_bar_menu_window", "Stats tour's performance", StatsTourPerfGUI],
+        ["customer_tab_bar_menu_window", "Tours Of Staff", StatsToursOfStaffGUI],
     ]
 
     @classmethod
