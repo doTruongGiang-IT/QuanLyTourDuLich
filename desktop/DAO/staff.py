@@ -1,8 +1,8 @@
 from Base.base_dao import BaseDAO, BASE_API_URL
-from DTO.staff import GroupStaff,Staff,StaffType
+from DTO.staff import Staff, GroupStaff, StaffType
+from Base.error import Error
 from DAO.group import GroupDAO
 import requests
-from Base.error import Error
 
 class StaffDAO(BaseDAO):
     DTO_CLASS = Staff
@@ -36,6 +36,7 @@ class StaffTypeDAO(BaseDAO):
         }
         return request_data
         
+
 class GroupStaffDAO(BaseDAO):
     DTO_CLASS = GroupStaff
     API_URL = {

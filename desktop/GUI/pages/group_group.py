@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import re
 
 import dearpygui.dearpygui as dpg
 from BUS.group import GroupBUS, GroupJourneyBUS
@@ -6,6 +7,9 @@ from BUS.tour import LocationBUS, TourBUS
 from BUS.customer import CustomerBUS, GroupCustomerBUS
 from DTO.group import Group, GroupJourney
 from DTO.customer import Customer, GroupCustomer
+from DTO.staff import GroupStaff
+from BUS.staff import GroupStaffBUS, StaffBUS, StaffTypeBUS
+from DTO.staff import StaffType, Staff
 from .customer_customer import CustomerCustomerGUI
 from .customer import CustomerGUI
 
@@ -29,9 +33,15 @@ class GroupGroupGUI:
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new group", callback=cls.create_window, parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
-        
+        search_text = dpg.add_input_text(label="Search", parent=top_group, on_enter=True)
+        column_text = dpg.add_combo(label="Columns", items=['all', 'name', 'start_date', 'end_date', 'revenue'], parent=top_group, default_value='all')
+        dpg.set_item_user_data(search_text, {
+            'tour': tour_combo,
+            'column': column_text
+        })
+        dpg.set_item_callback(search_text, cls.search_callback)
+
+
         if default_choice is not None:
             dpg.configure_item(tour_combo, default_value=default_choice)
             cls.choice_tour_combo(tour_combo, default_choice)
@@ -46,7 +56,6 @@ class GroupGroupGUI:
         data = []
         group_bus = GroupBUS()
         group_data = [g for g in group_bus.objects if g.tour == tour_id]
-        print(group_bus.objects[0].start_date)
         
         for d in group_data:
             data.append([
@@ -198,7 +207,6 @@ class GroupGroupGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -207,7 +215,6 @@ class GroupGroupGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
             request_data['location']  = int(request_data['location'].split('|')[0])
             location = [l for l in LocationBUS().objects if l.id == request_data['location']][0]
@@ -245,7 +252,6 @@ class GroupGroupGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -254,7 +260,6 @@ class GroupGroupGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
             tour_choice_value = request_data['tour']
             request_data['tour']  = int(request_data['tour'].split('|')[0])
@@ -351,7 +356,6 @@ class GroupGroupGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -360,7 +364,6 @@ class GroupGroupGUI:
             
         if is_valid:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
-            print(request_data)
             
             tour_choice_value = request_data['tour']
             request_data['tour']  = int(request_data['tour'].split('|')[0])
@@ -440,6 +443,7 @@ class GroupGroupGUI:
 
         group_bottom = dpg.add_group(horizontal=True, parent=window)
         dpg.add_button(label="Customers", callback=lambda :cls.customers_callback(group.id), parent=group_bottom)
+        dpg.add_button(label="Staffs", callback=lambda :cls.staffs_callback(group.id), parent=group_bottom)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=group_bottom)
 
     @classmethod
@@ -488,7 +492,7 @@ class GroupGroupGUI:
                 type_column_map[col] = (ind, type_columns[ind])
 
         dpg.add_table_column(label="Action", parent=table, no_sort=True)
-        print(data)
+
         for row in data:
             table_row = dpg.add_table_row(parent=table)
             for d in row:
@@ -534,7 +538,7 @@ class GroupGroupGUI:
             'customer_id': user_data['customer_id'],
             'status': status,
             'question_window': window,
-            'remove_customer_window': user_data['window']
+            'customer_window': user_data['window']
 
         }
         button_yes = dpg.add_button(label="Yes", callback=cls.remove_customer_callback, user_data=user_data, parent=group)
@@ -550,7 +554,7 @@ class GroupGroupGUI:
             dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
             dpg.delete_item(user_data['question_window'])            
             cls.customers_callback(user_data['group_id'])
-            dpg.delete_item(user_data['remove_customer_window'])
+            dpg.delete_item(user_data['customer_window'])
 
 
     @classmethod
@@ -569,7 +573,215 @@ class GroupGroupGUI:
             cls.customers_callback(user_data['group_id'])
             dpg.delete_item(user_data['window'])
 
+    @classmethod
+    def search_callback(cls,sender, app_data, user_data):
+        tour_id = int(dpg.get_value(user_data['tour']).split('|')[0])
 
+        group_bus = GroupBUS()
+        group = [ g for g in group_bus.objects if g.tour == tour_id]
+        header = ['id', 'name', 'start_date', "end_date", "revenue", "journey"]
+        datetime_type = lambda d: datetime.strptime(d, '%Y-%m-%d')
+        type_columns = [int, str, datetime_type, datetime_type, int, str]
+        data = []
+        column_search = dpg.get_value(user_data['column'])
+        if (column_search == 'all'):
+            for g in group:
+                start_date_string = g.start_date.strftime("%Y-%m-%d")
+                end_date_string = g.end_date.strftime("%Y-%m-%d")
+                multi_strings = f"{g.id} | {g.name} | {start_date_string} | {end_date_string} | {g.revenue}"
+                search = re.search(app_data, multi_strings)
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'name'):
+            for g in group:
+                search = re.search(app_data, g.name)
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'start_date'):
+            for g in group:
+                search = re.search(app_data, g.start_date.strftime("%Y-%m-%d"))
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'end_date'):
+            for g in group:
+                search = re.search(app_data, g.end_date.strftime("%Y-%m-%d"))
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'revenue'):
+            for g in group:
+                search = re.search(app_data, str(g.revenue))
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+
+        dpg.delete_item(cls.table)
+        cls.table= init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )
+
+    @classmethod
+    def staffs_callback(cls, sender):
+        group_staff_bus = GroupStaffBUS()
+        group_staff = group_staff_bus.read(sender)
+
+        window = dpg.add_window(label="Staff of the group", width=600, height=350, pos=[500, 200])
+        header = ['id', 'staff', 'staff_type']
+        type_columns = [int, str, str]
+        data = []
+
+        for gs in group_staff:
+            data.append([
+                gs.id,
+                gs.staff.name,
+                gs.staff_type.name
+            ])
+
+        table = dpg.add_table(
+            header_row=True, 
+            borders_innerH=True, 
+            borders_outerH=True,
+            borders_innerV=True, 
+            borders_outerV=True, 
+            row_background=True,
+            resizable=True,
+            sortable=True,
+            hideable=True,
+            precise_widths=True,
+            no_host_extendX=True,
+            callback=None,
+            parent=window,
+            height=200)
+
+        type_column_map = {}
+    
+        for ind, column in enumerate(header):
+            col = dpg.add_table_column(label=column, width_fixed=True, parent=table)
+            if type_columns:
+                type_column_map[col] = (ind, type_columns[ind])
+
+        dpg.add_table_column(label="Action", parent=table, no_sort=True)
+
+        for row in data:
+            table_row = dpg.add_table_row(parent=table)
+            for d in row:
+                dpg.add_text(d, parent=table_row)
+
+            remove_staff_button = dpg.add_button(label='Remove', parent=table_row, callback=cls.remove_staff)
+            group_staff_row = [gs for gs in group_staff if gs.id == row[0]][0]
+            dpg.set_item_user_data(
+                remove_staff_button,
+                {
+                    'window': window,
+                    'group_id': sender,
+                    'staff_id': group_staff_row.staff.id
+                }
+            )
+        
+        staff_bus = StaffBUS()
+        staffs = [f'{s.id} | {s.name}' for s in staff_bus.objects]
+        staff_type_bus = StaffTypeBUS()
+        staff_types = [f'{st.id} | {st.name}' for st in staff_type_bus.objects]
+        staff_combo = dpg.add_combo(label='Staff', parent=window, items=staffs, default_value=staffs[0])
+        staff_type_combo = dpg.add_combo(label='Staff type', parent=window, items=staff_types, default_value=staff_types[0])
+        status = dpg.add_text(default_value="Status", parent=window)
+        bottom_group = dpg.add_group(horizontal=True, parent=window)
+        add_customer_button = dpg.add_button(label="Add customer", parent=bottom_group, callback=cls.add_staff_callback)
+        dpg.add_button(label="Close", parent=bottom_group, callback=lambda :dpg.delete_item(window))
+        dpg.set_item_user_data(
+            add_customer_button,
+            {
+                'window': window,
+                'status': status,
+                'group_id': sender,
+                'staff': staff_combo,
+                'staff_type': staff_type_combo
+            }
+        )
+
+    @classmethod
+    def remove_staff(cls, sender, app_data, user_data):
+        window = dpg.add_window(label="Remove the customer from group", width=400, autosize=True, pos=[500, 200])
+        question = dpg.add_text(default_value=f"Do you want to remove the staff (id: {user_data['staff_id']} from ther group (id: {user_data['group_id']})?", parent=window)
+        status = dpg.add_text(default_value="Status", parent=window)
+        
+        group = dpg.add_group(horizontal=True, parent=window)
+        
+        user_data = {
+            'group_id': user_data['group_id'],
+            'staff_id': user_data['staff_id'],
+            'status': status,
+            'question_window': window,
+            'staff_window': user_data['window']
+
+        }
+        button_yes = dpg.add_button(label="Yes", callback=cls.remove_staff_callback, user_data=user_data, parent=group)
+        button_no = dpg.add_button(label="Cancel", callback=lambda :dpg.delete_item(window), parent=group)
+
+    @classmethod
+    def remove_staff_callback(cls, sender, app_data, user_data):
+        group_staff_bus = GroupStaffBUS()
+        error = group_staff_bus.delete(user_data['group_id'], user_data['staff_id'])
+        if error.status is True:
+            dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+        else:
+            dpg.configure_item(user_data['status'], default_value=f'Status: OK', color=[128, 237, 153])
+            dpg.delete_item(user_data['question_window'])            
+            cls.staffs_callback(user_data['group_id'])
+            dpg.delete_item(user_data['staff_window'])
+
+    @classmethod
+    def add_staff_callback(cls, sender, app_data, user_data):
+        staff_id = int(dpg.get_value(user_data['staff']).split('|')[0])
+        staff_type_id = int(dpg.get_value(user_data['staff_type']).split('|')[0])
+        group_staff_bus = GroupStaffBUS()
+        group_staff_obj = GroupStaff(
+            id = 0,
+            group = Group(user_data['group_id'], None, None, None, None, None, None),
+            staff = Staff(staff_id, None),
+            staff_type = StaffType(staff_type_id, None)
+        )
+        error = group_staff_bus.create(group_staff_obj)
+        if error.status is True:
+            dpg.configure_item(user_data['status'], default_value=f'Status: {error.message}', color=[255, 92, 88])
+        else:
+            cls.staffs_callback(user_data['group_id'])
+            dpg.delete_item(user_data['window'])
 
 
         

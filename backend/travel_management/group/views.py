@@ -41,13 +41,13 @@ class GroupJourneyViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
 class GroupJourneyCostTypeViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = GroupJourneyCostTypeSerializer
     queryset = GroupJourneyCostType.objects.all()
-    object_name = 'group_journey_cost_type'
+    object_name = 'group_cost_type'
     
 
 class GroupJourneyCostViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = GroupJourneyCostSerializer
     queryset = GroupJourneyCost.objects.all()
-    object_name = 'group_journey_cost'
+    object_name = 'group_cost'
     
     
 group_list = GroupViewSet.as_view({

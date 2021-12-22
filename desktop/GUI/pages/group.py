@@ -1,6 +1,8 @@
 import dearpygui.dearpygui as dpg
 
 from .group_group import GroupGroupGUI
+from .group_cost_type import GroupCostTypeGUI
+from .group_cost import GroupCostGUI
 
 
 class GroupGUI:
@@ -41,3 +43,15 @@ class GroupGUI:
         cls.init_content_window()
         GroupGroupGUI.group_content_window = cls.group_content_window
         GroupGroupGUI.content_render(str(sender))
+    
+    @classmethod
+    def group_cost_type_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        GroupCostTypeGUI.group_content_window = cls.group_content_window
+        GroupCostTypeGUI.content_render(str(sender))
+
+    @classmethod
+    def group_cost_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        GroupCostGUI.group_content_window = cls.group_content_window
+        GroupCostGUI.content_render(str(sender))

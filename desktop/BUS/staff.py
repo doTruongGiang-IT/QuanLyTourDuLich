@@ -1,7 +1,15 @@
 from Base.base_bus import BaseBUS
-from DAO.staff import GroupStaffDAO
-from DTO.staff import GroupStaff
+from DAO.staff import GroupStaffDAO, StaffDAO, StaffTypeDAO, GroupStaffDAO
+from DTO.staff import GroupStaff, Staff, StaffType, GroupStaff
 from Base.error import Error
+
+class StaffBUS(BaseBUS):
+    DTO_CLASS = Staff
+    DAO_CLASS = StaffDAO
+
+class StaffTypeBUS(BaseBUS):
+    DTO_CLASS = StaffType
+    DAO_CLASS = StaffTypeDAO
 
 class GroupStaffBUS(BaseBUS):
     DTO_CLASS = GroupStaff
