@@ -68,3 +68,15 @@ class StatsToursOfStaffDAO(BaseDAO):
         'read_detail':  f'{BASE_API_URL}/stats/tour_of_staff/{{}}'
     }
 
+class StatsToursOfStaffDAO(BaseDAO):
+    DTO_CLASS = StatsToursOfStaff
+    API_URL = {
+        'read':         f'{BASE_API_URL}/stats/tour_of_staff',
+    }
+    
+    # def to_create_request_data(self, data):
+    #     request_data = {
+    #         'name': data.name
+    #     }
+    #     return request_data
+    

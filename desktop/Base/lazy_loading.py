@@ -6,7 +6,8 @@ from BUS.group import GroupBUS, GroupJourneyBUS,GroupCostTypeBUS, GroupCostBUS
 from BUS.tour import (LocationBUS, TourBUS, TourCharacteristicBUS,
                       TourPriceBUS, TourTypeBUS)
 from BUS.customer import CustomerBUS, GroupCustomerBUS
-from BUS.staff import StaffBUS, StaffTypeBUS
+from BUS.staff import GroupStaffBUS, StaffBUS, StaffTypeBUS
+from BUS.statistics import StatsToursOfStaffBUS
 
 SOCKER_URL = 'ws://localhost:8000/ws/tracking'
 
@@ -20,6 +21,8 @@ CLASS_TO_OBJECT_NAMES = {
     'group_journey': GroupJourneyBUS,
     'customer': CustomerBUS,
     'group_customer': GroupCustomerBUS,
+    'group_staff' : GroupStaffBUS,
+    'stats_tour_staff' : StatsToursOfStaffBUS,
     'staff': StaffBUS,
     'staff_type': StaffTypeBUS,
     'group_cost_type': GroupCostTypeBUS,

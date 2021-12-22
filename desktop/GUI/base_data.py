@@ -33,6 +33,8 @@ MENU = {
     "menu_statictis": {
         "name": "Statistic",
         "data": [
+            ["menu_statistic_tours_of_staff", "Tours Of Staff", StatisticGUI.stats_tours_of_staff_render_callback],
+            # ["menu_statistic_tour_statistic", "Tour Status", TourGUI.tour_render_callback],
             ["menu_statistic_stats_cost_tour", "Cost statistic of tour", StatisticGUI.stats_cost_tour_render_callback],
             ["menu_statistic_stats_cost_group", "Cost statistic of group", StatisticGUI.stats_cost_group_render_callback],
             ["menu_statistic_stats_tour_perf", "Statistics on the tour's performance", StatisticGUI.stats_tour_perf_render_callback],

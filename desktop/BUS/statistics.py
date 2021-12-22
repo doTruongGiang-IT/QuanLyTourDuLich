@@ -1,7 +1,11 @@
 from Base.base_bus import BaseBUS
-from DTO.statistic import StatsCostRevenueTour, StatsCostRevenueGroup
-from DAO.statistic import StatsCostRevenueTourDAO, StatsCostRevenueGroupDAO
+from DAO.statistic import StatsToursOfStaffDAO, StatsCostRevenueTourDAO, StatsCostRevenueGroupDAO
+from DTO.statistic import StatsToursOfStaff, StatsCostRevenueTour, StatsCostRevenueGroup
 
+class StatsToursOfStaffBUS(BaseBUS):
+    DTO_CLASS = StatsToursOfStaff
+    DAO_CLASS = StatsToursOfStaffDAO
+    
 class StatsCostRevenueTourBUS(BaseBUS):
     DTO_CLASS = StatsCostRevenueTour
     DAO_CLASS = StatsCostRevenueTourDAO

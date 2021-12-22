@@ -1,6 +1,6 @@
 from Base.base_bus import BaseBUS
-from DAO.staff import StaffDAO, StaffTypeDAO, GroupStaffDAO
-from DTO.staff import Staff, StaffType, GroupStaff
+from DAO.staff import GroupStaffDAO, StaffDAO, StaffTypeDAO, GroupStaffDAO
+from DTO.staff import GroupStaff, Staff, StaffType, GroupStaff
 from Base.error import Error
 
 class StaffBUS(BaseBUS):
@@ -15,13 +15,8 @@ class GroupStaffBUS(BaseBUS):
     DTO_CLASS = GroupStaff
     DAO_CLASS = GroupStaffDAO
 
-    @property
-    def objects(self, group_id) -> list[DTO_CLASS]:
-        if self.__class__.TRACKING_STATUS is False:
-            self.__class__.TRACKING_STATUS = True
-            self.__class__.STORED_OBJECTS = self.read(group_id)
-        
-        return self.__class__.STORED_OBJECTS
+    def group_objects(self, group_id) -> list[DTO_CLASS]:
+        return self.read(group_id)
 
     def read(self, group_id) -> list[DTO_CLASS]:
         """

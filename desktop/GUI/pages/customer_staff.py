@@ -53,7 +53,7 @@ class CustomerStaffGUI:
 
             data = []
             group_staff_bus = GroupStaffBUS()
-            group_staff_data = group_staff_bus.read(group_id)
+            group_staff_data = group_staff_bus.group_objects(group_id)
             for gs in group_staff_data:
                 data.append([
                     gs.staff.id,
@@ -233,7 +233,7 @@ class CustomerStaffGUI:
         if dpg.get_value(user_data) != 'All':
             group_id = int(dpg.get_value(user_data).split('|')[0])
             group_staff_bus = GroupStaffBUS()
-            group_customer_data = group_staff_bus.read(group_id)
+            group_customer_data = group_staff_bus.group_objects(group_id)
             for gc in group_customer_data:
                 staff.append(gc.staff)
         if dpg.get_value(user_data) == 'All':

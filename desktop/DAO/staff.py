@@ -35,6 +35,7 @@ class StaffTypeDAO(BaseDAO):
             'name': data.name
         }
         return request_data
+        
 
 class GroupStaffDAO(BaseDAO):
     DTO_CLASS = GroupStaff
