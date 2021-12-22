@@ -21,7 +21,7 @@ class GroupStaffBUS(BaseBUS):
             self.__class__.TRACKING_STATUS = True
             self.__class__.STORED_OBJECTS_MAP[group_id] = self.read(group_id)
         
-        return self.__class__.STORED_OBJECTS_MAP[group_id]
+        return self.__class__.STORED_OBJECTS_MAP.get(group_id, None)
 
     def read(self, group_id) -> list[DTO_CLASS]:
         """
