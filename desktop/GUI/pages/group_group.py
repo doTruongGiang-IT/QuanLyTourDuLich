@@ -658,7 +658,7 @@ class GroupGroupGUI:
     @classmethod
     def staffs_callback(cls, sender):
         group_staff_bus = GroupStaffBUS()
-        group_staff = group_staff_bus.read(sender)
+        group_staff = group_staff_bus.group_objects(sender)
 
         window = dpg.add_window(label="Staff of the group", width=600, height=350, pos=[500, 200])
         header = ['id', 'staff', 'staff_type']

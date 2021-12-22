@@ -425,7 +425,7 @@ class StatsToursOfStaffGUI:
         window = dpg.add_window(label="Staff_groups", width=400, autosize=True, pos=[500, 200])
         
         for d in group_data:
-            group_data_list = [ gdl for gdl in group_staff.read(d.id)]
+            group_data_list = [ gdl for gdl in group_staff.group_objects(d.id)]
             for gl in group_data_list:
                 if gl.staff.id == user_data:
                     staff_group_list.append([

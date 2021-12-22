@@ -15,8 +15,7 @@ class GroupStaffBUS(BaseBUS):
     DTO_CLASS = GroupStaff
     DAO_CLASS = GroupStaffDAO
 
-    @property
-    def objects(self, group_id) -> list[DTO_CLASS]:
+    def group_objects(self, group_id) -> list[DTO_CLASS]:
         if self.__class__.TRACKING_STATUS is False:
             self.__class__.TRACKING_STATUS = True
             self.__class__.STORED_OBJECTS = self.read(group_id)
