@@ -2,12 +2,13 @@ import dearpygui.dearpygui as dpg
 from .statistic_cost_tour import StatsCostTourGUI
 from .statistic_tour_performance import StatsTourPerfGUI
 from .statistic_cost_group import StatsCostGroupGUI
-from .statistics_tours_of_staff import StatsToursOfStaffGUI
+from .statistic_tours_of_staff import StatsToursOfStaffGUI
 
 class StatisticGUI:
     content_window = "content_window"
     group_content_window = None
     CONTENT_TAB_BAR = [
+        ["customer_tab_bar_menu_window", "Tours Of Staff", StatsToursOfStaffGUI],
         ["stats_cost_tour_tab_bar_menu_window", "Stats cost tour", StatsCostTourGUI],
         ["stats_cost_group_tab_bar_menu_window", "Stats cost group", StatsCostGroupGUI],
         ["stats_tour_perf_tab_bar_menu_window", "Stats tour's performance", StatsTourPerfGUI],
@@ -57,3 +58,9 @@ class StatisticGUI:
         cls.init_content_window()
         StatsCostGroupGUI.group_content_window = cls.group_content_window
         StatsCostGroupGUI.content_render(str(sender))
+
+    @classmethod
+    def stats_tours_of_staff_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        StatsToursOfStaffGUI.group_content_window = cls.group_content_window
+        StatsToursOfStaffGUI.content_render(str(sender), app_data)
