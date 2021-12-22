@@ -1,6 +1,7 @@
 from GUI.pages.customer import CustomerGUI
 from .pages.tour import TourGUI
 from .pages.group import GroupGUI
+from .pages.statistics import StatisticsGUI
 
 MENU = {
     "menu_tour_management": {
@@ -28,7 +29,7 @@ MENU = {
     "menu_statictis": {
         "name": "Statistic",
         "data": [
-            ["menu_statistic_general", "General", TourGUI.tour_render_callback],
+            ["menu_statistic_tours_of_staff", "Tours Of Staff", StatisticsGUI.stats_tours_of_staff_render_callback],
             ["menu_statistic_tour_statistic", "Tour Status", TourGUI.tour_render_callback],
             ["menu_statistic_revenue", "Revenue", TourGUI.tour_render_callback],
         ]
