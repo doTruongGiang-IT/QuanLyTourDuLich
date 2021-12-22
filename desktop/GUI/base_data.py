@@ -23,6 +23,8 @@ MENU = {
         "name": "People Management",
         "data": [
             ["menu_customer_management_customer", "Customer", CustomerGUI.customer_render_callback],
+            ["menu_customer_management_staff", "Staff", CustomerGUI.staff_render_callback],
+            ["menu_customer_management_staff_type", "Staff Type", CustomerGUI.staff_type_render_callback],
         ]
     },
     "menu_statictis": {

@@ -1,12 +1,16 @@
 import dearpygui.dearpygui as dpg
 
 from GUI.pages.customer_customer import CustomerCustomerGUI
+from GUI.pages.customer_staff import CustomerStaffGUI
+from GUI.pages.customer_staff_type import CustomerStaffTypeGUI
 
 class CustomerGUI:
     content_window = "content_window"
     group_content_window = None
     CONTENT_TAB_BAR = [
         ["customer_tab_bar_menu_window", "customer", CustomerCustomerGUI],
+        ["staff_tab_bar_menu_window", "staff", CustomerStaffGUI],
+        ["staff_type_tab_bar_menu_window", "Staff type", CustomerStaffTypeGUI]
     ]
 
     @classmethod
@@ -40,6 +44,18 @@ class CustomerGUI:
         cls.init_content_window()
         CustomerCustomerGUI.group_content_window = cls.group_content_window
         CustomerCustomerGUI.content_render(str(sender), app_data)
+
+    @classmethod
+    def staff_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        CustomerStaffGUI.group_content_window = cls.group_content_window
+        CustomerStaffGUI.content_render(str(sender), app_data)
+
+    @classmethod
+    def staff_type_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        CustomerStaffTypeGUI.group_content_window = cls.group_content_window
+        CustomerStaffTypeGUI.content_render(str(sender))
     
 
     

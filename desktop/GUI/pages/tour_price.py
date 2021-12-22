@@ -106,7 +106,6 @@ class TourPriceGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 if item['field'] in ('start_date', 'end_date'):
                     data = f"{data['year'] + 1900}-{data['month'] + 1}-{data['month_day']}" 
                 request_data[item['field']] = data
@@ -192,7 +191,6 @@ class TourPriceGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 if item['field'] in ('start_date', 'end_date'):
                     data = f"{data['year'] + 1900}-{data['month'] + 1}-{data['month_day']}" 
                 request_data[item['field']] = data

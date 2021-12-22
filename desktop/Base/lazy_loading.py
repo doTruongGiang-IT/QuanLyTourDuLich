@@ -6,6 +6,7 @@ from BUS.group import GroupBUS, GroupJourneyBUS
 from BUS.tour import (LocationBUS, TourBUS, TourCharacteristicBUS,
                       TourPriceBUS, TourTypeBUS)
 from BUS.customer import CustomerBUS, GroupCustomerBUS
+from BUS.staff import StaffBUS, StaffTypeBUS
 
 SOCKER_URL = 'ws://localhost:8000/ws/tracking'
 
@@ -18,7 +19,9 @@ CLASS_TO_OBJECT_NAMES = {
     'group': GroupBUS,
     'group_journey': GroupJourneyBUS,
     'customer': CustomerBUS,
-    'group_customer': GroupCustomerBUS
+    'group_customer': GroupCustomerBUS,
+    'staff': StaffBUS,
+    'staff_type': StaffTypeBUS
 }
 
 async def lazy_loading():
