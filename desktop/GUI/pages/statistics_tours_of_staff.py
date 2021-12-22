@@ -375,7 +375,7 @@ class StatsToursOfStaffGUI:
             col = dpg.add_table_column(label=column, width_fixed=False, parent=table)
             if type_columns:
                 type_column_map[col] = (ind, type_columns[ind])
-        dpg.add_table_column(width_fixed=False, parent=table)
+        # dpg.add_table_column(width_fixed=False, parent=table)
 
         if is_action is True:
             dpg.add_table_column(label="Action", parent=table, no_sort=True)
