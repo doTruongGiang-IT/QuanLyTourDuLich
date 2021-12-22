@@ -16,6 +16,9 @@ init:
 	docker exec -it pl_backend pipenv run python3 manage.py init_super_user
 	docker exec -it pl_backend pipenv run python3 manage.py init_tour_data
 	docker exec -it pl_backend pipenv run python3 manage.py init_group_data
+	docker exec -it pl_backend pipenv run python3 manage.py init_customer_data
+	docker exec -it pl_backend pipenv run python3 manage.py init_staff_data
+	docker exec -it pl_backend pipenv run python3 manage.py init_group_cost_data
 	
 migrate:
 	docker exec -it pl_backend pipenv run python3 manage.py migrate

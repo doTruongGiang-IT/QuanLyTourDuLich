@@ -11,7 +11,7 @@ import { useHistory } from 'react-router';
 const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
     let formatLocations = [];
     let tourList = tours ? tours.map((tour) => {
-        return {key: tour.id + 1, ...tour};
+        return {key: tour.id + 1, id: tour.id, name: tour.name, description: tour.description, price: tour.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}), type: tour.type};
     }) : [];
 
     let locations = tourDetails.length > 0 ? tourDetails[0].journey.map(location => {
@@ -232,7 +232,7 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            width: '30%',
+            width: '20%',
             editable: true,
             ...getColumnSearchProps('name'),
             sorter: (a, b) => a.name.length - b.name.length,
@@ -240,22 +240,31 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
         },
         {
             title: 'Characteristic',
-            dataIndex: 'characteristic',
-            key: 'characteristic',
+            dataIndex: 'description',
+            key: 'description',
+            width: '30%',
             editable: true,
-            ...getColumnSearchProps('characteristic'),
+            ...getColumnSearchProps('description'),
+        },
+        {
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
+            width: '10%',
+            editable: true,
+            ...getColumnSearchProps('price'),
         },
         {
             title: 'ID Type',
             dataIndex: 'type',
             key: 'type',
-            width: '17%',
+            width: '15%',
             editable: true,
             ...getColumnSearchProps('type'),
         },
         {
             title: 'Actions',
-            width: '13%',
+            width: '15%',
             render: (_, record) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -263,16 +272,16 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
                         <Button
                             onClick={() => saveEdit(record.id)}
                             type="primary"
-                            size="small"
-                            style={{ width: 60 }}
+                            size="medium"
+                            style={{ width: 100 }}
                         >
                             Save
                         </Button>
                         <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
                             <Button
                                 type="primary"
-                                size="small"
-                                style={{ width: 60 }}
+                                size="medium"
+                                style={{ width: 100 }}
                                 danger
                             >
                                 Cancel
@@ -285,8 +294,8 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
                             <Button
                                 type="primary"
                                 icon={<DeleteOutlined />}
-                                size="small"
-                                style={{ width: 40 }}
+                                size="medium"
+                                style={{ width: 60 }}
                                 danger
                             />
                         </Popconfirm>
@@ -295,23 +304,23 @@ const TourListForm = ({remove, update, tours, setDetails, tourDetails}) => {
                             onClick={() => edit(record)}
                             type="primary"
                             icon={<EditOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 60 }}
                         />
                         <Button
                             disabled={editingKey !== ''} 
                             onClick={() => history.push(`/details/${record.id}`)}
                             type="primary"
                             icon={<EyeOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 60 }}
                         />
                         <Button
                             onClick={() => showModal(record.id)}
                             type="primary"
                             icon={<BookOutlined />}
-                            size="small"
-                            style={{ width: 40 }}
+                            size="medium"
+                            style={{ width: 60 }}
                         />
                     </Space>   
                 )

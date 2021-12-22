@@ -1,4 +1,7 @@
+from GUI.pages.customer import CustomerGUI
 from .pages.tour import TourGUI
+from .pages.group import GroupGUI
+from .pages.statistic import StatisticGUI
 
 MENU = {
     "menu_tour_management": {
@@ -14,14 +17,27 @@ MENU = {
     "menu_group_management": {
         "name": "Group Management",
         "data": [
-            ["menu_group_management_group", "Group", TourGUI.tour_render_callback],
+            ["menu_group_management_group", "Group", GroupGUI.group_render_callback],
+            ["menu_group_cost_type_management_group", "Group cost type", GroupGUI.group_cost_type_render_callback],
+            ["menu_group_cost_management_group", "Group cost", GroupGUI.group_cost_render_callback],
+        ]
+    },
+    "menu_customer_managment": {
+        "name": "People Management",
+        "data": [
+            ["menu_customer_management_customer", "Customer", CustomerGUI.customer_render_callback],
+            ["menu_customer_management_staff", "Staff", CustomerGUI.staff_render_callback],
+            ["menu_customer_management_staff_type", "Staff Type", CustomerGUI.staff_type_render_callback],
         ]
     },
     "menu_statictis": {
         "name": "Statistic",
         "data": [
-            ["menu_statistic_general", "General", TourGUI.tour_render_callback],
-            ["menu_statistic_tour_statistic", "Tour Status", TourGUI.tour_render_callback],
+            ["menu_statistic_tours_of_staff", "Tours Of Staff", StatisticGUI.stats_tours_of_staff_render_callback],
+            # ["menu_statistic_tour_statistic", "Tour Status", TourGUI.tour_render_callback],
+            ["menu_statistic_stats_cost_tour", "Cost statistic of tour", StatisticGUI.stats_cost_tour_render_callback],
+            ["menu_statistic_stats_cost_group", "Cost statistic of group", StatisticGUI.stats_cost_group_render_callback],
+            ["menu_statistic_stats_tour_perf", "Statistics on the tour's performance", StatisticGUI.stats_tour_perf_render_callback],
             ["menu_statistic_revenue", "Revenue", TourGUI.tour_render_callback],
         ]
     }

@@ -24,7 +24,9 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
     const [form] = Form.useForm();
 
     const onFinish = (values) => {
-        submit(values);
+        const tour = {...values, characteristic: 1};
+        // console.log(tour);
+        submit(tour);
         form.resetFields();
     };
     
@@ -48,22 +50,23 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    name="characteristic"
-                    label="Characteristic"
+                    name="description"
+                    label="Description"
                     rules={[
                         {
                             required: true,
                         },
                     ]}
                 >
-                    <Select placeholder="Select tour characteristic" allowClear>
+                    {/* <Select placeholder="Select tour characteristic" allowClear>
                         {
                             characteristics ?
                             characteristics.map(characteristic => {
                                 return <Option key={characteristic.id} value={characteristic.id}>{characteristic.name}</Option>
                             }) : null
                         }
-                    </Select>
+                    </Select> */}
+                    <Input />
                 </Form.Item>
                 <Form.Item
                     name="type"
@@ -96,7 +99,7 @@ const AddForm = ({submit, locations, types, prices, characteristics}) => {
                         {
                             prices ?
                             prices.map(price => {
-                                return <Option key={price.id} value={price.id}>{price.price} vnd-id: {price.id}</Option>
+                                return <Option key={price.id} value={price.id}>{price.name}: {price.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</Option>
                             }) : null
                         }
                     </Select>

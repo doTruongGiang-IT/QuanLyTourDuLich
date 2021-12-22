@@ -53,10 +53,9 @@ class BaseDAO:
         if request.status_code == 200:
             response = request.json()
             result = []
-            
-            for data in response['results']:
+            print(response)
+            for data in response:
                 result.append(self.get_object(data))
-                
             return (Error(False, None), result)
         else:
             return (Error(True, 'Get the tour list that have an error'), None)
@@ -72,7 +71,7 @@ class BaseDAO:
         if request.status_code == 200:
             response = request.json()
             result = self.get_object(response)
-                
+        
             return (Error(False, None), result)
         else:
             return (Error(True, 'Get the tour that have an error'), None)
@@ -89,7 +88,7 @@ class BaseDAO:
         if request.status_code == 201:
             return Error(False, None)
         else:
-            return Error(True, 'create new tour that have an error')
+            return Error(True, str(request.status_code))
         
     def update(self, data: DTO_CLASS) -> Error:
         """
@@ -103,7 +102,7 @@ class BaseDAO:
         if request.status_code == 200:
             return Error(False, None)
         else:
-            return Error(True, 'update a tour that have an error')
+            return Error(True, request.status_code)
         
     def delete(self, tour_id: int) -> Error:
         """

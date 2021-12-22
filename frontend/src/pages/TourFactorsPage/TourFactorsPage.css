@@ -1,0 +1,17 @@
+.tourFactorsPage {
+    display: flex;
+    flex-direction: column;
+}
+
+.tourItem {
+    display: flex;
+    justify-content: space-between;
+}
+
+#showMore {
+    margin: 0 auto;
+    margin-bottom: 20px;
+    color: blue;
+    cursor: pointer;
+    width: fit-content;
+}

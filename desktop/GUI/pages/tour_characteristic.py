@@ -1,3 +1,4 @@
+import re
 import dearpygui.dearpygui as dpg
 
 from ..base_table import init_table
@@ -7,22 +8,28 @@ from DTO.tour import TourCharacteristic
 
 class TourCharacteristicGUI:
     group_content_window = None
+    table = None
 
     @classmethod
     def content_render(cls, data):
         dpg.delete_item(cls.group_content_window, children_only=True)
         dpg.add_text(default_value=data, parent=cls.group_content_window)
+        cls.table = None
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new characteristic", callback=cls.create_window, parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
+        dpg.add_input_text(label="Search", parent=top_group, on_enter=True, callback=cls.search_callback)
+        # dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
         header = ['id', 'name']
         type_columns = [int, str]
         data = []
         tour_characteristic_bus = TourCharacteristicBUS()
         tour_characteristic_data = tour_characteristic_bus.objects
+
+        if cls.table is not None:
+            dpg.delete_item(cls.table)
+            cls.table = None
         
         for d in tour_characteristic_data:
             data.append([
@@ -30,7 +37,7 @@ class TourCharacteristicGUI:
                 d.name
             ])
         
-        table = init_table(
+        cls.table = init_table(
             header=header,
             data=data,
             parent=cls.group_content_window,
@@ -72,7 +79,6 @@ class TourCharacteristicGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -132,7 +138,6 @@ class TourCharacteristicGUI:
         for item in user_data['items']:
             data = dpg.get_value(item['item'])
             if data != "": 
-                print(data)
                 request_data[item['field']] = data
             else:
                 is_valid = False
@@ -192,3 +197,30 @@ class TourCharacteristicGUI:
         dpg.add_text(default_value=f"id: {tour_characteristic.id}", parent=window)
         dpg.add_text(default_value=f"Name: {tour_characteristic.name}", parent=window)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
+
+    @classmethod
+    def search_callback(cls,sender, app_data, user_data):
+        tour_characteristic_bus = TourCharacteristicBUS()
+        tour_characteristic = tour_characteristic_bus.objects
+        header = ['id', 'name']
+        type_columns = [int, str]
+        data = []
+        for tc in tour_characteristic:
+                search = re.search(app_data, tc.name)
+                if (search):
+                    data.append([
+                        tc.id,
+                        tc.name
+                    ])
+        
+        dpg.delete_item(cls.table)
+        cls.table = init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )  

@@ -39,3 +39,27 @@ class Group:
         self.end_date = end_date
         self.revenue = revenue
         self.journey = journey
+
+class GroupCostType:
+    def __init__(
+        self,
+        id: int,
+        name: str
+    ):
+        self.id = id
+        self.name = name
+
+class GroupCost:
+    def __init__(
+        self,
+        id: int,
+        name: str,
+        price: float,
+        group: Group,
+        type: GroupCostType
+    ):
+        self.id = id
+        self.name = name
+        self.price = price
+        self.group = group
+        self.type = type

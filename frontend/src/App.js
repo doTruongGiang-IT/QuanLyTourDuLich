@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import routes from './routes';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import MenuApp from './components/Menu/MenuApp';
 
 function App() {
   const showContentRoutes = (routes) => {
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <Router>
+      <MenuApp />
       <div className="App">
         <Switch>
           {showContentRoutes(routes)}
