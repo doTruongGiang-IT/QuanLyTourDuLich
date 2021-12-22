@@ -11,7 +11,7 @@ class StatsToursOfStaffGUI:
 
     @classmethod
     def content_render(cls, data, choice_default=None):
-        # dpg.delete_item(cls.group_content_window, children_only=True)
+        dpg.delete_item(cls.group_content_window, children_only=True)
         # dpg.add_text(default_value=data, parent=cls.group_content_window)
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
