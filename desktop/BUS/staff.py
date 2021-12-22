@@ -14,13 +14,14 @@ class StaffTypeBUS(BaseBUS):
 class GroupStaffBUS(BaseBUS):
     DTO_CLASS = GroupStaff
     DAO_CLASS = GroupStaffDAO
+    STORED_OBJECTS_MAP = {}
 
     def group_objects(self, group_id) -> list[DTO_CLASS]:
         if self.__class__.TRACKING_STATUS is False:
             self.__class__.TRACKING_STATUS = True
-            self.__class__.STORED_OBJECTS = self.read(group_id)
+            self.__class__.STORED_OBJECTS_MAP[group_id] = self.read(group_id)
         
-        return self.__class__.STORED_OBJECTS
+        return self.__class__.STORED_OBJECTS_MAP[group_id]
 
     def read(self, group_id) -> list[DTO_CLASS]:
         """
