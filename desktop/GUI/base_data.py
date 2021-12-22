@@ -20,7 +20,7 @@ MENU = {
         ]
     },
     "menu_customer_managment": {
-        "name": "Customer Management",
+        "name": "People Management",
         "data": [
             ["menu_customer_management_customer", "Customer", CustomerGUI.customer_render_callback],
         ]

@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import re
 
 import dearpygui.dearpygui as dpg
 from BUS.group import GroupBUS, GroupJourneyBUS
@@ -29,9 +30,15 @@ class GroupGroupGUI:
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new group", callback=cls.create_window, parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
-        
+        search_text = dpg.add_input_text(label="Search", parent=top_group, on_enter=True)
+        column_text = dpg.add_combo(label="Columns", items=['all', 'name', 'start_date', 'end_date', 'revenue'], parent=top_group, default_value='all')
+        dpg.set_item_user_data(search_text, {
+            'tour': tour_combo,
+            'column': column_text
+        })
+        dpg.set_item_callback(search_text, cls.search_callback)
+
+
         if default_choice is not None:
             dpg.configure_item(tour_combo, default_value=default_choice)
             cls.choice_tour_combo(tour_combo, default_choice)
@@ -568,6 +575,88 @@ class GroupGroupGUI:
         else:
             cls.customers_callback(user_data['group_id'])
             dpg.delete_item(user_data['window'])
+
+    @classmethod
+    def search_callback(cls,sender, app_data, user_data):
+        tour_id = int(dpg.get_value(user_data['tour']).split('|')[0])
+
+        group_bus = GroupBUS()
+        group = [ g for g in group_bus.objects if g.tour == tour_id]
+        header = ['id', 'name', 'start_date', "end_date", "revenue", "journey"]
+        datetime_type = lambda d: datetime.strptime(d, '%Y-%m-%d')
+        type_columns = [int, str, datetime_type, datetime_type, int, str]
+        data = []
+        column_search = dpg.get_value(user_data['column'])
+        if (column_search == 'all'):
+            for g in group:
+                start_date_string = g.start_date.strftime("%Y-%m-%d")
+                end_date_string = g.end_date.strftime("%Y-%m-%d")
+                multi_strings = f"{g.id} | {g.name} | {start_date_string} | {end_date_string} | {g.revenue}"
+                search = re.search(app_data, multi_strings)
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'name'):
+            for g in group:
+                search = re.search(app_data, g.name)
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'start_date'):
+            for g in group:
+                search = re.search(app_data, g.start_date.strftime("%Y-%m-%d"))
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'end_date'):
+            for g in group:
+                search = re.search(app_data, g.end_date.strftime("%Y-%m-%d"))
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+        if (column_search == 'revenue'):
+            for g in group:
+                search = re.search(app_data, str(g.revenue))
+                if (search):
+                    data.append([
+                        g.id,
+                        g.name,
+                        g.start_date.strftime("%Y-%m-%d"),
+                        g.end_date.strftime("%Y-%m-%d"),
+                        g.revenue
+                    ])
+
+        dpg.delete_item(cls.table)
+        cls.table= init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )
 
 
 

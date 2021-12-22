@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 import dearpygui.dearpygui as dpg
 from BUS.tour import TourPriceBUS
@@ -9,16 +10,20 @@ from ..base_table import init_table
 
 class TourPriceGUI:
     group_content_window = None
+    table = None
 
     @classmethod
     def content_render(cls, data):
         dpg.delete_item(cls.group_content_window, children_only=True)
         dpg.add_text(default_value=data, parent=cls.group_content_window)
+        cls.table = None
         
         top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
         dpg.add_button(label="Add new price", callback=cls.create_window, parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
+        search_text = dpg.add_input_text(label="Search", parent=top_group, on_enter=True)
+        column_search = dpg.add_combo(label="Columns", items=['all', 'name', 'price', 'start_date', 'end_date'], parent=top_group, default_value='all')
+        dpg.set_item_user_data(search_text, column_search)
+        dpg.set_item_callback(search_text, cls.search_callback)
         
         header = ['id', 'name', 'price', 'start_date', 'end_date']
         datetime_type = lambda d: datetime.strptime(d, '%Y-%m-%d')
@@ -27,6 +32,10 @@ class TourPriceGUI:
         tour_price_bus = TourPriceBUS()
         tour_price_data = tour_price_bus.objects
         
+        if cls.table is not None:
+            dpg.delete_item(cls.table)
+            cls.table = None
+
         for d in tour_price_data:
             data.append([
                 d.id,
@@ -36,7 +45,7 @@ class TourPriceGUI:
                 d.end_date.strftime("%Y-%m-%d")
             ])
         
-        table = init_table(
+        cls.table = init_table(
             header=header,
             data=data,
             parent=cls.group_content_window,
@@ -254,3 +263,83 @@ class TourPriceGUI:
         dpg.add_text(default_value=f"Start date: {tour_price.start_date.strftime('%Y-%m-%d')}", parent=window)
         dpg.add_text(default_value=f"End date: {tour_price.end_date.strftime('%Y-%m-%d')}", parent=window)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=window)
+    
+    @classmethod
+    def search_callback(cls,sender, app_data, user_data):
+        tour_price_bus = TourPriceBUS()
+        tour_price = tour_price_bus.objects
+        header = ['id', 'name', 'price', 'start_date', 'end_date']
+        datetime_type = lambda d: datetime.strptime(d, '%Y-%m-%d')
+        type_columns = [int, str, int, datetime_type, datetime_type]
+        data = []
+        column_search = dpg.get_value(user_data)
+        if (column_search == 'all'):
+            for tp in tour_price:
+                start_date_string = tp.start_date.strftime("%Y-%m-%d")
+                end_date_string = tp.end_date.strftime("%Y-%m-%d")
+                multi_strings = f"{tp.id} | {tp.name} | {tp.price} | {start_date_string} | {end_date_string}"
+                search = re.search(app_data, multi_strings)
+                if (search):
+                    data.append([
+                        tp.id,
+                        tp.name,
+                        tp.price,
+                        tp.start_date.strftime("%Y-%m-%d"),
+                        tp.end_date.strftime("%Y-%m-%d")
+                    ])
+        if (column_search == 'name'):
+            for tp in tour_price:
+                search = re.search(app_data, tp.name)
+                if (search):
+                    data.append([
+                        tp.id,
+                        tp.name,
+                        tp.price,
+                        tp.start_date.strftime("%Y-%m-%d"),
+                        tp.end_date.strftime("%Y-%m-%d")
+                    ])
+        if (column_search == 'price'):
+            for tp in tour_price:
+                search = re.search(app_data, str(tp.price))
+                if (search):
+                    data.append([
+                        tp.id,
+                        tp.name,
+                        tp.price,
+                        tp.start_date.strftime("%Y-%m-%d"),
+                        tp.end_date.strftime("%Y-%m-%d")
+                    ])
+        if (column_search == 'start_date'):
+            for tp in tour_price:
+                search = re.search(app_data, tp.start_date.strftime("%Y-%m-%d"))
+                if (search):
+                    data.append([
+                        tp.id,
+                        tp.name,
+                        tp.price,
+                        tp.start_date.strftime("%Y-%m-%d"),
+                        tp.end_date.strftime("%Y-%m-%d")
+                    ])
+        if (column_search == 'end_date'):
+            for tp in tour_price:
+                search = re.search(app_data, tp.end_date.strftime("%Y-%m-%d"))
+                if (search):
+                    data.append([
+                        tp.id,
+                        tp.name,
+                        tp.price,
+                        tp.start_date.strftime("%Y-%m-%d"),
+                        tp.end_date.strftime("%Y-%m-%d")
+                    ])
+
+        dpg.delete_item(cls.table)
+        cls.table= init_table(
+                header=header,
+                data=data,
+                parent=cls.group_content_window,
+                type_columns=type_columns,
+                is_action=True,
+                modified_callback=cls.modified_window,
+                delete_callback=cls.delete_window,
+                view_callback=cls.view_window
+            )
