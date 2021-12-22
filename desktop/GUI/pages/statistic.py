@@ -1,17 +1,17 @@
 import dearpygui.dearpygui as dpg
+from .statistic_cost_tour import StatsCostTourGUI
+from .statistic_tour_performance import StatsTourPerfGUI
+from .statistic_cost_group import StatsCostGroupGUI
 
-from .group_group import GroupGroupGUI
-from .group_cost_type import GroupCostTypeGUI
-from .group_cost import GroupCostGUI
-
-
-class GroupGUI:
+class StatisticGUI:
     content_window = "content_window"
     group_content_window = None
     CONTENT_TAB_BAR = [
-        ["group_tab_bar_menu_window", "Group", GroupGroupGUI],
+        ["stats_cost_tour_tab_bar_menu_window", "Stats cost tour", StatsCostTourGUI],
+        ["stats_cost_group_tab_bar_menu_window", "Stats cost group", StatsCostGroupGUI],
+        ["stats_tour_perf_tab_bar_menu_window", "Stats tour's performance", StatsTourPerfGUI]
     ]
-    
+
     @classmethod
     def tab_bar_call_back(cls, sender, data):
         for tab in cls.CONTENT_TAB_BAR:
@@ -37,21 +37,21 @@ class GroupGUI:
     def delete_group(cls, children_only=False):
         if cls.group_content_window:
             dpg.delete_item(cls.group_content_window, children_only=children_only)
-                
-    @classmethod
-    def group_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        GroupGroupGUI.group_content_window = cls.group_content_window
-        GroupGroupGUI.content_render(str(sender))
-    
-    @classmethod
-    def group_cost_type_render_callback(cls, sender, app_data):
-        cls.init_content_window()
-        GroupCostTypeGUI.group_content_window = cls.group_content_window
-        GroupCostTypeGUI.content_render(str(sender))
 
     @classmethod
-    def group_cost_render_callback(cls, sender, app_data):
+    def stats_cost_tour_render_callback(cls, sender, app_data):
         cls.init_content_window()
-        GroupCostGUI.group_content_window = cls.group_content_window
-        GroupCostGUI.content_render(str(sender))
+        StatsCostTourGUI.group_content_window = cls.group_content_window
+        StatsCostTourGUI.content_render(str(sender))
+    
+    @classmethod
+    def stats_tour_perf_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        StatsTourPerfGUI.group_content_window = cls.group_content_window
+        StatsTourPerfGUI.content_render(str(sender))
+
+    @classmethod
+    def stats_cost_group_render_callback(cls, sender, app_data):
+        cls.init_content_window()
+        StatsCostGroupGUI.group_content_window = cls.group_content_window
+        StatsCostGroupGUI.content_render(str(sender))

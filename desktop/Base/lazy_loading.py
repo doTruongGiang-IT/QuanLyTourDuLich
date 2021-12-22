@@ -2,7 +2,7 @@ import asyncio
 import json
 
 import websockets
-from BUS.group import GroupBUS, GroupJourneyBUS
+from BUS.group import GroupBUS, GroupJourneyBUS,GroupCostTypeBUS, GroupCostBUS
 from BUS.tour import (LocationBUS, TourBUS, TourCharacteristicBUS,
                       TourPriceBUS, TourTypeBUS)
 from BUS.customer import CustomerBUS, GroupCustomerBUS
@@ -21,7 +21,9 @@ CLASS_TO_OBJECT_NAMES = {
     'customer': CustomerBUS,
     'group_customer': GroupCustomerBUS,
     'staff': StaffBUS,
-    'staff_type': StaffTypeBUS
+    'staff_type': StaffTypeBUS,
+    'group_cost_type': GroupCostTypeBUS,
+    'group_cost': GroupCostBUS
 }
 
 async def lazy_loading():
