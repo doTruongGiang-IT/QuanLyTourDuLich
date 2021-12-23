@@ -8,6 +8,7 @@ import UpdateGroupPage from "./pages/UpdateGroupPage/UpdateGroupPage";
 import CustomerPage from "./pages/CustomerPage/CustomerPage";
 import CreateCustomerPage from "./pages/CreateCustomerPage/CreateCustomerPage";
 import StatsPage from "./pages/StatsPage/StatsPage";
+import GroupCostPage from "./pages/GroupCostPage/GroupCostPage";
 
 const routes = [
     {
@@ -49,6 +50,11 @@ const routes = [
         exact: true,
         path: '/details/:id',
         main: () => <TourDetailsPage />
+    }, 
+    {
+        exact: true,
+        path: '/group_cost/:id',
+        main: () => <GroupCostPage />
     }, 
     {
         exact: true,

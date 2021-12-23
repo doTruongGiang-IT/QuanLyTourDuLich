@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import '../GuestsForm/GuestsForm.css';
-import { Table, Input, Button, Space, Popconfirm, Form, notification, DatePicker, InputNumber } from 'antd';
+import { Table, Input, Button, Space, Popconfirm, Form, notification, InputNumber, Select } from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import moment from 'moment';
 import EditableCellForPriceList from '../EditableCellForPriceList/EditableCellForPriceList';
+import {useParams} from 'react-router-dom';
 
+const { Option } = Select;
 const layout = {
     labelCol: {
       span: 7,
@@ -21,9 +22,8 @@ const layout = {
     },
 };
 
-const { RangePicker } = DatePicker;
-
-const TourPrice = ({priceFactor, submit, update, remove}) => {
+const GroupCost = ({types, costList, submit, update, remove}) => {
+    const {id} = useParams();
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [form] = Form.useForm();
@@ -31,25 +31,30 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
     const [editingKey, setEditingKey] = useState('');
     const [api, contextHolder] = notification.useNotification();
     const Context = React.createContext();
-    let count = 0;
-    let start = new Date(); 
-    let end = new Date();
+    let formatCostList = [];
 
-    let priceFactorList = priceFactor ? priceFactor.map((price, index) => {
-        return {key: index, id: price.id, name: price.name, price: price.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}), start_date: price.start_date, end_date: price.end_date};
-    }) : [];
-    
-    const handleDate = (date) => {
-        if(count === 0) {
-            start = date;
-            count++;
-        }else {
-            end = date;
+    costList = costList.filter(cost => cost.group === Number.parseInt(id));
+
+    for(let i = 0; i < costList.length; i++) {
+        for(let j = 0; j < types.length; j++) {
+            if(costList[i].type === types[j].id) {
+                let formatCost = {
+                    id: costList[i].id,
+                    name: costList[i].name,
+                    price: costList[i].price,
+                    type: types[j].name
+                };
+                formatCostList.push(formatCost);
+            };
         };
     };
 
+    let priceFactorList = formatCostList ? formatCostList.map((price, index) => {
+        return {key: index, id: price.id, name: price.name, price: price.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}), type: price.type};
+    }) : [];
+
     const onFinish = (values) => {
-        submit({name: values.name, price: values.price, start_date: start, end_date: end});
+        submit({name: values.name, price: values.price, group: Number.parseInt(id), type: values.type});
         form.resetFields();
     };
     
@@ -167,26 +172,6 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
         }
     };
 
-    const quickSort = (values) => {
-        if (values.length <= 1) {
-            return values
-        };
-
-        var lessThanPivot = [];
-        var greaterThanPivot = [];
-        var pivot = values[0];
-        for (var i = 1; i < values.length; i++) {
-            if (values[i].id <= pivot.id) {
-                lessThanPivot.push(values[i]);
-            } else {
-                greaterThanPivot.push(values[i]);
-            }
-        }
-        return quickSort(lessThanPivot).concat(pivot, quickSort(greaterThanPivot));
-    };
-
-    priceFactorList = quickSort(priceFactorList);
-
     const columns = [
         {
             title: 'ID',
@@ -212,25 +197,17 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
             title: 'Price',
             dataIndex: 'price',
             key: 'price',
-            width: '15%',
+            width: '20%',
             editable: true,
             ...getColumnSearchProps('price'),
         },
         {
-            title: 'Start Date',
-            dataIndex: 'start_date',
-            key: 'start_date',
+            title: 'Cost Type',
+            dataIndex: 'type',
+            key: 'type',
             width: '20%',
             editable: true,
-            ...getColumnSearchProps('start_date'),
-        },
-        {
-            title: 'End Date',
-            dataIndex: 'end_date',
-            key: 'end_date',
-            width: '20%',
-            editable: true,
-            ...getColumnSearchProps('end_date'),
+            ...getColumnSearchProps('type'),
         },
         {
             title: 'Actions',
@@ -311,7 +288,7 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
 
     return (
         <div className="guestsForm">
-            <h2>Tour Price list</h2>
+            <h2>Group Cost list</h2>
             {contextHolder}
             <div className="guestContent">
                 <div className="guestList">
@@ -325,8 +302,27 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
                     </Form>
                 </div>
                 <div className="guestAddForm">
-                    <h2>ADD FORM</h2>
+                    <h2>ADD NEW COST</h2>
                     <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+                        <Form.Item
+                            name="type"
+                            label="Type"
+                            initialValue=""
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
+                        >
+                            <Select placeholder="Select customer" allowClear>
+                                {
+                                    types ?
+                                    types.map((type, index) => {
+                                        return <Option key={index} value={type.id}>{type.name}</Option>
+                                    }) : null
+                                }
+                            </Select>
+                        </Form.Item>
                         <Form.Item
                             name="name"
                             label="Name"
@@ -351,18 +347,6 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
                         >
                             <InputNumber style={{ width: 187 }} min="0" />
                         </Form.Item>
-                        <Form.Item
-                            name="date"
-                            label="Date"
-                            initialValue={[moment(start, 'YYYY-MM-DD'), moment(end, 'YYYY-MM-DD')]}
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >    
-                            <RangePicker format="YYYY-MM-DD" value={[moment('', 'YYYY-MM-DD'), moment('', 'YYYY-MM-DD')]} onBlur={e => handleDate(e.target.value)} />
-                        </Form.Item>
                         <Form.Item {...tailLayout}>
                             <Space>
                                 <Button type="primary" htmlType="submit">
@@ -380,4 +364,4 @@ const TourPrice = ({priceFactor, submit, update, remove}) => {
     )
 }
 
-export default TourPrice;
+export default GroupCost;

@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import React, {useState} from 'react';
 import { Table, Input, Button, Space, Modal, Popconfirm, notification, Form, DatePicker } from 'antd';
 import { Link } from 'react-router-dom';
-import { SearchOutlined, BookOutlined, TeamOutlined, ClockCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, BookOutlined, TeamOutlined, ClockCircleOutlined, DeleteOutlined, EditOutlined, MoneyCollectOutlined } from '@ant-design/icons';
 import './TourDeatilsForm.css';
 import { useHistory, useParams } from 'react-router';
 import EditableCell from '../EditableCell/EditableCell';
@@ -331,14 +331,14 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update, s
                       type="primary"
                       icon={<TeamOutlined />}
                       size="medium"
-                      style={{ width: 80 }}
+                      style={{ width: 60 }}
                     />
                     <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
                       <Button
                           type="primary"
                           icon={<DeleteOutlined />}
                           size="medium"
-                          style={{ width: 80 }}
+                          style={{ width: 60 }}
                           danger
                       />
                     </Popconfirm>
@@ -348,7 +348,14 @@ const TourDetailsForm = ({tourDetails, location, listLocation, remove, update, s
                         type="primary"
                         icon={<EditOutlined />}
                         size="medium"
-                        style={{ width: 80 }}
+                        style={{ width: 60 }}
+                    />
+                    <Button
+                        onClick={() => history.push(`/group_cost/${record.id}`)}
+                        type="primary"
+                        icon={<MoneyCollectOutlined />}
+                        size="medium"
+                        style={{ width: 60 }}
                     />
                 </Space>
               )
