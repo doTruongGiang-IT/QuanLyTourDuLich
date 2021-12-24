@@ -15,6 +15,14 @@ class TrackingMixin:
                     'tracking_object': str(self.__class__.object_name)
                 }
             })
+            
+            if self.__class__.parent_object_name:
+                async_to_sync(channel_layer.group_send)('tracking_channel', {
+                    'type': 'send_message', 
+                    'payload': {
+                        'tracking_object': str(self.__class__.parent_object_name)
+                    }
+                }) 
         return response
     
     
