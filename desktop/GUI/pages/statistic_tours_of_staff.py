@@ -14,10 +14,10 @@ class StatsToursOfStaffGUI:
         dpg.delete_item(cls.group_content_window, children_only=True)
         # dpg.add_text(default_value=data, parent=cls.group_content_window)
         
-        top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
-        # dpg.add_button(label="Add new tour", callback=cls.create_window, parent=top_group)
-        dpg.add_input_text(label="Search", parent=top_group)
-        dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
+        # top_group = dpg.add_group(horizontal=True, parent=cls.group_content_window)
+        # # dpg.add_button(label="Add new tour", callback=cls.create_window, parent=top_group)
+        # dpg.add_input_text(label="Search", parent=top_group)
+        # dpg.add_combo(label="Columns", items=['column1', 'column2', 'column3'], parent=top_group)
         
 
         header = ['id', 'name', 'number_of_tours']
