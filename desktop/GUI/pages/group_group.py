@@ -98,7 +98,7 @@ class GroupGroupGUI:
         group_start_date = dpg.add_date_picker(label="Start Date ", parent=window, default_value=datenow)
         group_end_date = dpg.add_date_picker(label="End Date ", parent=window, default_value=datenow)
         
-        dpg.add_button(label="Add Journey", callback=cls.create_journey_list_window_callback, parent=window, user_data=group_tour)
+        # dpg.add_button(label="Add Journey", callback=cls.create_journey_list_window_callback, parent=window, user_data=group_tour)
         
         group = dpg.add_group(horizontal=True, parent=window)
         button = dpg.add_button(label="Add new group", callback=cls.create_window_callback, parent=group)
@@ -135,16 +135,24 @@ class GroupGroupGUI:
         
     @classmethod
     def create_journey_list_window_callback(cls, sender, app_data, user_data):
-        group_id = dpg.get_value(user_data)
-        int(group_id.split('|')[0])
+        group_id = user_data
+        # int(group_id.split('|')[0])
             
         window = dpg.add_window(label="Add Journey list", width=400, autosize=True, pos=[500, 200])
         title = dpg.add_text(default_value="Journey List (0)", parent=window)
         group = dpg.add_group(parent=window)
+        group_bus = GroupBUS()
+        group_data = [g for g in group_bus.objects if g.id == group_id][0]
+        for j in group_data.journey:
+            group_journey = dpg.add_group(horizontal=True, parent=group)
+            content = dpg.add_text(default_value=j.content, parent=group_journey)
+            modified_button = dpg.add_button(label="[Modified]", parent=group_journey)
+            delete_button = dpg.add_button(label="[Delete]", parent=group_journey)
         user_data = {
             'title': title,
             'group': group,
-            'group_id': group_id
+            'group_id': group_id,
+            'window': window
         }
         dpg.add_button(label="[+] New Journey", callback=cls.add_journey_window_callback, user_data=user_data, parent=window)
         
@@ -159,7 +167,9 @@ class GroupGroupGUI:
             'month': date.today().month-1
         }
         start_date = dpg.add_date_picker(label="Start Date ", parent=window, default_value=datenow)
+        start_time = dpg.add_time_picker(label="Start Time", parent=window)
         end_date = dpg.add_date_picker(label="End Date ", parent=window, default_value=datenow)
+        end_time = dpg.add_time_picker(label="End Time", parent=window)
         
         location = LocationBUS().objects
         location = [f'{d.id} | {d.name}' for d in location]
@@ -174,6 +184,8 @@ class GroupGroupGUI:
                 'window': window,
                 'status': status, 
                 'journey_list_window': user_data['group'],
+                'group_id': user_data['group_id'],
+                'create_journey_list_window': user_data['window'],
                 'items': [
                     {
                         'field': 'content',
@@ -224,7 +236,7 @@ class GroupGroupGUI:
             
             journey_obj = GroupJourney(
                 id = 0,
-                group = 1,
+                group = user_data['group_id'],
                 content = request_data['content'],
                 start_date = start_date,
                 end_date = end_date,
@@ -243,6 +255,15 @@ class GroupGroupGUI:
                 content = dpg.add_text(default_value=journey_obj.content, parent=group_journey)
                 modified_button = dpg.add_button(label="[Modified]", parent=group_journey)
                 delete_button = dpg.add_button(label="[Delete]", parent=group_journey)
+                # cls.create_journey_list_window_callback(user_data['group_id'])
+                # dpg.delete_item(user_data['create_journey_list_window'])
+                cls.content_render('group')
+                print(user_data['group_id'])
+                cls.view_window(None, None, user_data['group_id'])
+    
+        
+    # @classmethod
+    # def modified
         
     @classmethod
     def create_window_callback(cls, sender, app_data, user_data):
@@ -444,6 +465,7 @@ class GroupGroupGUI:
         group_bottom = dpg.add_group(horizontal=True, parent=window)
         dpg.add_button(label="Customers", callback=lambda :cls.customers_callback(group.id), parent=group_bottom)
         dpg.add_button(label="Staffs", callback=lambda :cls.staffs_callback(group.id), parent=group_bottom)
+        dpg.add_button(label="Journey", callback=cls.create_journey_list_window_callback, parent=group_bottom, user_data=group.id)
         dpg.add_button(label="Close", callback=lambda :dpg.delete_item(window), parent=group_bottom)
 
     @classmethod
