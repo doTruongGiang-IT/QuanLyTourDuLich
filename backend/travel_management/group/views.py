@@ -26,6 +26,7 @@ class GroupJourneyViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = GroupJourneySerializer
     queryset = GroupJourney.objects.all()
     object_name = 'group_journey'
+    parent_object_name = 'group'
     
     def filter_queryset(self, queryset): 
         group_id = self.request.query_params.get("group_id", None)
