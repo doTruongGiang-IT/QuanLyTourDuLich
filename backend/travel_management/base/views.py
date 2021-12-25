@@ -16,7 +16,7 @@ class TrackingMixin:
                 }
             })
             
-            if self.__class__.parent_object_name:
+            if hasattr(self.__class__, 'parent_object_name') and self.__class__.parent_object_name:
                 async_to_sync(channel_layer.group_send)('tracking_channel', {
                     'type': 'send_message', 
                     'payload': {
