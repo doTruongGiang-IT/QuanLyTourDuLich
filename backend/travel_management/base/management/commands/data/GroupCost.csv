@@ -1,0 +1,29 @@
+id,name,group,type,price
+1,Mua vé máy bay Vienam air line,1,1,100000
+2,Ăn uống ở nhà hàng ABD,1,2,150000
+3,Phí đi Hội An,2,3,300000
+4,Phí Khách Sạn AJHOTEL,2,4,200000
+5,Phí tham quan,2,5,500000
+6,Mua vé máy bay Vienam air line,3,1,100000
+7,Ăn uống ở nhà hàng ABD,3,2,150000
+8,Phí Khách Sạn AJHOTEL,3,3,300000
+9,Mua vé máy bay Vienam air line,4,4,200000
+10,Phí tham quan,4,5,500000
+11,Ăn uống ở nhà hàng ABD,4,1,100000
+12,Phí tham quan,5,2,150000
+13,Phí Khách Sạn AJHOTEL,5,3,300000
+14,Mua vé máy bay Vienam air line,6,4,200000
+15,Ăn uống ở nhà hàng ABD,7,5,500000
+16,Phí Khách Sạn AJHOTEL,8,1,100000
+17,Phí tham quan,9,2,150000
+18,Ăn uống ở nhà hàng ABD,10,3,300000
+19,Mua vé máy bay Vienam air line,11,4,200000
+20,Phí Khách Sạn AJHOTEL,12,5,500000
+21,Phí tham quan,13,1,100000
+22,Ăn uống ở nhà hàng ABD,14,2,150000
+23,Mua vé máy bay Vienam air line,15,3,300000
+24,Phí Khách Sạn AJHOTEL,16,4,200000
+25,Phí tham quan,17,5,500000
+26,Phí Khách Sạn AJHOTEL,17,1,100000
+27,Mua vé máy bay Vienam air line,17,2,150000
+28,Ăn uống ở nhà hàng ABD,17,3,300000

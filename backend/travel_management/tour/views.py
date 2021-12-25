@@ -1,32 +1,51 @@
+from base.views import PaginateMixin, TrackingMixin
 from rest_framework import viewsets
 
-from .models import Tour, TourCharacteristic, TourType, TourPrice, Location
-from .serializers import TourSerializer, TourCharacteristicSerializer, TourTypeSerializer, TourPriceSerializer, LocationSerializer
+from .models import Location, Tour, TourCharacteristic, TourPrice, TourType
+from .serializers import (LocationSerializer, TourCharacteristicSerializer,
+                          TourPriceSerializer, TourSerializer,
+                          TourTypeSerializer)
 
 
-class TourViewSet(viewsets.ModelViewSet):
+class TourViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourSerializer
     queryset = Tour.objects.all()
+    object_name = 'tour'
+    
+    def get_serializer_context(self):
+        contexts = super().get_serializer_context()
+        
+        is_format = self.request.query_params.get("is_format", None)
+        if is_format is not None and is_format == 'true':
+            contexts['is_format'] = True 
+        else:
+            contexts['is_format'] = False
+        
+        return contexts
     
     
-class TourCharacteristicViewSet(viewsets.ModelViewSet):
+class TourCharacteristicViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourCharacteristicSerializer
     queryset = TourCharacteristic.objects.all()
+    object_name = 'tour_characteristic'
     
     
-class TourTypeViewSet(viewsets.ModelViewSet):
+class TourTypeViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourTypeSerializer
     queryset = TourType.objects.all()
+    object_name = 'tour_type'
     
     
-class TourPriceViewSet(viewsets.ModelViewSet):
+class TourPriceViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = TourPriceSerializer
     queryset = TourPrice.objects.all()
+    object_name = 'tour_price'
     
     
-class LocationViewSet(viewsets.ModelViewSet):
+class LocationViewSet(TrackingMixin, PaginateMixin, viewsets.ModelViewSet):
     serializer_class = LocationSerializer
     queryset = Location.objects.all()
+    object_name = 'location'
     
     
 tour_list = TourViewSet.as_view({
@@ -41,17 +60,45 @@ tour_detail = TourViewSet.as_view({
 })
 
 tour_characteristic_list = TourCharacteristicViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+tour_characteristic_detail = TourCharacteristicViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
 
 tour_type_list = TourTypeViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+tour_type_detail = TourTypeViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
 
 tour_price_list = TourPriceViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+tour_price_detail = TourPriceViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })
 
 location_list = LocationViewSet.as_view({
-    'get': 'list'
+    'get': 'list',
+    'post': 'create'
+})
+
+location_detail = LocationViewSet.as_view({
+    'get': 'retrieve',
+    'patch': 'partial_update',
+    'delete': 'destroy'
 })

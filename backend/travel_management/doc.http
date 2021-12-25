@@ -16,12 +16,17 @@
 
 
 ### Tour List ###
-GET {{api_url}}/tour/ HTTP/1.1
+GET {{api_url}}/tour HTTP/1.1
+content-type: application/json
+
+
+### Tour List (Format) ###
+GET {{api_url}}/tour?is_format=true HTTP/1.1
 content-type: application/json
 
 
 ### Tour Detail ###
-GET {{api_url}}/tour/2 HTTP/1.1
+GET {{api_url}}/tour/1 HTTP/1.1
 content-type: application/json
 
 
@@ -31,6 +36,7 @@ content-type: application/json
 
 {   
     "name": "Let the games begin",
+    "description": "description tour new",
     "characteristic": 2,
     "type": 3,
     "price": 2,
@@ -39,11 +45,11 @@ content-type: application/json
 
 
 ### Tour Update ###
-PATCH {{api_url}}/tour/12 HTTP/1.1
+PATCH {{api_url}}/tour/1 HTTP/1.1
 content-type: application/json
 
 {   
-    "name": "Hi there"
+    "description": "description tour 1"
 }
 
 
@@ -64,13 +70,77 @@ content-type: application/json
 
 
 ### Group Detail ###
-GET {{api_url}}/group/2 HTTP/1.1
+GET {{api_url}}/group/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Create ###
+POST {{api_url}}/group/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour ádas",
+    "tour": 1,
+    "start_date": "2023-05-12",
+    "end_date": "2023-05-15"
+}
+
+### Group Update ###
+PATCH {{api_url}}/group/10 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour avsd"
+}
+
+### Group Delete ###
+DELETE {{api_url}}/group/10 HTTP/1.1
 content-type: application/json
 
 
 
+###############################
+#      3. Group Journey       #
+###############################
+
+
+### Group Journey List ###
+GET {{api_url}}/group/journey?group_id=1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journey Detail ###
+GET {{api_url}}/group/journey/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journey Create ###
+POST {{api_url}}/group/journey HTTP/1.1
+content-type: application/json
+
+{
+    "group": 10,
+    "content": "Hạ cách sân bay Incheon",
+    "start_date": "2021-10-22T09:40:00Z",
+    "end_date": "2021-10-22T10:20:00Z",
+    "location": 7
+}
+
+### Group Journey Update ###
+PATCH {{api_url}}/group/journey/19 HTTP/1.1
+content-type: application/json
+
+{
+    "content": "Hạ cách sân bay Incheos"
+}
+
+### Group Journey Delete ###
+DELETE {{api_url}}/group/journey/19 HTTP/1.1
+content-type: application/json
+
+
 ##################################
-#     3. Tour Characteristic     #
+#     4. Tour Characteristic     #
 ##################################
 
 
@@ -79,9 +149,37 @@ GET {{api_url}}/tour/tour_characteristic HTTP/1.1
 content-type: application/json
 
 
+### Tour Characteristic Detail ###
+GET {{api_url}}/tour/tour_characteristic/1 HTTP/1.1
+content-type: application/json
+
+
+### Tour Characteristic Create ###
+POST {{api_url}}/tour/tour_characteristic HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour characteristic 1"
+}
+
+
+### Tour Characteristic Update ###
+PATCH {{api_url}}/tour/tour_characteristic/8 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tour characteristic 1 sss"
+}
+
+
+### Tour Characteristic Delete ###
+DELETE {{api_url}}/tour/tour_characteristic/8 HTTP/1.1
+content-type: application/json
+
+
 
 ############################
-#       4. Tour Type       #
+#       5. Tour Type       #
 ############################
 
 
@@ -90,9 +188,34 @@ GET {{api_url}}/tour/tour_type HTTP/1.1
 content-type: application/json
 
 
+### Tour Type Detail ###
+GET {{api_url}}/tour/tour_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Tour Type Create ###
+POST {{api_url}}/tour/tour_type HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Type 1"
+}
+
+### Tour Type Update ###
+PATCH {{api_url}}/tour/tour_type/5 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Type 1 d"
+}
+
+
+### Tour Type Delete ###
+DELETE {{api_url}}/tour/tour_type/5 HTTP/1.1
+content-type: application/json
 
 #############################
-#       5. Tour Price       #
+#       6. Tour Price       #
 #############################
 
 
@@ -101,12 +224,322 @@ GET {{api_url}}/tour/tour_price HTTP/1.1
 content-type: application/json
 
 
+### Tour Price Detail ###
+GET {{api_url}}/tour/tour_price/1 HTTP/1.1
+content-type: application/json
+
+
+### Tour Price Create ###
+POST {{api_url}}/tour/tour_price HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Du lịch Đà Nẵng mùa xuân asdsa d",
+  "price": 5000000,
+  "start_date": "2022-03-20",
+  "end_date": "2022-06-21"
+}
+
+
+### Tour Price Update ###
+PATCH {{api_url}}/tour/tour_price/21 HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Du lịch Đà Nẵng mùa xuân asdsa d",
+  "price": 500000000,
+  "start_date": "2022-03-20",
+  "end_date": "2022-06-21"
+}
+
+
+### Tour Price Delete ###
+DELETE {{api_url}}/tour/tour_price/21 HTTP/1.1
+content-type: application/json
+
+
+
 
 ############################
-#       6. Location        #
+#       7. Location        #
 ############################
 
 
-### Location ###
+### Location List ###
 GET {{api_url}}/tour/location HTTP/1.1
 content-type: application/json
+
+
+### Location Detail ###
+GET {{api_url}}/tour/location/1 HTTP/1.1
+content-type: application/json
+
+
+### Location Create ###
+POST {{api_url}}/tour/location HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Đà Nẵng 212",
+    "type": "Tourist Area",
+    "level": "City"
+}
+
+
+### Location Update ###
+PATCH {{api_url}}/tour/location/17 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Đà Nẵng 123",
+    "type": "Tourist Area",
+    "level": "City"
+}
+
+
+### Location Delete###
+DELETE {{api_url}}/tour/location/17 HTTP/1.1
+content-type: application/json
+
+
+############################
+#       8. Customer        #
+############################
+
+
+### Customer List All ###
+GET {{api_url}}/customer HTTP/1.1
+content-type: application/json
+
+
+### Customer Detail ###
+GET {{api_url}}/customer/1 HTTP/1.1
+content-type: application/json
+
+
+### Customer Create ###
+POST {{api_url}}/customer/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1",
+    "id_number": "113120381203",
+    "address": "Address 1",
+    "gender": "Male",
+    "phone_number": "123981273"
+}
+
+### Customer Update ###
+PATCH {{api_url}}/customer/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1 updated"
+}
+
+
+### Customer Delete ###
+DELETE {{api_url}}/customer/1 HTTP/1.1
+content-type: application/json
+
+
+### Customer List by Group ###
+GET {{api_url}}/customer/group/1 HTTP/1.1
+content-type: application/json
+
+
+### Customer Add To Group ###
+POST {{api_url}}/customer/group/ HTTP/1.1
+content-type: application/json
+
+{
+    "group": 3,
+    "customer": 2
+}
+
+### Customer Delete From Group ###
+DELETE {{api_url}}/customer/group/?group_id=1&customer_id=2 HTTP/1.1
+content-type: application/json
+
+
+
+############################
+#       9. Staff        #
+############################
+
+
+### Staff List All ###
+GET {{api_url}}/staff HTTP/1.1
+content-type: application/json
+
+
+### Staff Detail ###
+GET {{api_url}}/staff/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Create ###
+POST {{api_url}}/staff/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name Staff 3"
+}
+
+### Staff Update ###
+PATCH {{api_url}}/staff/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1 updated"
+}
+
+
+### Staff Delete ###
+DELETE {{api_url}}/staff/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Type List All ###
+GET {{api_url}}/staff/staff_type HTTP/1.1
+content-type: application/json
+
+
+### Staff Type Detail ###
+GET {{api_url}}/staff/staff_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Type Create ###
+POST {{api_url}}/staff/staff_type/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name Type 1"
+}
+
+### Staff Type Update ###
+PATCH {{api_url}}/staff/staff_type/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name 1 updated"
+}
+
+
+### Staff Type Delete ###
+DELETE {{api_url}}/staff/staff_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff List by Group ###
+GET {{api_url}}/staff/group/1 HTTP/1.1
+content-type: application/json
+
+
+### Staff Add To Group ###
+POST {{api_url}}/staff/group/ HTTP/1.1
+content-type: application/json
+
+{
+    "group": 1,
+    "staff": 2,
+    "staff_type": 2
+}
+
+### Staff Delete From Group ###
+DELETE {{api_url}}/staff/group/?group_id=1&staff_id=2 HTTP/1.1
+content-type: application/json
+
+
+
+############################
+#        10. Stats         #
+############################
+
+
+### Staff Number of tours of staff ###
+GET {{api_url}}/stats/tour_of_staff HTTP/1.1
+content-type: application/json
+
+
+### Cost and Revenue of group ###
+GET {{api_url}}/stats/stats_cost_revenue_group/2 HTTP/1.1
+content-type: application/json
+
+
+### Cost and Revenue of Tour ###
+GET {{api_url}}/stats/stats_cost_revenue_tour HTTP/1.1
+content-type: application/json
+
+
+
+#########################################
+#        11. Group Journey Cost         #
+#########################################
+
+
+### Group Journet cost type list ###
+GET {{api_url}}/group/cost_type HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost type detal ###
+GET {{api_url}}/group/cost_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost type create ###
+POST {{api_url}}/group/cost_type HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay"
+}
+
+### Group Journet cost type update ###
+PATCH {{api_url}}/group/cost_type/1 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay mới"
+}
+
+### Group Journet cost type delete ###
+DELETE {{api_url}}/group/cost_type/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost list ###
+GET {{api_url}}/group/cost HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost detal ###
+GET {{api_url}}/group/cost/1 HTTP/1.1
+content-type: application/json
+
+
+### Group Journet cost create ###
+POST {{api_url}}/group/cost HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay",
+    "price": 10000000,
+    "group": 2,
+    "type": 2
+}
+
+### Group Journet cost update ###
+PATCH {{api_url}}/group/cost/3 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Phí vé máy bay mới"
+}
+
+### Group Journet cost delete ###
+DELETE {{api_url}}/group/cost/1 HTTP/1.1
+content-type: application/json
+

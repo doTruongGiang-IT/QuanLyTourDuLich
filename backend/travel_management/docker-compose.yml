@@ -14,7 +14,6 @@ services:
   pl-backend:
     image: pl_backend:latest
     container_name: pl_backend
-    restart: always
     volumes:
       - ./:/app
     networks:
